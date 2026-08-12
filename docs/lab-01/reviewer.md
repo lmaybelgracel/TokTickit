@@ -7,7 +7,7 @@
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
 | [#6](https://github.com/lmaybelgracel/TokTickit/pull/6) | feature/1-project-foundation | Approved |
-|    | feature/2-health-check |  |
+| [#7](https://github.com/lmaybelgracel/TokTickit/pull/7) | feature/2-health-check | Pending Peer Review |
 |    | feature/3-category-seed |  |
 |    | feature/4-category-list |  |
 
