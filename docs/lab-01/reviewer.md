@@ -6,7 +6,7 @@
 ## Pull Requests I authored (reviewed by my partner)
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
-|    | feature/1-project-foundation |  |
+| [#5](https://github.com/lmaybelgracel/TokTickit/pull/5) | feature/1-project-foundation | Pending Peer Review |
 |    | feature/2-health-check |  |
 |    | feature/3-category-seed |  |
 |    | feature/4-category-list |  |
