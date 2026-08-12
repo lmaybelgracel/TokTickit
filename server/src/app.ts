@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import { getPrisma } from "./prisma.js";
 
 // The Express app is exported separately from app.listen() (see index.ts) so
 // Supertest can import `app` without opening a port. Do not merge these files.
@@ -14,6 +15,20 @@ app.get("/api/health", (req: Request, res: Response, next: NextFunction) => {
     return next(new Error("Database connection failure"));
   }
   res.status(200).json({ status: "ok", service: "TokTickIT API" });
+});
+
+// Issue 4 — Category list
+app.get("/api/categories", async (_req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const categories = await prisma.category.findMany({
+      orderBy: { id: "asc" },
+      select: { id: true, name: true }
+    });
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve categories" });
+  }
 });
 
 // Centralized error handling middleware
