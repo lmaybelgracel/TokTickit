@@ -31,8 +31,8 @@ All test files live under `server/tests/lab-01/` and `client/tests/lab-01/`.
 ```text
  RUN  v2.1.9 C:/Users/AT5748/Downloads/Lab1_Starter_Scaffold/toktickit/client
 
- ✓ tests/lab-01/App.test.tsx (3 tests)
+ ✓ tests/lab-01/App.test.tsx (4 tests)
 
  Test Files  1 passed (1)
-      Tests  3 passed (3)
+      Tests  4 passed (4)
 ```

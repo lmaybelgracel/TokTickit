@@ -1,4 +1,4 @@
-# Lab 1 — Peer Review Record  (fill this in)
+# Lab 1 — Peer Review Record
 
 **Author:** <your name> — <student id> — GitHub: @<username>
 **Peer reviewer:** บิว — <student id> — GitHub: @<username>
