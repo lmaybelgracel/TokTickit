@@ -7,8 +7,8 @@
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
 | [#6](https://github.com/lmaybelgracel/TokTickit/pull/6) | feature/1-project-foundation | Approved |
-|    | feature/2-health-check |  |
-|    | feature/3-category-seed |  |
+| [#8](https://github.com/lmaybelgracel/TokTickit/pull/8) | feature/2-health-check | Pending Peer Review |
+| [#9](https://github.com/lmaybelgracel/TokTickit/pull/9) | feature/3-category-seed | Pending Peer Review |
 |    | feature/4-category-list |  |
 
 Reviewer comment I received: "เช็คโค้ดดูแล้วพบว่าใน PR นี้มีโค้ดของ Issue 2, 3, 4 ติดมาด้วยทั้งหมดเลยครับ (เช่นไฟล์ health.test.ts, schema.prisma, App.tsx) ตามโจทย์ Lab 1 เราต้องแยกแตก Branch และทำ PR แยกทีละ Issue ครับ รบกวนกลับไปแยก Branch และย้อนโค้ดให้เหลือแค่ Project Foundation เปล่าๆ สำหรับ PR นี้ก่อนนะครับ"
