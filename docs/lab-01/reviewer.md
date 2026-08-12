@@ -9,7 +9,7 @@
 | [#6](https://github.com/lmaybelgracel/TokTickit/pull/6) | feature/1-project-foundation | Approved |
 | [#8](https://github.com/lmaybelgracel/TokTickit/pull/8) | feature/2-health-check | Approved |
 | [#9](https://github.com/lmaybelgracel/TokTickit/pull/9) | feature/3-category-seed | Approved |
-| [#10](https://github.com/lmaybelgracel/TokTickit/pull/10) | feature/4-category-list | Pending Peer Review |
+| [#10](https://github.com/lmaybelgracel/TokTickit/pull/10) | feature/4-category-list | Approved |
 
 ### PR #8 (feature/2-health-check)
 **Reviewer comment I received:** "ดูแล้วโดยรวมทำได้ตรงตาม Issue มีการเพิ่ม /api/health และเขียน test ด้วย supertest ครบทั้งกรณีที่ endpoint ทำงานปกติและกรณีเรียก route ที่ไม่มีอยู่ ส่วนที่อยากเสนอเพิ่มเติมคืออาจเพิ่ม test กรณี response body ไม่ตรงตามที่กำหนด หรือกรณีเกิด error ภายใน server อีกสักกรณี เพื่อให้การทดสอบ health check ครอบคลุมมากขึ้น"
@@ -22,6 +22,13 @@
 **Reviewer comment I received:** "Base branch และ feature branch ถูกต้องตาม workflow ของ Lab แล้ว และเห็นว่ามีการเพิ่ม Category model กับ idempotent seed script ตามขอบเขตของ Issue 3 ก่อน Approve รบกวนตรวจสอบเพิ่มเติมว่า migration ทำงานได้ และ seed สามารถรันซ้ำได้โดยไม่เกิด category ซ้ำ รวมถึงมีข้อมูลครบ 4 categories ตาม requirement"
 
 **How I responded:** "ขอบคุณบิวมากครับ! ได้ทำการสร้างและเพิ่มไฟล์ Migration (`server/prisma/migrations/20260812000000_init/migration.sql`) รวมถึงเพิ่มผลการทดสอบการรัน Seed สคริปต์ซ้ำซ้อน ยืนยันว่าสร้างหมวดหมู่ครบทั้ง 4 รายการ (Account and Access, Hardware, Software, Network) ถูกต้องโดยไม่มีการสร้างข้อมูลซ้ำเรียบร้อยครับ"
+
+---
+
+### PR #10 (feature/4-category-list)
+**Reviewer comment I received:** "โดยรวมทำได้ตรงตาม Issue ทั้งการเพิ่ม API /api/categories และนำข้อมูลมาแสดงใน React UI รวมถึงมี test เพิ่มเข้ามาด้วย แนะนำเพิ่มเติมว่าอาจเพิ่ม test กรณี API คืนข้อมูลเป็น array ว่าง หรือเกิด error จาก API เพื่อเช็กว่า UI แสดงผลได้เหมาะสมในกรณีที่ไม่มี category หรือโหลดข้อมูลไม่สำเร็จ"
+
+**How I responded:** "ขอบคุณสำหรับข้อเสนอแนะ ได้เพิ่มการแสดงผลกรณีหมวดหมู่เป็นอาร์เรย์ว่าง No categories available ใน React UI และเพิ่ม Vitest UI test cases สำหรับกรณีหมวดหมู่ว่างและกรณี API โหลดข้อมูลไม่สำเร็จใน client/tests/lab-01/App.test.tsx รวมเป็น 4 test cases เรียบร้อยแล้ว"
 
 ## Pull Requests I reviewed for my partner
 My comment: <...>

@@ -58,17 +58,23 @@ export default function App() {
                 <h2 className="h6 text-secondary text-uppercase tracking-wider fw-bold mb-3">
                   Supported Request Categories
                 </h2>
-                <ol className="list-group list-group-numbered shadow-sm rounded-3">
-                  {categories.map((cat) => (
-                    <li
-                      key={cat.id}
-                      className="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 fw-medium"
-                    >
-                      <span>{cat.name}</span>
-                      <span className="badge bg-light text-dark rounded-pill border">ID: {cat.id}</span>
-                    </li>
-                  ))}
-                </ol>
+                {categories.length > 0 ? (
+                  <ol className="list-group list-group-numbered shadow-sm rounded-3">
+                    {categories.map((cat) => (
+                      <li
+                        key={cat.id}
+                        className="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 fw-medium"
+                      >
+                        <span>{cat.name}</span>
+                        <span className="badge bg-light text-dark rounded-pill border">ID: {cat.id}</span>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <div className="alert alert-secondary text-muted rounded-3" role="status">
+                    No categories available
+                  </div>
+                )}
               </div>
             </div>
           )}

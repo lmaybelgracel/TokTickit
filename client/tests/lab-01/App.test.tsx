@@ -34,6 +34,23 @@ describe("App UI Tests", () => {
     });
   });
 
+  it("handles empty category array gracefully when no categories exist", async () => {
+    vi.spyOn(api, "checkSystem").mockResolvedValueOnce({
+      status: "Online",
+      service: "TokTickIT API",
+      categories: [],
+    });
+
+    render(<App />);
+    const checkBtn = screen.getByRole("button", { name: /Check System/i });
+    fireEvent.click(checkBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Online/i)).toBeInTheDocument();
+      expect(screen.getByText(/No categories available/i)).toBeInTheDocument();
+    });
+  });
+
   it("shows an Offline error message when the API is unavailable", async () => {
     vi.spyOn(api, "checkSystem").mockRejectedValueOnce(
       new Error("Unable to connect to TokTickIT API")
