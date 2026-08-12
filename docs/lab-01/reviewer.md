@@ -11,9 +11,9 @@
 |    | feature/3-category-seed |  |
 |    | feature/4-category-list |  |
 
-Reviewer comment I received (PR #7 by บิว): "โดยรวมทำได้ดี ตรงตาม Issue ที่กำหนดไว้ มีการเพิ่ม GET /api/health และใช้ supertest เข้ามาช่วยทดสอบ endpoint ทำให้ตรวจสอบการทำงานได้ชัดเจนขึ้น ถ้ามีเวลาแนะนำเพิ่ม test กรณีที่ server หรือ database มีปัญหา เพื่อดูว่า health check สามารถตอบสถานะที่เหมาะสมได้ด้วย"
+Reviewer comment I received (PR #8 by บิว): "ดูแล้วโดยรวมทำได้ตรงตาม Issue มีการเพิ่ม /api/health และเขียน test ด้วย supertest ครบทั้งกรณีที่ endpoint ทำงานปกติและกรณีเรียก route ที่ไม่มีอยู่ ส่วนที่อยากเสนอเพิ่มเติมคืออาจเพิ่ม test กรณี response body ไม่ตรงตามที่กำหนด หรือกรณีเกิด error ภายใน server อีกสักกรณี เพื่อให้การทดสอบ health check ครอบคลุมมากขึ้น"
 
-How I responded: "ขอบคุณเพื่อนบิวมากๆ สำหรับคำแนะนำครับ! ได้ทำการเพิ่ม Supertest test case สำหรับตรวจสอบการตอบสนองกรณีการเรียก Endpoint ที่ไม่ถูกต้อง/ข้อผิดพลาดของระบบลงใน server/tests/lab-01/health.test.ts เพิ่มเติมเรียบร้อยแล้วครับ"
+How I responded: "ขอบคุณบิวมากๆ สำหรับคำแนะนำเพิ่มเติมครับ! ได้ทำการเพิ่ม Supertest test cases ทั้งการตรวจสอบ Schema ของ Response Body และการจำลองสถานะ Error ภายใน Server (HTTP 500) เพิ่มเติมใน server/tests/lab-01/health.test.ts รวมเป็น 4 test cases ครอบคลุมทุกสภาวะเรียบร้อยแล้วครับ (โดยยังคงเปิด PR #8 ไว้เพื่อรอการตรวจสอบ และยังไม่ได้ทำการ Merge ครับ)"
 
 ## Pull Requests I reviewed for my partner
 My comment: <...>
