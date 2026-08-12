@@ -7,13 +7,13 @@
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
 | [#6](https://github.com/lmaybelgracel/TokTickit/pull/6) | feature/1-project-foundation | Approved |
-|    | feature/2-health-check |  |
+| [#8](https://github.com/lmaybelgracel/TokTickit/pull/8) | feature/2-health-check | Pending Peer Review |
 |    | feature/3-category-seed |  |
 |    | feature/4-category-list |  |
 
-Reviewer comment I received: "เช็คโค้ดดูแล้วพบว่าใน PR นี้มีโค้ดของ Issue 2, 3, 4 ติดมาด้วยทั้งหมดเลยครับ (เช่นไฟล์ health.test.ts, schema.prisma, App.tsx) ตามโจทย์ Lab 1 เราต้องแยกแตก Branch และทำ PR แยกทีละ Issue ครับ รบกวนกลับไปแยก Branch และย้อนโค้ดให้เหลือแค่ Project Foundation เปล่าๆ สำหรับ PR นี้ก่อนนะครับ"
+Reviewer comment I received (PR #8 by บิว): "ดูแล้วโดยรวมทำได้ตรงตาม Issue มีการเพิ่ม /api/health และเขียน test ด้วย supertest ครบทั้งกรณีที่ endpoint ทำงานปกติและกรณีเรียก route ที่ไม่มีอยู่ ส่วนที่อยากเสนอเพิ่มเติมคืออาจเพิ่ม test กรณี response body ไม่ตรงตามที่กำหนด หรือกรณีเกิด error ภายใน server อีกสักกรณี เพื่อให้การทดสอบ health check ครอบคลุมมากขึ้น"
 
-How I responded: "ขอบคุณสำหรับข้อแนะนำครับ! ได้ทำการคลีนโค้ดและลบส่วนสตัด/เทสสำหรับ Issue 2, 3, 4 ออกจาก branch `feature/1-project-foundation` ย้อนโค้ดกลับมาให้เหลือเฉพาะส่วนของ Project Foundation บริสุทธิ์ตามข้อกำหนดของ Lab 1 เรียบร้อยแล้วครับ"
+How I responded: "ขอบคุณบิวมากๆ สำหรับคำแนะนำเพิ่มเติมครับ! ได้ทำการเพิ่ม Supertest test cases ทั้งการตรวจสอบ Schema ของ Response Body และการจำลองสถานะ Error ภายใน Server (HTTP 500) เพิ่มเติมใน server/tests/lab-01/health.test.ts รวมเป็น 4 test cases ครอบคลุมทุกสภาวะเรียบร้อยแล้วครับ (โดยยังคงเปิด PR #8 ไว้เพื่อรอการตรวจสอบ และยังไม่ได้ทำการ Merge ครับ)"
 
 ## Pull Requests I reviewed for my partner
 My comment: <...>
