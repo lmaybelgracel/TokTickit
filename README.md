@@ -26,9 +26,9 @@ toktickit/
 
 ### Prerequisites
 
-- **Node.js**: v18+ or v20+
-- **npm**: v9+
-- **PostgreSQL**: v14+ running locally (default connection: `postgresql://toktickit:toktickit@localhost:5432/toktickit?schema=public`)
+- **Node.js**: `v20.x` (LTS recommended, see `.nvmrc`)
+- **npm**: `v10.x` (or `v9+`)
+- **PostgreSQL**: `v14+` running locally (default connection: `postgresql://toktickit:toktickit@localhost:5432/toktickit?schema=public`)
 
 ---
 
