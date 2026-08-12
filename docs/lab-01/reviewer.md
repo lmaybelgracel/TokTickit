@@ -9,7 +9,7 @@
 | [#6](https://github.com/lmaybelgracel/TokTickit/pull/6) | feature/1-project-foundation | Approved |
 | [#8](https://github.com/lmaybelgracel/TokTickit/pull/8) | feature/2-health-check | Approved |
 | [#9](https://github.com/lmaybelgracel/TokTickit/pull/9) | feature/3-category-seed | Approved |
-|    | feature/4-category-list |  |
+| [#10](https://github.com/lmaybelgracel/TokTickit/pull/10) | feature/4-category-list | Pending Peer Review |
 
 ### PR #8 (feature/2-health-check)
 **Reviewer comment I received:** "ดูแล้วโดยรวมทำได้ตรงตาม Issue มีการเพิ่ม /api/health และเขียน test ด้วย supertest ครบทั้งกรณีที่ endpoint ทำงานปกติและกรณีเรียก route ที่ไม่มีอยู่ ส่วนที่อยากเสนอเพิ่มเติมคืออาจเพิ่ม test กรณี response body ไม่ตรงตามที่กำหนด หรือกรณีเกิด error ภายใน server อีกสักกรณี เพื่อให้การทดสอบ health check ครอบคลุมมากขึ้น"
