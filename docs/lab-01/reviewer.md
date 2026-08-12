@@ -11,9 +11,9 @@
 |    | feature/3-category-seed |  |
 |    | feature/4-category-list |  |
 
-Reviewer comment I received: "Reviewed PR #6 แล้ว โดยรวมโครงสร้างโปรเจกต์ชัดเจนดี มีการแยก frontend/backend และจัด test กับ documentation เป็นสัดส่วน ทำให้ project foundation พร้อมสำหรับการพัฒนาฟีเจอร์ต่อไป. Suggestion: README ระบุ Node.js เป็น v18+ or v20+ และ npm เป็น v9+ ถ้าต้องการให้ environment ของทีมตรงกันมากขึ้น อาจระบุ version ที่แนะนำเป็น version เดียว หรือเพิ่มไฟล์สำหรับกำหนด Node.js version เช่น .nvmrc เพื่อช่วยลดปัญหา version mismatch ระหว่างสมาชิกในทีม"
+Reviewer comment I received: "เช็คโค้ดดูแล้วพบว่าใน PR นี้มีโค้ดของ Issue 2, 3, 4 ติดมาด้วยทั้งหมดเลยครับ (เช่นไฟล์ health.test.ts, schema.prisma, App.tsx) ตามโจทย์ Lab 1 เราต้องแยกแตก Branch และทำ PR แยกทีละ Issue ครับ รบกวนกลับไปแยก Branch และย้อนโค้ดให้เหลือแค่ Project Foundation เปล่าๆ สำหรับ PR นี้ก่อนนะครับ"
 
-How I responded: "ขอบคุณสำหรับข้อเสนอแนะ! ได้ทำการเพิ่มไฟล์ `.nvmrc` (ระบุ Node.js v20) และอัปเดตเอกสาร `README.md` เพื่อกำหนดเวอร์ชันแนะนำสำหรับทีมให้สอดคล้องกันเรียบร้อยแล้วครับ"
+How I responded: "ขอบคุณสำหรับข้อแนะนำครับ! ได้ทำการคลีนโค้ดและลบส่วนสตัด/เทสสำหรับ Issue 2, 3, 4 ออกจาก branch `feature/1-project-foundation` ย้อนโค้ดกลับมาให้เหลือเฉพาะส่วนของ Project Foundation บริสุทธิ์ตามข้อกำหนดของ Lab 1 เรียบร้อยแล้วครับ"
 
 ## Pull Requests I reviewed for my partner
 My comment: <...>
