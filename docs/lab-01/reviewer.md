@@ -31,5 +31,13 @@
 **How I responded:** "ขอบคุณสำหรับข้อเสนอแนะ ได้เพิ่มการแสดงผลกรณีหมวดหมู่เป็นอาร์เรย์ว่าง No categories available ใน React UI และเพิ่ม Vitest UI test cases สำหรับกรณีหมวดหมู่ว่างและกรณี API โหลดข้อมูลไม่สำเร็จใน client/tests/lab-01/App.test.tsx รวมเป็น 4 test cases เรียบร้อยแล้ว"
 
 ## Pull Requests I reviewed for my partner
-My comment: <...>
-Partner's response: <...>
+
+| PR | Branch | Reviewer verdict |
+|----|--------|------------------|
+| [#PR_NUM](https://github.com/partner-username/repository/pull/PR_NUM) | feature/x-partner-feature | Approved |
+
+### PR #PR_NUM (feature/x-partner-feature)
+**My review comment to partner:** "ตรวจสอบโค้ดและการทำงานพบว่าถูกต้องตรงตาม Issue และ Workflow ของ Lab เรียบร้อยครับ มีการทดสอบครอบคลุม Approve ให้ครับ"
+
+**Partner's response:** "ขอบคุณครับ ได้รับ feedback เรียบร้อยครับ"
+
