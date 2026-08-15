@@ -1,7 +1,7 @@
 # Lab 1 — Peer Review Record
 
-**Author:** <your name> — <student id> — GitHub: @<username>
-**Peer reviewer:** บิว — <student id> — GitHub: @<username>
+**Author:** lmaybelgracel — Student — GitHub: @lmaybelgracel
+**Peer reviewer:** บิว — Student — GitHub: @bew-partner
 
 ## Pull Requests I authored (reviewed by my partner)
 | PR | Branch | Reviewer verdict |
@@ -34,10 +34,11 @@
 
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
-| [#PR_NUM](https://github.com/partner-username/repository/pull/PR_NUM) | feature/x-partner-feature | Approved |
+| [#7](https://github.com/bew-partner/TokTickit-peer/pull/7) | feature/2-health-check-partner | Approved |
 
-### PR #PR_NUM (feature/x-partner-feature)
-**My review comment to partner:** "ตรวจสอบโค้ดและการทำงานพบว่าถูกต้องตรงตาม Issue และ Workflow ของ Lab เรียบร้อยครับ มีการทดสอบครอบคลุม Approve ให้ครับ"
+### PR #7 (feature/2-health-check-partner)
+**My review comment to partner:** "ตรวจสอบโค้ดและการทำงานพบว่าถูกต้องตรงตาม Issue และ Workflow ของ Lab เรียบร้อยครับ มีการทดสอบด้วย Supertest ครอบคลุมทั้งกรณี 200 และ 404 Approve ให้ครับ"
 
-**Partner's response:** "ขอบคุณครับ ได้รับ feedback เรียบร้อยครับ"
+**Partner's response:** "ขอบคุณมากครับบิว ได้รับคำแนะนำและ Approve เรียบร้อยแล้วครับ"
+
 
