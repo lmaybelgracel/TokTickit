@@ -2,13 +2,13 @@
 
 All test files live under `server/tests/lab-01/` and `client/tests/lab-01/`.
 
-| Test ID | Tool | Test Target | Description | Result |
-|---------|------|-------------|-------------|--------|
-| **API-01** | Supertest | `/api/health` | GET /api/health returns 200 status with JSON `{ status: "ok", service: "TokTickIT API" }` | **PASS** |
-| **API-02** | Supertest | `/api/categories` | GET /api/categories returns 4 seeded categories ordered by ID ascending | **PASS** |
-| **UI-01** | Vitest / RTL | Heading | Renders "TokTickIT" heading and "IT Service Desk" badge | **PASS** |
-| **UI-02** | Vitest / RTL | Loading → Category List | Shows loading spinner on button click, then displays "Online" badge and 4 seeded categories | **PASS** |
-| **UI-03** | Vitest / RTL | API Error Message | Displays "Offline" badge and error alert message when backend/DB connection fails | **PASS** |
+| Test ID | Test File (under tests/lab-01/) | Tool | Test Description | Result |
+|---------|--------------------------------|------|------------------|--------|
+| **API-01** | `server/tests/lab-01/health.test.ts` | Supertest | Health endpoint returns 200 and expected JSON `{ status: "ok", service: "TokTickIT API" }` | **PASS** |
+| **API-02** | `server/tests/lab-01/categories.test.ts` | Supertest | Categories endpoint returns the four seeded categories ordered by ID | **PASS** |
+| **UI-01** | `client/tests/lab-01/App.test.tsx` | Vitest | TokTickIT heading renders properly with IT Service Desk badge | **PASS** |
+| **UI-02** | `client/tests/lab-01/App.test.tsx` | Vitest | Loading state changes to category list showing Online status & 4 categories | **PASS** |
+| **UI-03** | `client/tests/lab-01/App.test.tsx` | Vitest | API failure displays a useful error message with Offline status | **PASS** |
 
 ---
 
