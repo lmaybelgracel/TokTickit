@@ -1,9 +1,9 @@
 # Lab 1 — Peer Review Record
 
-**Author:** lmaybelgracel — Student — GitHub: @lmaybelgracel
-**Peer reviewer:** บิว — Student — GitHub: @bew-partner
+**Author:** เกรซ — GitHub: @lmaybelgracel  
+**Peer reviewer:** บิว — GitHub: @phatthidawadi  
 
-## Pull Requests I authored (reviewed by my partner)
+## Pull Requests I authored (reviewed by my partner @phatthidawadi)
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
 | [#6](https://github.com/lmaybelgracel/TokTickit/pull/6) | feature/1-project-foundation | Approved |
@@ -26,19 +26,30 @@
 ---
 
 ### PR #10 (feature/4-category-list)
-**Reviewer comment I received:** "โดยรวมทำได้ตรงตาม Issue ทั้งการเพิ่ม API /api/categories และนำข้อมูลมาแสดงใน React UI รวมถึงมี test เพิ่มเข้ามาด้วย แนะนำเพิ่มเติมว่าอาจเพิ่ม test กรณี API คืนข้อมูลเป็น array ว่าง หรือเกิด error จาก API เพื่อเช็กว่า UI แสดงผลได้เหมาะสมในกรณีที่ไม่มี category หรือโหลดข้อมูลไม่สำเร็จ"
+**Reviewer comment I received:** "โดยรวมทำได้ตรงตาม Issue ทั้งการเพิ่ม API /api/categories และนำข้อมูลมาแสดงใน React UI รวมถึงมี test เพิ่มเข้ามาด้วย แนะนำเพิ่มเติมว่าอาจเพิ่ม test กรณี API คืนข้อมูลเป็น array ว่าง หรือเกิด error จาก API เพื่อเช็กว่า UIแสดงผลได้เหมาะสมในกรณีที่ไม่มี category หรือโหลดข้อมูลไม่สำเร็จ"
 
 **How I responded:** "ขอบคุณสำหรับข้อเสนอแนะ ได้เพิ่มการแสดงผลกรณีหมวดหมู่เป็นอาร์เรย์ว่าง No categories available ใน React UI และเพิ่ม Vitest UI test cases สำหรับกรณีหมวดหมู่ว่างและกรณี API โหลดข้อมูลไม่สำเร็จใน client/tests/lab-01/App.test.tsx รวมเป็น 4 test cases เรียบร้อยแล้ว"
 
-## Pull Requests I reviewed for my partner
+---
+
+## Pull Requests I reviewed for my partner (@phatthidawadi)
 
 | PR | Branch | Reviewer verdict |
 |----|--------|------------------|
-| [#7](https://github.com/bew-partner/TokTickit-peer/pull/7) | feature/2-health-check-partner | Approved |
+| [#11](https://github.com/phatthidawadi/toktickit/pull/11) | feat/api-health-check | Approved |
+| [#12](https://github.com/phatthidawadi/toktickit/pull/12) | feat/category-model-seed | Approved |
 
-### PR #7 (feature/2-health-check-partner)
-**My review comment to partner:** "ตรวจสอบโค้ดและการทำงานพบว่าถูกต้องตรงตาม Issue และ Workflow ของ Lab เรียบร้อยครับ มีการทดสอบด้วย Supertest ครอบคลุมทั้งกรณี 200 และ 404 Approve ให้ครับ"
+### PR #11 (feat: implement API health check)
+**My review comment to partner:** "บิวทำส่วน API Health Check ได้ตรงตาม requirement และแก้จาก stub ที่ return 501 มาเป็น HTTP 200 พร้อม response { status: 'ok', service: 'TokTickIT API' } ได้ชัดเจนดี อีกจุดที่ชอบคือมีการอัปเดต test evidence และ documentation ควบคู่ไปกับ implementation ทำให้เห็นว่าไม่ได้โฟกัสแค่เขียนโค้ด แต่มีการตรวจสอบผลลัพธ์ของ feature ด้วย โดยเฉพาะการบันทึกผลจาก Supertest ว่า health check ผ่านแล้ว"
 
-**Partner's response:** "ขอบคุณมากครับบิว ได้รับคำแนะนำและ Approve เรียบร้อยแล้วครับ"
+**Partner's response:** "ขอบคุณมากครับ ได้ทำการอัปเดต documentation และรายละเอียด test evidence ตามคำแนะนำเรียบร้อยครับ"
+
+---
+
+### PR #12 (feat: create and seed IT request categories)
+**My review comment to partner:** "บิวทำ Category Model และ Seed ได้ตรง requirement ดี โดยใช้ name @unique และ upsert ทำให้สามารถ seed ซ้ำได้โดยไม่เกิด category ซ้ำ ถือว่าออกแบบได้เหมาะกับงานนี้ มีจุดที่แนะนำให้แก้ก่อน merge คือยังมี TODO/comment เก่าค้างใน schema.prisma และ seed.ts ลบออกเรียบร้อยเริ่ดมาก Approve ให้ครับ!"
+
+**Partner's response:** "ขอบคุณมากครับ ได้ทำการเคลียร์ comment และ TODO ออกเรียบร้อยพร้อม merge ครับ"
+
 
 
