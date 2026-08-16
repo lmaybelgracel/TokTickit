@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lab 1 Submission Report - TokTickIT</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #0f172a;
+    line-height: 1.6;
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 0 20px;
+    background-color: #ffffff;
+  }
+  h1 {
+    color: #1e3a8a;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 12px;
+    font-size: 26px;
+    margin-top: 30px;
+  }
+  h2 {
+    color: #1e293b;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 8px;
+    font-size: 20px;
+    margin-top: 40px;
+    page-break-before: auto;
+  }
+  h3 {
+    color: #334155;
+    font-size: 16px;
+    margin-top: 24px;
+  }
+  pre {
+    background-color: #0f172a;
+    color: #f8fafc;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  code {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+  a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 30px 0;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+  .print-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: all 0.2s ease;
+  }
+  .print-btn:hover {
+    background-color: #1d4ed8;
+  }
+  @media print {
+    .print-btn {
+      display: none;
+    }
+    body {
+      margin: 0;
+      max-width: 100%;
+      padding: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Save as PDF / Print</button>
+<h1>Lab 1 Submission Document — TokTickIT (ตอกติ๊กกิต)</h1>
+
+<hr>
+
+<h2>Answer Part 1: Git Use with Engineering Workflow (15 คะแนน)</h2>
+
+<h3>1. URL List</h3>
+<li><strong>GitHub Repository URL:</strong> <a href="https://github.com/lmaybelgracel/TokTickit" target="_blank">https://github.com/lmaybelgracel/TokTickit</a></li>
+<li><strong>GitHub Project URL:</strong> <a href="https://github.com/users/lmaybelgracel/projects/1" target="_blank">https://github.com/users/lmaybelgracel/projects/1</a></li>
+<li><strong>GitHub Issues URLs:</strong></li>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/issues/1" target="_blank">Issue #1: Project Foundation</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/issues/2" target="_blank">Issue #2: Health Check API</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/issues/3" target="_blank">Issue #3: Category Model &amp; Idempotent Seed</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/issues/4" target="_blank">Issue #4: Category List API &amp; React UI Integration</a>
+<li><strong>Pull Requests URLs:</strong></li>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/pull/6" target="_blank">PR #6 (feature/1-project-foundation -&gt; lab1-staging)</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/pull/8" target="_blank">PR #8 (feature/2-health-check -&gt; lab1-staging)</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/pull/9" target="_blank">PR #9 (feature/3-category-seed -&gt; lab1-staging)</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/pull/10" target="_blank">PR #10 (feature/4-category-list -&gt; lab1-staging)</a>
+  - <a href="https://github.com/lmaybelgracel/TokTickit/pull/11" target="_blank">PR #11 (lab1-staging -&gt; main)</a>
+
+<hr>
+
+<h3>2. GitHub Project Kanban Board (Done State)</h3>
+All 4 Issues are tracked and completed in the "Done" column of the GitHub Project Kanban board:
+```text
++-----------------------------------------------------------------------------+
+|                                 DONE (4)                                    |
++-----------------------------------------------------------------------------+
+| [v] Issue #1: Set up TokTickIT full-stack foundation                       |
+| [v] Issue #2: Implement GET /api/health endpoint                            |
+| [v] Issue #3: Define Category Prisma model &amp; Idempotent Seed script         |
+| [v] Issue #4: Implement GET /api/categories API &amp; React UI System Check     |
++-----------------------------------------------------------------------------+
+```
+
+<hr>
+
+<h3>3. Git Commit History Graph (`feature/*` -&gt; `lab1-staging` -&gt; `main`)</h3>
+```text
+<li>2e203ef (HEAD -&gt; lab1-staging, main) docs: align ai_use.md and tests.md table formats with PDF grading criteria</li>
+<li>9488b5a docs: finalize Lab 1 documentation, test plan matrix, and peer review record</li>
+<li>1f2fd48 docs: clean template markers and update test evidence count</li>
+<li>92f61e7 test: add empty category array and API load failure UI test cases for PR #10</li>
+<li>673b796 docs: update reviewer record with PR #10 link for Issue 4</li>
+<li>bf25b8f feat: implement GET /api/categories, React UI, and Vitest test suite for Issue 4</li>
+<li>  f48bbf2 merge: resolve conflicts and integrate Issue 2 &amp; 3 into lab1-staging</li>
+|\  
+| * 46020ad docs: resolve conflict and update peer review records for PR #8 and #9
+| * 56035ca feat: add Prisma migration files and update reviewer record for Issue 3
+| * f351de7 test: add seed idempotency test and update reviewer record for PR #9
+| * 5745c70 docs: update reviewer record with PR #9 link for Issue 3
+| * 054bc19 feat: add Category prisma model and idempotent seed script
+<li>| c4209df test: add response schema validation and 500 server error test cases</li>
+<li>| 5707331 docs: update reviewer record with PR #8 link for Issue 2</li>
+<li>| 47da125 test: add error handling test case and update reviewer record for PR #7</li>
+<li>| fe70c93 docs: update reviewer record with PR #7 link for Issue 2</li>
+<li>| 0e7a19f feat: implement GET /api/health endpoint and supertest</li>
+|/  
+<li>0274cad refactor: clean up feature/1-project-foundation to include foundation only</li>
+<li>5053035 docs: add .nvmrc and record peer review feedback</li>
+<li>cd7fe62 docs: update reviewer record with PR #6 link</li>
+<li>51f0b7d feat: set up TokTickIT project foundation</li>
+<li>4613281 Initial commit</li>
+```
+
+<hr>
+
+<h3>4. Repository Directory Structure in IDE</h3>
+```text
+toktickit/
+├── .gitignore
+├── .nvmrc
+├── README.md
+├── client/
+│   ├── index.html
+│   ├── package.json
+│   ├── src/
+│   │   ├── App.tsx
+│   │   ├── api.ts
+│   │   └── main.tsx
+│   └── tests/
+│       └── lab-01/
+│           └── App.test.tsx
+├── docs/
+│   └── lab-01/
+│       ├── ai_use.md
+│       ├── reviewer.md
+│       └── tests.md
+└── server/
+    ├── package.json
+    ├── prisma/
+    │   ├── migrations/
+    │   ├── schema.prisma
+    │   └── seed.ts
+    ├── src/
+    │   ├── app.ts
+    │   ├── index.ts
+    │   └── prisma.ts
+    └── tests/
+        └── lab-01/
+            ├── app.test.ts
+            ├── categories.test.ts
+            ├── health.test.ts
+            └── seed.test.ts
+```
+
+<hr>
+
+<h3>5. Rendered README.md &amp; .gitignore Content</h3>
+
+<h4>`.gitignore`</h4>
+```gitignore
+<h1>dependencies</h1>
+node_modules/
+<h1>env &amp; secrets</h1>
+.env
+*.env
+!.env.example
+<h1>build output</h1>
+dist/
+build/
+<h1>prisma</h1>
+server/prisma/*.db
+<h1>logs &amp; OS</h1>
+*.log
+.DS_Store
+```
+
+<h4>`README.md`</h4>
+```markdown
+<h1>TokTickIT (ตอกติ๊กกิต) - Full-Stack IT Service Desk Application</h1>
+
+TokTickIT is an IT service desk web application for Account &amp; Access, Hardware, Software, and Network requests built with <strong>React</strong>, <strong>TypeScript</strong>, <strong>Vite</strong>, <strong>Bootstrap</strong>, <strong>Express</strong>, <strong>Prisma</strong>, and <strong>PostgreSQL</strong>.
+
+<hr>
+
+<h2>🏗️ Project Architecture &amp; Structure</h2>
+
+```
+toktickit/
+├── client/                 # React + TypeScript + Vite + Bootstrap frontend
+│   ├── src/                # UI components &amp; API integrations
+│   └── tests/lab-01/       # Vitest UI tests
+├── server/                 # Node.js + Express + TypeScript backend
+│   ├── prisma/             # Prisma schema &amp; migration/seed scripts
+│   ├── src/                # REST API controllers &amp; services
+│   └── tests/lab-01/       # Supertest API tests
+├── docs/lab-01/            # Documentation &amp; submission evidence
+├── .gitignore
+└── README.md
+```
+
+<hr>
+
+<h2>🚀 Getting Started (Setup Instructions)</h2>
+
+<h3>Prerequisites</h3>
+
+<li><strong>Node.js</strong>: `v20.x` (LTS recommended, see `.nvmrc`)</li>
+<li><strong>npm</strong>: `v10.x` (or `v9+`)</li>
+<li><strong>PostgreSQL</strong>: `v14+` running locally (default connection: `postgresql://toktickit:toktickit@localhost:5432/toktickit?schema=public`)</li>
+
+<hr>
+
+<h3>1. Backend Setup (`server/`)</h3>
+
+```bash
+<h1>Navigate to server directory</h1>
+cd server
+
+<h1>Install dependencies</h1>
+npm install
+
+<h1>Copy environment variables</h1>
+cp .env.example .env
+
+<h1>Generate Prisma Client &amp; run migrations</h1>
+npx prisma generate
+npx prisma migrate dev --name init
+
+<h1>Seed database</h1>
+npm run prisma:seed
+
+<h1>Start backend server in development mode (PORT 3000)</h1>
+npm run dev
+```
+
+<hr>
+
+<h3>2. Frontend Setup (`client/`)</h3>
+
+```bash
+<h1>Navigate to client directory</h1>
+cd client
+
+<h1>Install dependencies</h1>
+npm install
+
+<h1>Copy environment variables</h1>
+cp .env.example .env
+
+<h1>Start Vite frontend development server</h1>
+npm run dev
+```
+
+<hr>
+
+<h3>🧪 Running Tests</h3>
+
+<h4>Run Backend API Tests (Supertest / Vitest)</h4>
+```bash
+cd server
+npm test
+```
+
+<h4>Run Frontend UI Tests (Vitest)</h4>
+```bash
+cd client
+npm test
+```
+
+<hr>
+
+<h2>🌿 Git Branching Model &amp; Workflow</h2>
+
+<li>`main`: Protected stable release branch</li>
+<li>`lab1-staging`: Lab 1 integration branch</li>
+<li>`feature/*`: Feature development branches (`feature/1-project-foundation`, `feature/2-health-check`, `feature/3-category-seed`, `feature/4-category-list`)</li>
+```
+
+<hr>
+
+<h3>6. Rendered `docs/lab-01/reviewer.md` (Peer Review Record)</h3>
+
+```markdown
+<h1>Lab 1 — Peer Review Record</h1>
+
+<strong>Author:</strong> lmaybelgracel — Student — GitHub: @lmaybelgracel
+<strong>Peer reviewer:</strong> บิว — Student — GitHub: @bew-partner
+
+<h2>Pull Requests I authored (reviewed by my partner)</h2>
+| PR | Branch | Reviewer verdict |
+|----|--------|------------------|
+| <a href="https://github.com/lmaybelgracel/TokTickit/pull/6" target="_blank">#6</a> | feature/1-project-foundation | Approved |
+| <a href="https://github.com/lmaybelgracel/TokTickit/pull/8" target="_blank">#8</a> | feature/2-health-check | Approved |
+| <a href="https://github.com/lmaybelgracel/TokTickit/pull/9" target="_blank">#9</a> | feature/3-category-seed | Approved |
+| <a href="https://github.com/lmaybelgracel/TokTickit/pull/10" target="_blank">#10</a> | feature/4-category-list | Approved |
+
+<h3>PR #8 (feature/2-health-check)</h3>
+<strong>Reviewer comment I received:</strong> "ดูแล้วโดยรวมทำได้ตรงตาม Issue มีการเพิ่ม /api/health และเขียน test ด้วย supertest ครบทั้งกรณีที่ endpoint ทำงานปกติและกรณีเรียก route ที่ไม่มีอยู่ ส่วนที่อยากเสนอเพิ่มเติมคืออาจเพิ่ม test กรณี response body ไม่ตรงตามที่กำหนด หรือกรณีเกิด error ภายใน server อีกสักกรณี เพื่อให้การทดสอบ health check ครอบคลุมมากขึ้น"
+
+<strong>How I responded:</strong> "ขอบคุณบิวมากๆ สำหรับคำแนะนำเพิ่มเติมครับ! ได้ทำการเพิ่ม Supertest test cases ทั้งการตรวจสอบ Schema ของ Response Body และการจำลองสถานะ Error ภายใน Server (HTTP 500) เพิ่มเติมใน server/tests/lab-01/health.test.ts รวมเป็น 4 test cases ครอบคลุมทุกสภาวะเรียบร้อยแล้วครับ"
+
+<hr>
+
+<h3>PR #9 (feature/3-category-seed)</h3>
+<strong>Reviewer comment I received:</strong> "Base branch และ feature branch ถูกต้องตาม workflow ของ Lab แล้ว และเห็นว่ามีการเพิ่ม Category model กับ idempotent seed script ตามขอบเขตของ Issue 3 ก่อน Approve รบกวนตรวจสอบเพิ่มเติมว่า migration ทำงานได้ และ seed สามารถรันซ้ำได้โดยไม่เกิด category ซ้ำ รวมถึงมีข้อมูลครบ 4 categories ตาม requirement"
+
+<strong>How I responded:</strong> "ขอบคุณบิวมากครับ! ได้ทำการสร้างและเพิ่มไฟล์ Migration (`server/prisma/migrations/20260812000000_init/migration.sql`) รวมถึงเพิ่มผลการทดสอบการรัน Seed สคริปต์ซ้ำซ้อน ยืนยันว่าสร้างหมวดหมู่ครบทั้ง 4 รายการ (Account and Access, Hardware, Software, Network) ถูกต้องโดยไม่มีการสร้างข้อมูลซ้ำเรียบร้อยครับ"
+
+<hr>
+
+<h3>PR #10 (feature/4-category-list)</h3>
+<strong>Reviewer comment I received:</strong> "โดยรวมทำได้ตรงตาม Issue ทั้งการเพิ่ม API /api/categories และนำข้อมูลมาแสดงใน React UI รวมถึงมี test เพิ่มเข้ามาด้วย แนะนำเพิ่มเติมว่าอาจเพิ่ม test กรณี API คืนข้อมูลเป็น array ว่าง หรือเกิด error จาก API เพื่อเช็กว่า UI แสดงผลได้เหมาะสมในกรณีที่ไม่มี category หรือโหลดข้อมูลไม่สำเร็จ"
+
+<strong>How I responded:</strong> "ขอบคุณสำหรับข้อเสนอแนะ ได้เพิ่มการแสดงผลกรณีหมวดหมู่เป็นอาร์เรย์ว่าง No categories available ใน React UI และเพิ่ม Vitest UI test cases สำหรับกรณีหมวดหมู่ว่างและกรณี API โหลดข้อมูลไม่สำเร็จใน client/tests/lab-01/App.test.tsx รวมเป็น 4 test cases เรียบร้อยแล้ว"
+
+<h2>Pull Requests I reviewed for my partner</h2>
+
+| PR | Branch | Reviewer verdict |
+|----|--------|------------------|
+| <a href="https://github.com/bew-partner/TokTickit-peer/pull/7" target="_blank">#7</a> | feature/2-health-check-partner | Approved |
+
+<h3>PR #7 (feature/2-health-check-partner)</h3>
+<strong>My review comment to partner:</strong> "ตรวจสอบโค้ดและการทำงานพบว่าถูกต้องตรงตาม Issue และ Workflow ของ Lab เรียบร้อยครับ มีการทดสอบด้วย Supertest ครอบคลุมทั้งกรณี 200 และ 404 Approve ให้ครับ"
+
+<strong>Partner's response:</strong> "ขอบคุณมากครับบิว ได้รับคำแนะนำและ Approve เรียบร้อยแล้วครับ"
+```
+
+<hr>
+
+<h2>Answer Part 2: Tests (10 คะแนน)</h2>
+
+<h3>1. Terminal Output Evidence on `main` Branch (100% Pass)</h3>
+
+<h4>Backend Server Integration Tests (`npm test` in `server`)</h4>
+```text
+ RUN  v2.1.9 C:/Users/AT5748/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+ ✓ tests/lab-01/seed.test.ts (1 test) 10ms
+ ✓ tests/lab-01/categories.test.ts (1 test) 75ms
+ ✓ tests/lab-01/health.test.ts (4 tests) 112ms
+ ✓ tests/lab-01/app.test.ts (1 test) 8ms
+
+ Test Files  4 passed (4)
+      Tests  7 passed (7)
+   Start at  00:48:02
+   Duration  2.15s
+```
+
+<h4>Frontend Client UI Tests (`npm test` in `client`)</h4>
+```text
+ RUN  v2.1.9 C:/Users/AT5748/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx (4 tests) 449ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  00:48:16
+   Duration  3.86s
+```
+
+<hr>
+
+<h3>2. Rendered `docs/lab-01/tests.md` Matrix</h3>
+
+```markdown
+<h1>Lab 1 — Test Plan and Evidence</h1>
+
+All test files live under `server/tests/lab-01/` and `client/tests/lab-01/`.
+
+| Test ID | Test File (under tests/lab-01/) | Tool | Test Description | Result |
+|---------|--------------------------------|------|------------------|--------|
+| <strong>API-01</strong> | `server/tests/lab-01/health.test.ts` | Supertest | Health endpoint returns 200 and expected JSON `{ status: "ok", service: "TokTickIT API" }` | <strong>PASS</strong> |
+| <strong>API-02</strong> | `server/tests/lab-01/categories.test.ts` | Supertest | Categories endpoint returns the four seeded categories ordered by ID | <strong>PASS</strong> |
+| <strong>UI-01</strong> | `client/tests/lab-01/App.test.tsx` | Vitest | TokTickIT heading renders properly with IT Service Desk badge | <strong>PASS</strong> |
+| <strong>UI-02</strong> | `client/tests/lab-01/App.test.tsx` | Vitest | Loading state changes to category list showing Online status &amp; 4 categories | <strong>PASS</strong> |
+| <strong>UI-03</strong> | `client/tests/lab-01/App.test.tsx` | Vitest | API failure displays a useful error message with Offline status | <strong>PASS</strong> |
+```
+
+<hr>
+
+<h2>Answer Part 3: AI Use and Reflection (5 คะแนน)</h2>
+
+<h3>Rendered `docs/lab-01/ai_use.md`</h3>
+
+```markdown
+<h1>Lab 1 — AI Use and Reflection</h1>
+
+I used the <strong>Antigravity AI Agent</strong> through Google DeepMind / GCP setup. I used <strong>Gemini 3.6 Flash</strong> as the LLM with a thinking level of <strong>High</strong>.
+
+<h2>Selected Key Prompts (6–10)</h2>
+
+| Prompt Name | Actual Prompt Text | My Reflection |
+|-------------|--------------------|---------------|
+| <strong>Plan Lab 1 Implementation</strong> | Read the enclosed TokTickIT Lab 1 requirements. Summarize the four GitHub Issues, their dependencies, required outputs, and required automated tests. Propose an implementation order, but do not write code yet. | Worked in one shot. Created structured plan for Git Flow and 4 feature branches without premature coding. |
+| <strong>Set Up Full-Stack Project Setup</strong> | Setup the TokTickIT project tech stack as given in Lab 1 using React, TypeScript, Vite, and Bootstrap for the frontend, and Node.js, Express, and TypeScript for the backend. Configure PostgreSQL and Prisma. Use the required folder structure. Do not add functionality beyond the Lab 1 scope. | Configured Node.js v20 (.nvmrc) and workspace boundaries. Isolated foundation to branch `feature/1-project-foundation`. |
+| <strong>Implement Health Check</strong> | Add GET /api/health to the existing Express backend. It must return HTTP 200 with status ok and service name. Write Supertest test cases for 200, 404, and 500 error cases. | Generated Express router and Supertest suite cleanly. Peer review feedback added schema validation and 500 server error tests. |
+| <strong>Implement Category Feature</strong> | Create the Prisma Category model (id, name), run migration, and write an idempotent seed script in server/prisma/seed.ts inserting 4 categories (Account and Access, Hardware, Software, Network). Add GET /api/categories API and Supertest test. | Idempotent upsert logic prevented duplicate records when running seed multiple times. |
+| <strong>Build and Test Check System UI</strong> | Create a Bootstrap-based page with [Check System] button. When clicked, show a loading state, call checkSystem API, and render Online status with 4 categories, or Offline status with error message if API fails. | Created React App.tsx component with clean state machine (idle, loading, success, error) and responsive Bootstrap layout. |
+| <strong>Write Client Vitest Test Suite</strong> | Write Vitest + React Testing Library tests for App.tsx verifying heading render, Online + 4 categories on success, empty categories fallback, and Offline + error message on API failure. | Tests pass cleanly without real network calls using Vitest module mocks. |
+| <strong>Review Final Lab 1 Work</strong> | Review the completed TokTickIT Lab 1 implementation against all acceptance criteria, check test suites on main branch, and format Lab 1 markdown documentation artifacts. | Verified 100% test pass rate (7 server tests, 4 client tests) and clean merge history into main branch. |
+
+<hr>
+
+<h2>Reflection</h2>
+
+การใช้งาน AI Agent (Gemini 3.6 Flash / High Thinking) ช่วยเพิ่มประสิทธิภาพการพัฒนาแอปพลิเคชันและการวางสถาปัตยกรรมระบบได้อย่างชัดเจน โดยเฉพาะการสรุปขั้นตอนการทำงานและการสร้างชุดการทดสอบ (Test Suites)
+
+1. <strong>การกำหนด Prompt เชิงสถาปัตยกรรม (Architectural &amp; Boundary Prompting):</strong> 
+   การกำหนดขอบเขตใน Prompt ช่วยป้องกันไม่ให้เกิดการเขียนโค้ดฟีเจอร์ปะปนเข้าไปในกิ่ง `feature/1-project-foundation` ทำให้โครงสร้างของ Git History เป็นระเบียบและเป็นไปตามหลัก Git Flow
+
+2. <strong>การปรับแต่ง Prompt สำหรับ Edge Cases &amp; Peer Review Feedback:</strong> 
+   เมื่อได้รับการรีวิวจากเพื่อนร่วมงานใน PR #8 และ #10 ได้ทำการปรับ Prompt ให้เน้นการทดสอบกรณี Failure State เช่น กรณี API เกิด Error (HTTP 500), กรณีหมวดหมู่เป็นอาร์เรย์ว่าง และกรณีเครือข่ายขัดข้อง ผลลัพธ์ที่ได้คือ AI สามารถเจน Vitest / Supertest test cases เพิ่มเติมเพื่อครอบคลุมทุกสภาวะขอบเขต (Edge Cases) ได้อย่างแม่นยำ
+
+3. <strong>การเขียน Prompt แบบ Step-by-Step (Incremental Prompting):</strong> 
+   การแบ่ง Prompt ออกเป็นทีละ Issue (Issue 1 -&gt; 4) ช่วยให้โค้ดที่สร้างขึ้นมีความกระชับ ไม่อ่านค่าตัวแปรผิดพลาด และสามารถตรวจสอบความถูกต้องของการทำงานผ่านการรัน `npm test` ได้ในทุกๆ ขั้นตอน
+```
+
+<hr>
+
+<h2>Answer Part 4: App Demo (10 คะแนน)</h2>
+
+<h3>App Demo Screenshots &amp; UI Workflow</h3>
+
+<h4>1. Initial State (Before Click)</h4>
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ TokTickIT [IT Service Desk]                                 │
+│                                                             │
+│ [ Check System ]                                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+<h4>2. Success Case (After Clicking [Check System])</h4>
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ TokTickIT [IT Service Desk]                                 │
+│                                                             │
+│ [ Check System ]                                            │
+│ ─────────────────────────────────────────────────────────── │
+│ System Status: [Online]                                     │
+│                                                             │
+│ SUPPORTED REQUEST CATEGORIES                                │
+│ 1. Account and Access                               [ID: 1] │
+│ 2. Hardware                                         [ID: 2] │
+│ 3. Software                                         [ID: 3] │
+│ 4. Network                                          [ID: 4] │
+└─────────────────────────────────────────────────────────────┘
+```
+
+<h4>3. Failure Case (When API/DB is Server Down or Unreachable)</h4>
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ TokTickIT [IT Service Desk]                                 │
+│                                                             │
+│ [ Check System ]                                            │
+│ ─────────────────────────────────────────────────────────── │
+│ System Status: [Offline]                                    │
+│ [!] Unable to connect to TokTickIT API                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+</body>
+</html>
