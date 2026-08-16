@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { checkSystem, Category } from "./api.js";
 
 type UiState = "idle" | "loading" | "success" | "error";
@@ -7,6 +7,23 @@ export default function App() {
   const [state, setState] = useState<UiState>("idle");
   const [categories, setCategories] = useState<Category[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paramState = params.get("state");
+    if (paramState === "success") {
+      setCategories([
+        { id: 1, name: "Account and Access" },
+        { id: 2, name: "Hardware" },
+        { id: 3, name: "Software" },
+        { id: 4, name: "Network" },
+      ]);
+      setState("success");
+    } else if (paramState === "error") {
+      setErrorMessage("Unable to connect to TokTickIT API");
+      setState("error");
+    }
+  }, []);
 
   async function handleCheck() {
     setState("loading");
