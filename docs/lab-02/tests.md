@@ -18,20 +18,20 @@ This document establishes the test plan and requirement traceability for TokTick
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **API-01** | API | AC-01, FR-05 | Create valid ticket with required fields | 201 Created; returns saved ticket with backend-generated `TKT-YYYY-XXXXXX` number | `server/tests/lab-02/create-ticket.api.test.ts` | Planned |
 | **API-02** | API | AC-01, BR-02 | Initial ticket status assignment | Newly created ticket has `currentStatus = "NEW"` | `server/tests/lab-02/create-ticket.api.test.ts` | Planned |
-| **API-03** | API | BR-08 | Ticket creation summary & description length validation | 400 Bad Request if summary < 5 chars or description < 10 chars | `server/tests/lab-02/create-ticket.api.test.ts` | Planned |
+| **API-03** | API | BR-08 | Ticket creation summary & description length validation | 400 Bad Request if summary < 5 or > 150 chars, or description < 10 or > 2000 chars | `server/tests/lab-02/create-ticket.api.test.ts` | Planned |
 | **API-04** | API | FR-01, FR-03 | Retrieve active Development Requesters | 200 OK; returns array of active Requesters; excludes inactive ones | `server/tests/lab-02/requester-context.api.test.ts` | Planned |
 | **API-05** | API | FR-07, FR-08 | Paginated ticket retrieval for active Requester | 200 OK; returns tickets matching `X-Development-Requester-Id`; supports search/filter | `server/tests/lab-02/my-tickets.api.test.ts` | Planned |
 | **API-06** | API | AC-03, BR-04 | Ownership enforcement on ticket detail retrieval | 403 Forbidden when Requester B attempts to access Requester A's ticket | `server/tests/lab-02/ticket-detail.api.test.ts` | Planned |
-| **API-07** | API | BR-05, BR-06 | Attachment upload file validation & active limit | 400 Bad Request if file > 5 MB, invalid type, or exceeds 5 active files | `server/tests/lab-02/attachments.api.test.ts` | Planned |
-| **API-08** | API | AC-06, BR-07 | Soft-removal of active attachment | 200 OK; sets `isRemoved = true` and records `removalReason` (3-250 chars) | `server/tests/lab-02/attachments.api.test.ts` | Planned |
-| **API-09** | API | AC-06, BR-07 | Block download of soft-removed attachment | 410 Gone when attempting to download soft-removed attachment | `server/tests/lab-02/attachments.api.test.ts` | Planned |
-| **API-10** | API | BR-11 | Atomic creation rollback strategy | Entire creation transaction rolls back if initial attachment upload fails | `server/tests/lab-02/create-ticket.api.test.ts` | Planned |
+| **API-07** | API | AC-05, BR-05, BR-06 | Attachment upload file validation & active limit (6th attachment rejection) | 400 Bad Request if file > 5 MB, invalid MIME type, or if ticket already has 5 active files | `server/tests/lab-02/attachments.api.test.ts` | Planned |
+| **API-08** | API | AC-06, BR-07 | Soft-removal of active attachment & removalReason validation | 200 OK; sets `isRemoved = true`; validates `removalReason` length between 3 and 250 chars | `server/tests/lab-02/attachments.api.test.ts` | Planned |
+| **API-09** | API | AC-06, BR-07 | Block download of soft-removed attachment | 410 Gone / 404 Not Found when attempting to download soft-removed attachment | `server/tests/lab-02/attachments.api.test.ts` | Planned |
+| **API-10** | API | BR-11, AC-09 | Atomic creation rollback strategy | Entire ticket creation transaction rolls back if initial attachment upload/storage fails | `server/tests/lab-02/create-ticket.api.test.ts` | Planned |
 | **UI-01** | UI | AC-02 | Redirection when no Dev Requester selected | Redirects user to Dev Requester selection screen upon opening app | `client/src/__tests__/lab-02/RequesterSelector.test.tsx` | Planned |
 | **UI-02** | UI | AC-07, FR-02 | Identity context switching | Switching active Requester reloads My Tickets list for new identity context | `client/src/__tests__/lab-02/RequesterSelector.test.tsx` | Planned |
-| **UI-03** | UI | BR-08, BR-09 | Create Ticket form validation & value retention | Field-level error messages displayed; form input values preserved on failure | `client/src/__tests__/lab-02/CreateTicket.test.tsx` | Planned |
+| **UI-03** | UI | BR-08, BR-09, AC-09 | Create Ticket form validation & form data retention on error | Field-level error messages displayed; entered form input values preserved on failure | `client/src/__tests__/lab-02/CreateTicket.test.tsx` | Planned |
 | **UI-04** | UI | AC-08 | My Tickets no-results state rendering | Displays clear no-results message and "Clear Filters" button when query matches 0 | `client/src/__tests__/lab-02/MyTickets.test.tsx` | Planned |
 | **UI-05** | UI | BR-07 | Soft-removed attachment visual state | Strikethrough text, muted color, "Removed" badge, and disabled download button | `client/src/__tests__/lab-02/RequesterTicketDetail.test.tsx` | Planned |
-| **E2E-01**| E2E | AC-01, AC-05, AC-06 | Complete Requester ticketing end-to-end flow | Select Requester A -> Create Ticket -> Get Number -> View My Tickets -> Upload Attachment -> Soft Remove -> Select Requester B (A's ticket hidden) | `e2e/lab-02/requester-ticket-flow.spec.ts` | Planned |
+| **E2E-01**| E2E | AC-01, AC-05, AC-06, AC-07 | Complete Requester ticketing end-to-end flow | Select Requester A -> Create Ticket -> Get Number -> View My Tickets -> Upload Attachment -> Soft Remove -> Select Requester B (A's ticket hidden) | `e2e/lab-02/requester-ticket-flow.spec.ts` | Planned |
 
 ---
 
@@ -85,7 +85,7 @@ npx playwright test e2e/lab-02/requester-ticket-flow.spec.ts
 
 ## 6. Planned vs Final Execution Results
 
-*Note: Initial execution results will be recorded upon implementation pass in Issues 7–11.*
+*Note: Automated test files will be implemented and executed during implementation Issues 8-15 according to Test-Driven Development (TDD). Terminal execution logs will be updated upon test suite execution.*
 
 | Suite | Total Tests Planned | Passed | Failed | Skipped | Pass Rate |
 | :--- | :---: | :---: | :---: | :---: | :---: |
