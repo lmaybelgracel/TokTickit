@@ -57,10 +57,14 @@ The IT department needs a Requester-facing application to receive real IT suppor
   - Allowed MIME types: `image/jpeg`, `image/jpg`, `image/png`, `image/webp`, `application/pdf`.
   - Max file size: $5\,\text{MB}$ ($5,242,880\,\text{bytes}$). Files exceeding this size must be rejected on both client and server.
 - **BR-06 (Active Attachment Limit):** A single ticket can have a maximum of 5 **active** (non-removed) attachments at any given time.
-- **BR-07 (Soft Removal & Non-recoverability):** Removed attachments are marked with `isRemoved = true`, `removedAt = NOW()`, and `removalReason`. Removed files must not be downloadable, previewable, or restorable by the Requester.
-- **BR-08 (Input Trimming & Required Fields):** Text inputs (`summary`, `description`, `removalReason`) must be trimmed. `summary` length must be between 5 and 150 characters. `description` length must be between 10 and 2000 characters.
-- **BR-09 (Form Retention on Error):** If ticket creation or attachment upload fails due to validation or server errors, entered form values must be preserved in the UI so the user does not lose input.
+- **BR-07 (Soft Removal & Reason Constraint):** Removed attachments are marked with `isRemoved = true`, `removedAt = NOW()`, and `removalReason`. `removalReason` is required and must be between 3 and 250 characters after trimming whitespace. Removed files must not be downloadable, previewable, or restorable.
+- **BR-08 (Input Trimming & Field Lengths):** Text inputs must be trimmed of leading/trailing whitespace.
+  - `summary`: Required, 5 to 150 characters.
+  - `description`: Required, 10 to 2000 characters.
+  - `removalReason`: Required upon removal, 3 to 250 characters.
+- **BR-09 (Form Data Retention on Error):** If ticket creation or attachment upload fails due to validation or server errors, entered form values must be preserved in the UI so the user does not lose input data.
 - **BR-10 (Idempotent Reference Data & Seed):** Categories and Related Systems must be seeded with fixed unique identifiers and names to allow re-running seed scripts without creating duplicates.
+- **BR-11 (Atomic Creation & Transaction Strategy):** Initial ticket creation along with initial attachment records is executed within an atomic database transaction. If attachment storage or metadata creation fails during creation, the entire transaction is rolled back so no orphaned ticket is created.
 
 ---
 
@@ -88,18 +92,21 @@ The application UI strictly implements the **Zen Green Theme**:
 - **`Category`**: `id` (Int, PK), `name` (String, Unique), `description` (String?), `isActive` (Boolean, default true).
 - **`RelatedSystem`**: `id` (Int, PK), `name` (String, Unique), `category` (String?), `isActive` (Boolean, default true).
 - **`Ticket`**: `id` (Int, PK), `ticketNumber` (String, Unique), `summary` (String), `description` (String), `requestedPriority` (Enum: LOW, MEDIUM, HIGH), `currentStatus` (Enum: NEW, IN_PROGRESS, RESOLVED, CLOSED, default NEW), `requesterId` (Int, FK -> RequesterUser), `categoryId` (Int, FK -> Category), `relatedSystemId` (Int, FK -> RelatedSystem), `createdAt`, `updatedAt`.
+  - **Indexes:** `@@index([requesterId])`, `@@index([requesterId, createdAt])`, `@@index([categoryId])`, `@@index([relatedSystemId])`.
 - **`Attachment`**: `id` (Int, PK), `ticketId` (Int, FK -> Ticket), `filename` (String), `storedPath` (String), `fileSize` (Int), `mimeType` (String), `isRemoved` (Boolean, default false), `removedAt` (DateTime?), `removalReason` (String?), `uploadedAt` (DateTime, default NOW()).
+  - **Indexes:** `@@index([ticketId])`, `@@index([ticketId, isRemoved])`.
 
 ---
 
 ## 8. API Contract Summary
 
+- **Context Header Standard:** All requester-scoped API calls require the header `X-Development-Requester-Id: <id>` to represent the selected testing identity.
 - `GET /api/requesters` — Retrieve active Development Requesters.
 - `GET /api/categories` — Retrieve active Ticket Categories.
 - `GET /api/related-systems` — Retrieve active Related Systems.
-- `POST /api/tickets` — Create a new validated Ticket for active Requester (`requesterId` in header/body).
+- `POST /api/tickets` — Create a new validated Ticket for active Requester.
 - `GET /api/tickets` — Retrieve paginated tickets for active Requester (`?search=&category=&priority=&status=&sort=&page=&pageSize=`).
-- `GET /api/tickets/:id` — Retrieve ticket detail (Ownership check enforced).
+- `GET /api/tickets/:id` — Retrieve ticket detail (Ownership check enforced via `X-Development-Requester-Id`).
 - `POST /api/tickets/:id/attachments` — Upload attachment to ticket (Ownership check, file type/size/limit validated).
 - `GET /api/attachments/:id/download` — Download active attachment (Fails if file is soft-removed or requested by non-owner).
 - `DELETE /api/attachments/:id` — Soft-remove attachment with reason `{ "removalReason": "..." }`.
@@ -115,14 +122,16 @@ The application UI strictly implements the **Zen Green Theme**:
 - **AC-05:** Given a ticket with 5 active attachments, when attempting to upload a 6th active attachment, then the API returns HTTP 400 with active attachment limit exceeded error.
 - **AC-06:** Given an active attachment owned by Requester A, when soft-removed with reason "Outdated screenshot", then `isRemoved` is set to true, metadata displays removal timestamp and reason, and download links return HTTP 410/404.
 - **AC-07:** Given Requester A switches identity to Requester B, when viewing My Tickets, then Requester A's tickets disappear and only Requester B's tickets are displayed.
+- **AC-08:** Given a search query or filter combination that matches no tickets owned by the active Requester, when My Tickets renders, then a clear no-results state with clear-filters action is displayed.
+- **AC-09:** Given a server error or backend validation failure during ticket submission, when the request completes, then a safe error message is displayed while preserving all user-entered form values.
 
 ---
 
 ## 10. Definition of Done (DoD)
 
 ### Part 1: Product Completion Checklist
-- [ ] All functional scope (FR-01 to FR-13) and business rules (BR-01 to BR-10) implemented.
-- [ ] All acceptance criteria (AC-01 to AC-07) satisfied and backed by traceable automated tests.
+- [ ] All functional scope (FR-01 to FR-13) and business rules (BR-01 to BR-11) implemented.
+- [ ] All acceptance criteria (AC-01 to AC-09) satisfied and backed by traceable automated tests.
 - [ ] 100% passing Unit, API, UI Component, UI Style, Responsive, and Playwright E2E tests on `main`.
 - [ ] Zen Green Design System fully applied with zero clipping, overflow, or broken focus indicators across Desktop, Tablet, and Mobile viewports.
 - [ ] Soft-removal and cross-requester ownership protection verified.
@@ -139,6 +148,6 @@ The application UI strictly implements the **Zen Green Theme**:
 
 ## 11. Assumptions and Decisions
 
-1. **Development Identity Storage:** Selected Requester ID is stored in `localStorage` / React State for client persistence during test sessions.
+1. **Development Identity Storage:** Selected Requester ID is stored in `localStorage` / React State for client persistence during test sessions and transmitted via HTTP header `X-Development-Requester-Id`.
 2. **File Storage Location:** Attachments are stored safely on server disk in `server/uploads/lab-02/` with sanitized, UUID-prefixed filenames to prevent directory traversal and file overwrite issues.
 3. **Pagination Defaults:** My Tickets page size defaults to 10 items per page, with options for 5, 10, or 25.
