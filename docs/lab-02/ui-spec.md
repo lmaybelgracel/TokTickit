@@ -25,7 +25,21 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
 
 ---
 
-## 3. Typography & Spacing Rules
+## 3. Priority and Status Badge Specification
+
+To maintain visual clarity across table lists, cards, and detail views, Priority and Status badges use explicit color pairings:
+
+### Requested Priority Badges
+- **HIGH Priority:** Background `#FDF2F2`, Border `#F5C6CB`, Text `#B71C1C` (Dark Red).
+- **MEDIUM Priority:** Background `#FFF3E0`, Border `#FFE0B2`, Text `#E65100` (Dark Amber).
+- **LOW Priority:** Background `#E8F5E9`, Border `#C8E6C9`, Text `#2E7D32` (Dark Green).
+
+### Current Status Badges
+- **NEW Status:** Background `#EAF6EF`, Border `#B2DFDB`, Text `#006B3C` (Primary Zen Green).
+
+---
+
+## 4. Typography & Spacing Rules
 
 - **Font Family:** Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif.
 - **Headings:**
@@ -38,7 +52,7 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
 
 ---
 
-## 4. Component States & Hierarchy
+## 5. Component States & Hierarchy
 
 ### Form Control States
 1. **Initial / Default:** White background, neutral border (`#C2D1C8`), dark text.
@@ -55,9 +69,9 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
 
 ---
 
-## 5. Screen Layout Specifications
+## 6. Screen Layout Specifications
 
-### 5.1 Development Requester Selection Screen
+### 6.1 Development Requester Selection Screen
 - **Purpose:** Testing mechanism to select active simulated Requester identity.
 - **Layout:** Centered surface card (max-width 480px) on `#F5F7F6` background.
 - **Elements:**
@@ -68,7 +82,7 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
   - Loading skeleton state during initial fetch.
   - Empty state message if no active Requesters exist.
 
-### 5.2 Create Ticket Screen
+### 6.2 Create Ticket Screen
 - **Layout:** Responsive container (max-width 896px).
 - **Structure:**
   - **Header Section (Read-only / System Generated):**
@@ -89,7 +103,7 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
   - **Action Footer:**
     - Primary Submit Ticket button & Secondary Cancel button.
 
-### 5.3 My Tickets Screen
+### 6.3 My Tickets Screen
 - **Layout:** Full container (max-width 1200px).
 - **Controls Bar:**
   - Search Box (Input with search icon: filters ticket number or summary).
@@ -107,18 +121,21 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
   - Empty State (No tickets created yet): Illustration placeholder + "No tickets found. Create your first IT support ticket."
   - No-Results State (Search/Filter returned 0 items): "No tickets match your search filters." + Clear Filters button.
 
-### 5.4 Ticket Detail Screen (Read-Only & Attachments)
+### 6.4 Ticket Detail Screen & Attachment Presentation
 - **Layout:** Two-column split on Desktop, stacked on Mobile.
 - **Main Detail Panel:** Read-only fields displaying Ticket No, Ticket Date, Requester, Category, Related System, Priority Badge, Status Badge, Summary, Description.
-- **Attachment Management Panel:**
-  - **Active Attachments List:** Displays active files with filename, size, upload date, "Download" button, and "Remove" button.
-  - **Add Attachment Dropzone:** Allows adding additional attachments up to limit of 5 active.
-  - **Soft-Removed Attachments List:** Displays metadata of removed files (filename, size, removal timestamp, and removal reason). Download and preview actions are disabled/hidden.
-  - **Soft Removal Dialog:** Modal prompting user for a required removal reason (3-250 chars) before confirming soft removal.
+- **Active Attachment Presentation:**
+  - Cards showing filename, size, upload date, "Download" button (`#0B7A46`), and "Soft Remove" button (`#B71C1C`).
+- **Soft-Removed Attachment Visual State:**
+  - Filename styling: Strikethrough text (`line-through`) with muted text color (`#5A6E63`).
+  - Badge: Gray "Removed" pill badge (`#E0E6E2` background, `#5A6E63` text).
+  - Metadata block: Displays removal timestamp (`Removed on YYYY-MM-DD HH:mm`) and removal reason callout box (`#F9F9F9` background, italic text).
+  - Action buttons: "Download" and "Preview" buttons are strictly hidden/disabled with a lock icon and tooltip: "File removed - download unavailable".
+- **Soft Removal Dialog:** Modal prompting user for a required removal reason (3-250 chars) before confirming soft removal.
 
 ---
 
-## 6. Responsive Viewport Rules
+## 7. Responsive Viewport Rules
 
 | Viewport | Width Boundary | Layout Strategy |
 | :--- | :--- | :--- |
@@ -128,7 +145,7 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
 
 ---
 
-## 7. Accessibility & Non-Color Indicators
+## 8. Accessibility & Non-Color Indicators
 
 - **Required Fields:** Marked with red asterisk `*` accompanied by `aria-required="true"`.
 - **Keyboard Navigation:** All interactive elements (inputs, buttons, select menus, pagination) must maintain visible focus rings (`color-secondary-green`).
@@ -137,9 +154,9 @@ This document defines the complete UI specification for TokTickIT Lab 2, impleme
 
 ---
 
-## 8. Visual Inspection Checklist & Screenshot Artifacts
+## 9. Visual Inspection Checklist & Screenshot Artifacts
 
-During QA execution (Issue 12), Playwright screenshots must be captured and saved under `artifacts/lab-02/screenshots/`:
+During QA execution (Issue 16), Playwright screenshots must be captured and saved under `artifacts/lab-02/screenshots/`:
 
 - `artifacts/lab-02/screenshots/create-ticket/` (Desktop, Tablet, Mobile, Validation error state, Submitting state, Success state)
 - `artifacts/lab-02/screenshots/my-tickets/` (Desktop table view, Mobile card view, Filtered state, No-results state, Dev Requester switched state)
