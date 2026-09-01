@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { RequesterUser } from "./api";
+import { RequesterUser, Ticket } from "./api";
 import { RequesterSelector } from "./components/RequesterSelector";
+import { CreateTicket } from "./components/CreateTicket";
 
 export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
 
@@ -9,6 +10,8 @@ export default function App() {
     const saved = localStorage.getItem("toktickit_dev_requester");
     return saved ? JSON.parse(saved) : null;
   });
+
+  const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
 
   const [currentView, setCurrentView] = useState<CurrentView>(() => {
     return activeRequester ? "my-tickets" : "selector";
@@ -31,6 +34,11 @@ export default function App() {
   const handleChangeRequester = () => {
     setActiveRequester(null);
     setCurrentView("selector");
+  };
+
+  const handleTicketCreated = (ticket: Ticket) => {
+    setCreatedSuccessTicket(ticket);
+    setCurrentView("my-tickets");
   };
 
   return (
@@ -101,15 +109,21 @@ export default function App() {
             currentRequesterId={activeRequester?.id}
           />
         ) : currentView === "create-ticket" ? (
-          <div style={styles.placeholderContainer}>
-            <h2>Create Ticket Screen</h2>
-            <p>Will be implemented in Issue 12 (Create Ticket UI)</p>
-          </div>
+          <CreateTicket
+            activeRequester={activeRequester}
+            onSuccess={handleTicketCreated}
+            onCancel={() => setCurrentView("my-tickets")}
+          />
         ) : currentView === "my-tickets" ? (
           <div style={styles.placeholderContainer}>
             <h2>My Tickets Screen</h2>
+            {createdSuccessTicket && (
+              <div style={{ backgroundColor: "#EAF6EF", border: "1px solid #B2DFDB", color: "#006B3C", padding: "0.75rem 1rem", borderRadius: "8px", marginBottom: "1rem" }}>
+                Success! Created ticket <strong>{createdSuccessTicket.ticketNumber}</strong> ({createdSuccessTicket.summary})
+              </div>
+            )}
             <p>Active Requester: <strong>{activeRequester.name}</strong> ({activeRequester.email})</p>
-            <p>Will be implemented in Issue 13 (My Tickets UI)</p>
+            <p>Will be implemented in Issue 11 (My Tickets UI)</p>
           </div>
         ) : null}
       </main>
