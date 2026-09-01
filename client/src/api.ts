@@ -3,6 +3,21 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 export interface Category {
   id: number;
   name: string;
+  description?: string;
+}
+
+export interface RelatedSystem {
+  id: number;
+  name: string;
+  category?: string;
+}
+
+export interface RequesterUser {
+  id: number;
+  name: string;
+  email: string;
+  department: string;
+  isActive: boolean;
 }
 
 export interface SystemStatus {
@@ -29,4 +44,12 @@ export async function checkSystem(): Promise<SystemStatus> {
     service: healthData.service || "TokTickIT API",
     categories: categoriesData,
   };
+}
+
+export async function fetchRequesters(): Promise<RequesterUser[]> {
+  const res = await fetch(`${BASE_URL}/api/requesters`);
+  if (!res.ok) {
+    throw new Error("Failed to load Development Requesters");
+  }
+  return res.json();
 }
