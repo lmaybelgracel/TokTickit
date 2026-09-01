@@ -1,68 +1,53 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import React from "react";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
 
 describe("App UI Tests", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    localStorage.clear();
+  });
+
   it("renders the TokTickIT heading", () => {
     render(<App />);
     expect(screen.getByText(/TokTickIT/i)).toBeInTheDocument();
   });
 
-  it("shows Online and the seeded categories on success", async () => {
-    vi.spyOn(api, "checkSystem").mockResolvedValueOnce({
-      status: "Online",
-      service: "TokTickIT API",
-      categories: [
-        { id: 1, name: "Account and Access" },
-        { id: 2, name: "Hardware" },
-        { id: 3, name: "Software" },
-        { id: 4, name: "Network" },
-      ],
-    });
+  it("renders Development Requester selection when no requester is logged in", async () => {
+    vi.spyOn(api, "fetchRequesters").mockResolvedValueOnce([
+      {
+        id: 1,
+        name: "Jennifer Anderson",
+        email: "jennifer.a@kmutt.ac.th",
+        department: "Faculty of Engineering",
+        isActive: true,
+      },
+    ]);
 
     render(<App />);
-    const checkBtn = screen.getByRole("button", { name: /Check System/i });
-    fireEvent.click(checkBtn);
 
     await waitFor(() => {
-      expect(screen.getByText(/Online/i)).toBeInTheDocument();
-      expect(screen.getByText(/Account and Access/i)).toBeInTheDocument();
-      expect(screen.getByText(/Hardware/i)).toBeInTheDocument();
-      expect(screen.getByText(/Software/i)).toBeInTheDocument();
-      expect(screen.getByText(/Network/i)).toBeInTheDocument();
+      expect(screen.getByText(/Select Development Requester/i)).toBeInTheDocument();
     });
   });
 
-  it("handles empty category array gracefully when no categories exist", async () => {
-    vi.spyOn(api, "checkSystem").mockResolvedValueOnce({
-      status: "Online",
-      service: "TokTickIT API",
-      categories: [],
-    });
-
-    render(<App />);
-    const checkBtn = screen.getByRole("button", { name: /Check System/i });
-    fireEvent.click(checkBtn);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Online/i)).toBeInTheDocument();
-      expect(screen.getByText(/No categories available/i)).toBeInTheDocument();
-    });
-  });
-
-  it("shows an Offline error message when the API is unavailable", async () => {
-    vi.spyOn(api, "checkSystem").mockRejectedValueOnce(
-      new Error("Unable to connect to TokTickIT API")
+  it("renders active requester interface when requester is selected in localStorage", () => {
+    localStorage.setItem(
+      "toktickit_dev_requester",
+      JSON.stringify({
+        id: 1,
+        name: "Jennifer Anderson",
+        email: "jennifer.a@kmutt.ac.th",
+        department: "Faculty of Engineering",
+        isActive: true,
+      })
     );
 
     render(<App />);
-    const checkBtn = screen.getByRole("button", { name: /Check System/i });
-    fireEvent.click(checkBtn);
 
-    await waitFor(() => {
-      expect(screen.getByText(/Offline/i)).toBeInTheDocument();
-      expect(screen.getByText(/Unable to connect to TokTickIT API/i)).toBeInTheDocument();
-    });
+    expect(screen.getAllByText(/Jennifer Anderson/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/My Tickets/i).length).toBeGreaterThan(0);
   });
 });
