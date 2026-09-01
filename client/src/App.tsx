@@ -42,7 +42,7 @@ export default function App() {
             <div style={styles.logoBadge}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
+                <polyline points="12 6 12 16 14" />
               </svg>
             </div>
             <span style={styles.brandTitle}>TokTickIT</span>
@@ -130,7 +130,6 @@ const styles: Record<string, React.CSSProperties> = {
     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   },
   headerInner: {
-    maxWdith: "1200px",
     maxWidth: "1200px",
     margin: "0 auto",
     padding: "0.75rem 1.5rem",

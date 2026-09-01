@@ -1,8 +1,49 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import { app } from "../../src/app.js";
+import * as prismaModule from "../../src/prisma.js";
 
 describe("GET /api/requesters — Development Requester API Tests (Issue 9)", () => {
+  const mockRequesters = [
+    {
+      id: 1,
+      name: "Alice Smith",
+      email: "alice@example.com",
+      department: "IT",
+      isActive: true,
+    },
+    {
+      id: 2,
+      name: "Bob Jones",
+      email: "bob@example.com",
+      department: "Finance",
+      isActive: true,
+    },
+  ];
+
+  beforeEach(() => {
+    const mockPrisma = {
+      requesterUser: {
+        findMany: vi.fn().mockImplementation(({ where }) => {
+          if (where?.isActive === true) {
+            return Promise.resolve(mockRequesters);
+          }
+          return Promise.resolve([
+            ...mockRequesters,
+            {
+              id: 3,
+              name: "Charlie Inactive",
+              email: "charlie@example.com",
+              department: "HR",
+              isActive: false,
+            },
+          ]);
+        }),
+      },
+    };
+    vi.spyOn(prismaModule, "getPrisma").mockReturnValue(mockPrisma as any);
+  });
+
   it("should return HTTP 200 and an array of active Development Requesters", async () => {
     const res = await request(app).get("/api/requesters");
 
@@ -27,3 +68,4 @@ describe("GET /api/requesters — Development Requester API Tests (Issue 9)", ()
     expect(inactiveUsers.length).toBe(0);
   });
 });
+
