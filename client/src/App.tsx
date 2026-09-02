@@ -3,6 +3,7 @@ import { RequesterUser, Ticket } from "./api";
 import { RequesterSelector } from "./components/RequesterSelector";
 import { CreateTicket } from "./components/CreateTicket";
 import { MyTickets } from "./components/MyTickets";
+import { TicketDetail } from "./components/TicketDetail";
 
 export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
 
@@ -13,6 +14,7 @@ export default function App() {
   });
 
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
 
   const [currentView, setCurrentView] = useState<CurrentView>(() => {
     return activeRequester ? "my-tickets" : "selector";
@@ -125,8 +127,11 @@ export default function App() {
             <MyTickets
               activeRequester={activeRequester}
               onNavigateCreate={() => setCurrentView("create-ticket")}
+              onSelectTicket={(ticket) => { setSelectedTicketId(ticket.id); setCurrentView("ticket-detail"); }}
             />
           </div>
+        ) : currentView === "ticket-detail" && selectedTicketId ? (
+          <TicketDetail activeRequester={activeRequester} ticketId={selectedTicketId} onBack={() => setCurrentView("my-tickets")} />
         ) : null}
       </main>
     </div>

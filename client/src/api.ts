@@ -60,6 +60,13 @@ export interface Ticket {
   updatedAt: string;
   category?: Category;
   relatedSystem?: RelatedSystem;
+  requester?: Pick<RequesterUser, "id" | "name" | "email">;
+  attachments?: Attachment[];
+}
+
+export interface Attachment {
+  id: number; ticketId: number; filename: string; fileSize: number; mimeType: string;
+  isRemoved: boolean; uploadedAt: string; removedAt?: string | null; removalReason?: string | null;
 }
 
 export interface CreateTicketPayload {
@@ -169,6 +176,38 @@ export async function createTicket(
   }
 
   return data;
+}
+
+async function apiError(res: Response, fallback: string): Promise<Error> {
+  const data = await res.json().catch(() => ({}));
+  return new Error(data.error?.message || fallback);
+}
+
+export async function fetchTicketDetail(requesterId: number, ticketId: number): Promise<Ticket> {
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}`, { headers: { "X-Development-Requester-Id": String(requesterId) } });
+  if (!res.ok) throw await apiError(res, "Failed to load ticket detail");
+  return res.json();
+}
+
+export async function uploadAttachment(requesterId: number, ticketId: number, file: File): Promise<Attachment> {
+  const body = new FormData(); body.append("file", file);
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/attachments`, { method: "POST", headers: { "X-Development-Requester-Id": String(requesterId) }, body });
+  if (!res.ok) throw await apiError(res, "Failed to upload attachment");
+  return res.json();
+}
+
+export async function removeAttachment(requesterId: number, attachmentId: number, removalReason: string): Promise<Attachment> {
+  const res = await fetch(`${BASE_URL}/api/attachments/${attachmentId}`, { method: "DELETE", headers: { "Content-Type": "application/json", "X-Development-Requester-Id": String(requesterId) }, body: JSON.stringify({ removalReason }) });
+  if (!res.ok) throw await apiError(res, "Failed to remove attachment");
+  return res.json();
+}
+
+export async function downloadAttachment(requesterId: number, attachment: Attachment): Promise<void> {
+  const res = await fetch(`${BASE_URL}/api/attachments/${attachment.id}/download`, { headers: { "X-Development-Requester-Id": String(requesterId) } });
+  if (!res.ok) throw await apiError(res, "Failed to download attachment");
+  const url = URL.createObjectURL(await res.blob());
+  const anchor = document.createElement("a"); anchor.href = url; anchor.download = attachment.filename; anchor.click();
+  URL.revokeObjectURL(url);
 }
 
 
