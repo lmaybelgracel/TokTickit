@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { RequesterUser, Ticket } from "./api";
 import { RequesterSelector } from "./components/RequesterSelector";
 import { CreateTicket } from "./components/CreateTicket";
+import { MyTickets } from "./components/MyTickets";
 
 export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
 
@@ -115,15 +116,16 @@ export default function App() {
             onCancel={() => setCurrentView("my-tickets")}
           />
         ) : currentView === "my-tickets" ? (
-          <div style={styles.placeholderContainer}>
-            <h2>My Tickets Screen</h2>
+          <div>
             {createdSuccessTicket && (
-              <div style={{ backgroundColor: "#EAF6EF", border: "1px solid #B2DFDB", color: "#006B3C", padding: "0.75rem 1rem", borderRadius: "8px", marginBottom: "1rem" }}>
+              <div style={{ maxWidth: "1200px", margin: "1rem auto 0 auto", padding: "0.75rem 1rem", backgroundColor: "#EAF6EF", border: "1px solid #B2DFDB", color: "#006B3C", borderRadius: "8px" }}>
                 Success! Created ticket <strong>{createdSuccessTicket.ticketNumber}</strong> ({createdSuccessTicket.summary})
               </div>
             )}
-            <p>Active Requester: <strong>{activeRequester.name}</strong> ({activeRequester.email})</p>
-            <p>Will be implemented in Issue 11 (My Tickets UI)</p>
+            <MyTickets
+              activeRequester={activeRequester}
+              onNavigateCreate={() => setCurrentView("create-ticket")}
+            />
           </div>
         ) : null}
       </main>

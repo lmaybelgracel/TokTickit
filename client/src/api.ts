@@ -94,6 +94,56 @@ export async function fetchRequesters(): Promise<RequesterUser[]> {
   return res.json();
 }
 
+export interface PaginationMeta {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: PaginationMeta;
+}
+
+export interface FetchTicketsParams {
+  search?: string;
+  category?: string;
+  priority?: string;
+  status?: string;
+  sort?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export async function fetchMyTickets(
+  requesterId: number,
+  params: FetchTicketsParams = {}
+): Promise<PaginatedResponse<Ticket>> {
+  const query = new URLSearchParams();
+  if (params.search) query.set("search", params.search);
+  if (params.category) query.set("category", params.category);
+  if (params.priority) query.set("priority", params.priority);
+  if (params.status) query.set("status", params.status);
+  if (params.sort) query.set("sort", params.sort);
+  if (params.page) query.set("page", params.page.toString());
+  if (params.pageSize) query.set("pageSize", params.pageSize.toString());
+
+  const queryString = query.toString() ? `?${query.toString()}` : "";
+
+  const res = await fetch(`${BASE_URL}/api/tickets${queryString}`, {
+    headers: {
+      "X-Development-Requester-Id": requesterId.toString(),
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to load tickets");
+  }
+
+  return res.json();
+}
+
 export async function createTicket(
   requesterId: number,
   payload: CreateTicketPayload
@@ -120,4 +170,5 @@ export async function createTicket(
 
   return data;
 }
+
 

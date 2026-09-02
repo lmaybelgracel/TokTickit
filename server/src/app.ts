@@ -198,6 +198,122 @@ app.post("/api/tickets", async (req: Request, res: Response) => {
   }
 });
 
+// Lab 2 — Issue 11: GET /api/tickets (Paginated ticket list owned by Requester)
+app.get("/api/tickets", async (req: Request, res: Response) => {
+  try {
+    const requesterHeader = req.headers["x-development-requester-id"];
+    if (!requesterHeader) {
+      return res.status(400).json({
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "X-Development-Requester-Id header is required",
+        },
+      });
+    }
+
+    const requesterId = parseInt(Array.isArray(requesterHeader) ? requesterHeader[0] : requesterHeader, 10);
+    if (isNaN(requesterId)) {
+      return res.status(400).json({
+        error: {
+          code: "VALIDATION_ERROR",
+          message: "Invalid X-Development-Requester-Id header",
+        },
+      });
+    }
+
+    const prisma = getPrisma();
+
+    // Verify Requester existence and isActive === true
+    const requester = await prisma.requesterUser.findUnique({
+      where: { id: requesterId },
+    });
+
+    if (!requester || !requester.isActive) {
+      return res.status(422).json({
+        error: {
+          code: "INACTIVE_REQUESTER",
+          message: "Selected Development Requester is inactive or does not exist.",
+        },
+      });
+    }
+
+    const { search, category, priority, status, sort, page, pageSize } = req.query;
+
+    const where: any = {
+      requesterId,
+    };
+
+    if (search && typeof search === "string" && search.trim() !== "") {
+      const term = search.trim();
+      where.OR = [
+        { ticketNumber: { contains: term, mode: "insensitive" } },
+        { summary: { contains: term, mode: "insensitive" } },
+      ];
+    }
+
+    if (category) {
+      const catId = parseInt(category as string, 10);
+      if (!isNaN(catId)) {
+        where.categoryId = catId;
+      }
+    }
+
+    if (priority && ["LOW", "MEDIUM", "HIGH"].includes(priority as string)) {
+      where.requestedPriority = priority as string;
+    }
+
+    if (status && typeof status === "string" && status.trim() !== "") {
+      where.currentStatus = status.trim();
+    }
+
+    let orderBy: any = { createdAt: "desc" };
+    if (sort === "createdAt:asc") {
+      orderBy = { createdAt: "asc" };
+    } else if (sort === "updatedAt:desc") {
+      orderBy = { updatedAt: "desc" };
+    } else if (sort === "updatedAt:asc") {
+      orderBy = { updatedAt: "asc" };
+    }
+
+    const parsedPage = Math.max(1, parseInt(page as string, 10) || 1);
+    const parsedPageSize = Math.min(50, Math.max(1, parseInt(pageSize as string, 10) || 10));
+    const skip = (parsedPage - 1) * parsedPageSize;
+
+    const [totalItems, tickets] = await Promise.all([
+      prisma.ticket.count({ where }),
+      prisma.ticket.findMany({
+        where,
+        orderBy,
+        skip,
+        take: parsedPageSize,
+        include: {
+          category: { select: { id: true, name: true } },
+          relatedSystem: { select: { id: true, name: true } },
+        },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(totalItems / parsedPageSize) || 1;
+
+    return res.status(200).json({
+      data: tickets,
+      pagination: {
+        totalItems,
+        totalPages,
+        currentPage: parsedPage,
+        pageSize: parsedPageSize,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: {
+        code: "SERVER_ERROR",
+        message: "Failed to retrieve tickets",
+      },
+    });
+  }
+});
+
 // Centralized error handling middleware
 app.use((_err: any, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: "Internal Server Error" });
