@@ -30,4 +30,13 @@ describe("TicketDetail — Issue 12", () => {
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "Old" } });
     await waitFor(() => expect(confirm).toBeEnabled());
   });
+
+  it("rejects an unsupported file before calling the upload API", async () => {
+    vi.mocked(api.fetchTicketDetail).mockResolvedValue({ ...ticket, attachments: [] });
+    render(<TicketDetail activeRequester={requester} ticketId={101} onBack={vi.fn()} />);
+    const input = await screen.findByLabelText("Upload attachment");
+    fireEvent.change(input, { target: { files: [new File(["bad"], "notes.txt", { type: "text/plain" })] } });
+    expect(await screen.findByRole("alert")).toHaveTextContent("Only JPG, PNG, WEBP, and PDF files are allowed.");
+    expect(api.uploadAttachment).not.toHaveBeenCalled();
+  });
 });

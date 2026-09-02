@@ -5,6 +5,8 @@ import "./TicketDetail.css";
 interface Props { activeRequester: RequesterUser; ticketId: number; onBack: () => void; }
 const size = (bytes: number) => bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 const date = (value?: string | null) => value ? new Date(value).toLocaleString() : "—";
+const allowedFileTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"]);
+const maxFileSize = 5 * 1024 * 1024;
 
 export const TicketDetail: React.FC<Props> = ({ activeRequester, ticketId, onBack }) => {
   const [ticket, setTicket] = useState<Ticket | null>(null);
@@ -19,6 +21,12 @@ export const TicketDetail: React.FC<Props> = ({ activeRequester, ticketId, onBac
 
   const onFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]; if (!file) return;
+    if (!allowedFileTypes.has(file.type)) {
+      setError("Only JPG, PNG, WEBP, and PDF files are allowed."); event.target.value = ""; return;
+    }
+    if (file.size > maxFileSize) {
+      setError("Attachment must not exceed 5 MB."); event.target.value = ""; return;
+    }
     setBusy(true); setError(""); try { await uploadAttachment(activeRequester.id, ticketId, file); await load(); } catch (e) { setError(e instanceof Error ? e.message : "Upload failed"); } finally { setBusy(false); event.target.value = ""; }
   };
   const confirmRemove = async () => {

@@ -375,6 +375,13 @@ app.post("/api/tickets/:id/attachments", attachmentUpload.single("file"), async 
       return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "A valid requester, ticket id, and file are required." } });
     }
     const prisma = getPrisma();
+    const requester = await prisma.requesterUser.findUnique({
+      where: { id: requesterId },
+      select: { isActive: true },
+    });
+    if (!requester || !requester.isActive) {
+      return res.status(422).json({ error: { code: "INACTIVE_REQUESTER", message: "Selected Development Requester is inactive or does not exist." } });
+    }
     const ticket = await prisma.ticket.findUnique({ where: { id: ticketId }, select: { requesterId: true } });
     if (!ticket) return res.status(404).json({ error: { code: "NOT_FOUND", message: "Ticket not found." } });
     if (ticket.requesterId !== requesterId) return res.status(403).json({ error: { code: "FORBIDDEN_ACCESS", message: "You do not have permission to modify this ticket." } });
