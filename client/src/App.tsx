@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { RequesterUser } from "./api";
+import { RequesterUser, Ticket } from "./api";
 import { RequesterSelector } from "./components/RequesterSelector";
+import { CreateTicket } from "./components/CreateTicket";
 
 export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
 
@@ -9,6 +10,8 @@ export default function App() {
     const saved = localStorage.getItem("toktickit_dev_requester");
     return saved ? JSON.parse(saved) : null;
   });
+
+  const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
 
   const [currentView, setCurrentView] = useState<CurrentView>(() => {
     return activeRequester ? "my-tickets" : "selector";
@@ -33,6 +36,11 @@ export default function App() {
     setCurrentView("selector");
   };
 
+  const handleTicketCreated = (ticket: Ticket) => {
+    setCreatedSuccessTicket(ticket);
+    setCurrentView("my-tickets");
+  };
+
   return (
     <div style={styles.appWrapper}>
       {/* Zen Green Application Shell Header */}
@@ -42,7 +50,7 @@ export default function App() {
             <div style={styles.logoBadge}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
+                <polyline points="12 6 12 16 14" />
               </svg>
             </div>
             <span style={styles.brandTitle}>TokTickIT</span>
@@ -101,15 +109,21 @@ export default function App() {
             currentRequesterId={activeRequester?.id}
           />
         ) : currentView === "create-ticket" ? (
-          <div style={styles.placeholderContainer}>
-            <h2>Create Ticket Screen</h2>
-            <p>Will be implemented in Issue 12 (Create Ticket UI)</p>
-          </div>
+          <CreateTicket
+            activeRequester={activeRequester}
+            onSuccess={handleTicketCreated}
+            onCancel={() => setCurrentView("my-tickets")}
+          />
         ) : currentView === "my-tickets" ? (
           <div style={styles.placeholderContainer}>
             <h2>My Tickets Screen</h2>
+            {createdSuccessTicket && (
+              <div style={{ backgroundColor: "#EAF6EF", border: "1px solid #B2DFDB", color: "#006B3C", padding: "0.75rem 1rem", borderRadius: "8px", marginBottom: "1rem" }}>
+                Success! Created ticket <strong>{createdSuccessTicket.ticketNumber}</strong> ({createdSuccessTicket.summary})
+              </div>
+            )}
             <p>Active Requester: <strong>{activeRequester.name}</strong> ({activeRequester.email})</p>
-            <p>Will be implemented in Issue 13 (My Tickets UI)</p>
+            <p>Will be implemented in Issue 11 (My Tickets UI)</p>
           </div>
         ) : null}
       </main>
@@ -130,7 +144,6 @@ const styles: Record<string, React.CSSProperties> = {
     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
   },
   headerInner: {
-    maxWdith: "1200px",
     maxWidth: "1200px",
     margin: "0 auto",
     padding: "0.75rem 1.5rem",
