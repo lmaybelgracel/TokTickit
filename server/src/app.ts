@@ -132,8 +132,8 @@ app.post("/api/tickets", async (req: Request, res: Response) => {
       details.push({ field: "categoryId", message: "Category ID is required and must be a valid integer." });
     } else {
       const categoryObj = await prisma.category.findUnique({ where: { id: parsedCategoryId } });
-      if (!categoryObj) {
-        details.push({ field: "categoryId", message: "Selected Category does not exist." });
+      if (!categoryObj || !categoryObj.isActive) {
+        details.push({ field: "categoryId", message: "Selected Category does not exist or is inactive." });
       }
     }
 
@@ -142,8 +142,8 @@ app.post("/api/tickets", async (req: Request, res: Response) => {
       details.push({ field: "relatedSystemId", message: "Related System ID is required and must be a valid integer." });
     } else {
       const systemObj = await prisma.relatedSystem.findUnique({ where: { id: parsedRelatedSystemId } });
-      if (!systemObj) {
-        details.push({ field: "relatedSystemId", message: "Selected Related System does not exist." });
+      if (!systemObj || !systemObj.isActive) {
+        details.push({ field: "relatedSystemId", message: "Selected Related System does not exist or is inactive." });
       }
     }
 
