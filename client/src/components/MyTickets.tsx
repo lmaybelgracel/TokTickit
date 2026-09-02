@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Category,
   RequesterUser,
@@ -7,6 +7,7 @@ import {
   fetchCategories,
   fetchMyTickets,
 } from "../api";
+import "./MyTickets.css";
 
 interface MyTicketsProps {
   activeRequester: RequesterUser;
@@ -51,39 +52,22 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
     loadCats();
   }, []);
 
-  const loadTickets = useCallback(async () => {
+  useEffect(() => {
+    let cancelled = false;
     setIsLoading(true);
     setError(null);
-    try {
-      const res = await fetchMyTickets(activeRequester.id, {
-        search,
-        category: selectedCategory,
-        priority: selectedPriority,
-        status: selectedStatus,
-        sort,
-        page: currentPage,
-        pageSize: 10,
-      });
-      setTickets(res.data);
-      setPagination(res.pagination);
-    } catch (err: any) {
-      setError("Failed to load your tickets. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [
-    activeRequester.id,
-    search,
-    selectedCategory,
-    selectedPriority,
-    selectedStatus,
-    sort,
-    currentPage,
-  ]);
-
-  useEffect(() => {
-    loadTickets();
-  }, [loadTickets]);
+    const timer = window.setTimeout(async () => {
+      try {
+        const res = await fetchMyTickets(activeRequester.id, { search, category: selectedCategory, priority: selectedPriority, status: selectedStatus, sort, page: currentPage, pageSize: 10 });
+        if (!cancelled) { setTickets(res.data); setPagination(res.pagination); }
+      } catch {
+        if (!cancelled) { setTickets([]); setError("Failed to load your tickets. Please try again."); }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }, search ? 250 : 0);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [activeRequester.id, search, selectedCategory, selectedPriority, selectedStatus, sort, currentPage]);
 
   const handleClearFilters = () => {
     setSearch("");
@@ -129,16 +113,16 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="my-tickets">
       {/* Header Row */}
-      <div style={styles.headerRow}>
+      <div style={styles.headerRow} className="my-tickets__header">
         <div>
           <h1 style={styles.title}>My Tickets</h1>
           <span style={styles.subtitle}>
             Manage and track support tickets created by {activeRequester.name}
           </span>
         </div>
-        <button onClick={onNavigateCreate} style={styles.createBtn}>
+        <button type="button" onClick={onNavigateCreate} style={styles.createBtn}>
           + Create Ticket
         </button>
       </div>
@@ -148,7 +132,9 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
         <div style={styles.filterGrid}>
           {/* Search Input */}
           <div style={styles.searchWrapper}>
+            <label className="visually-hidden" htmlFor="my-tickets-search">Search by ticket number or summary</label>
             <input
+              id="my-tickets-search"
               type="text"
               placeholder="Search by ticket number or summary..."
               value={search}
@@ -230,11 +216,11 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
       </div>
 
       {/* Content Area */}
-      {error && <div style={styles.errorBanner}>{error}</div>}
+      {error && <div style={styles.errorBanner} role="alert">{error}</div>}
 
       {isLoading ? (
         <div style={styles.cardContainer}>
-          <p style={{ textAlign: "center", color: "#5A6E63", padding: "2rem" }}>
+          <p role="status" style={{ textAlign: "center", color: "#5A6E63", padding: "2rem" }}>
             Loading tickets...
           </p>
         </div>
@@ -267,7 +253,7 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
       ) : (
         <>
           {/* Desktop Table View */}
-          <div style={styles.tableCard}>
+          <div style={styles.tableCard} className="my-tickets__table-wrap">
             <table style={styles.table}>
               <thead>
                 <tr>
@@ -281,26 +267,31 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
               </thead>
               <tbody>
                 {tickets.map((t) => (
-                  <tr
-                    key={t.id}
-                    style={styles.tr}
-                    onClick={() => onSelectTicket && onSelectTicket(t)}
-                  >
+                  <tr key={t.id} style={styles.tr}>
                     <td style={styles.tdTicketNo}>{t.ticketNumber}</td>
                     <td style={styles.tdDate}>{formatDate(t.createdAt)}</td>
                     <td style={styles.tdSummary}>{t.summary}</td>
                     <td style={styles.tdCategory}>{t.category?.name || "-"}</td>
                     <td style={styles.td}>{renderPriorityBadge(t.requestedPriority)}</td>
-                    <td style={styles.td}>{renderStatusBadge(t.currentStatus)}</td>
+                    <td style={styles.td}>{renderStatusBadge(t.currentStatus)}{onSelectTicket && <button type="button" className="ticket-open-link" onClick={() => onSelectTicket(t)}>View detail</button>}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
+          <div className="my-tickets__cards">
+            {tickets.map((t) => <article className="my-ticket-card" key={t.id}>
+              <div className="my-ticket-card__top"><strong>{t.ticketNumber}</strong>{renderStatusBadge(t.currentStatus)}</div>
+              <h2>{t.summary}</h2>
+              <p>{t.category?.name || "Uncategorized"} - {formatDate(t.createdAt)}</p>
+              <div className="my-ticket-card__actions">{renderPriorityBadge(t.requestedPriority)}{onSelectTicket && <button type="button" className="ticket-open-link" onClick={() => onSelectTicket(t)}>View detail</button>}</div>
+            </article>)}
+          </div>
+
           {/* Pagination Controls */}
           {pagination.totalPages > 1 && (
-            <div style={styles.paginationRow}>
+            <div style={styles.paginationRow} className="my-tickets__pagination">
               <span style={styles.paginationInfo}>
                 Page {pagination.currentPage} of {pagination.totalPages} ({pagination.totalItems} tickets)
               </span>
@@ -317,7 +308,7 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
                   Previous
                 </button>
 
-                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).filter(pageNum => pageNum === 1 || pageNum === pagination.totalPages || Math.abs(pageNum-currentPage) <= 1).map(
                   (pageNum) => (
                     <button
                       key={pageNum}

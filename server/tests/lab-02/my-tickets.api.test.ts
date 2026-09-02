@@ -111,4 +111,19 @@ describe("GET /api/tickets — My Tickets API Tests (Issue 11)", () => {
     expect(res.status).toBe(422);
     expect(res.body.error.code).toBe("INACTIVE_REQUESTER");
   });
+
+  it.each([
+    "category=abc",
+    "priority=URGENT",
+    "status=INVALID",
+    "sort=summary:desc",
+    "page=0",
+    "pageSize=7",
+  ])("should return 400 for invalid query: %s", async (query) => {
+    const res = await request(app)
+      .get(`/api/tickets?${query}`)
+      .set("X-Development-Requester-Id", "1");
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("INVALID_QUERY");
+  });
 });

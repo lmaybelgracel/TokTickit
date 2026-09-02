@@ -60,18 +60,24 @@ describe("MyTickets Component (Issue 11)", () => {
   });
 
   it("renders list of user-owned tickets with badges and search control", async () => {
+    const onSelectTicket = vi.fn();
     render(
       <MyTickets
         activeRequester={mockRequester}
         onNavigateCreate={vi.fn()}
+        onSelectTicket={onSelectTicket}
       />
     );
 
-    expect(await screen.findByText("My Tickets")).toBeInTheDocument();
-    expect(screen.getByText("TKT-2026-000101")).toBeInTheDocument();
-    expect(screen.getByText("Laptop screen flickering")).toBeInTheDocument();
+    expect(screen.getByText("My Tickets")).toBeInTheDocument();
+    expect((await screen.findAllByText("TKT-2026-000101")).length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Laptop screen flickering").length).toBeGreaterThan(0);
     expect(screen.getAllByText("HIGH").length).toBeGreaterThan(0);
     expect(screen.getAllByText("NEW").length).toBeGreaterThan(0);
+    expect(screen.getByLabelText(/Search by ticket number or summary/i)).toBeInTheDocument();
+    expect(document.querySelector(".my-tickets__cards")).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole("button", { name: /View detail/i })[0]);
+    expect(onSelectTicket).toHaveBeenCalledWith(mockTickets[0]);
   });
 
   it("UI-04: displays clear no-results state and Clear Filters button when 0 tickets match search", async () => {
@@ -106,6 +112,6 @@ describe("MyTickets Component (Issue 11)", () => {
     expect(clearFiltersBtns.length).toBeGreaterThan(0);
 
     fireEvent.click(clearFiltersBtns[0]);
-    expect(searchInput).toHaveValue("");
+    await waitFor(() => expect(searchInput).toHaveValue(""));
   });
 });

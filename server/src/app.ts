@@ -251,39 +251,41 @@ app.get("/api/tickets", async (req: Request, res: Response) => {
       ];
     }
 
-    if (category) {
-      const catId = parseInt(category as string, 10);
-      if (!isNaN(catId)) {
-        where.categoryId = catId;
-      }
+    const catId = category === undefined ? undefined : Number(category);
+    if (category !== undefined && (!Number.isInteger(catId) || Number(catId) < 1)) {
+      return res.status(400).json({ error: { code: "INVALID_QUERY", message: "category must be a positive integer." } });
     }
+    if (catId) where.categoryId = catId;
 
-    if (priority && ["LOW", "MEDIUM", "HIGH"].includes(priority as string)) {
-      where.requestedPriority = priority as string;
+    if (priority !== undefined && !["LOW", "MEDIUM", "HIGH"].includes(String(priority))) {
+      return res.status(400).json({ error: { code: "INVALID_QUERY", message: "priority must be LOW, MEDIUM, or HIGH." } });
     }
+    if (priority) where.requestedPriority = String(priority);
 
-    if (status && typeof status === "string" && status.trim() !== "") {
-      where.currentStatus = status.trim();
+    if (status !== undefined && !["NEW", "IN_PROGRESS", "RESOLVED", "CLOSED"].includes(String(status))) {
+      return res.status(400).json({ error: { code: "INVALID_QUERY", message: "status is invalid." } });
     }
+    if (status) where.currentStatus = String(status);
 
-    let orderBy: any = { createdAt: "desc" };
-    if (sort === "createdAt:asc") {
-      orderBy = { createdAt: "asc" };
-    } else if (sort === "updatedAt:desc") {
-      orderBy = { updatedAt: "desc" };
-    } else if (sort === "updatedAt:asc") {
-      orderBy = { updatedAt: "asc" };
+    const validSorts: Record<string, { createdAt?: "asc" | "desc"; updatedAt?: "asc" | "desc" }> = {
+      "createdAt:desc": { createdAt: "desc" }, "createdAt:asc": { createdAt: "asc" },
+      "updatedAt:desc": { updatedAt: "desc" }, "updatedAt:asc": { updatedAt: "asc" },
+    };
+    const sortKey = sort === undefined ? "createdAt:desc" : String(sort);
+    if (!validSorts[sortKey]) return res.status(400).json({ error: { code: "INVALID_QUERY", message: "sort value is invalid." } });
+
+    const parsedPage = page === undefined ? 1 : Number(page);
+    const parsedPageSize = pageSize === undefined ? 10 : Number(pageSize);
+    if (!Number.isInteger(parsedPage) || parsedPage < 1 || ![5, 10, 25, 50].includes(parsedPageSize)) {
+      return res.status(400).json({ error: { code: "INVALID_QUERY", message: "page must be a positive integer and pageSize must be 5, 10, 25, or 50." } });
     }
-
-    const parsedPage = Math.max(1, parseInt(page as string, 10) || 1);
-    const parsedPageSize = Math.min(50, Math.max(1, parseInt(pageSize as string, 10) || 10));
     const skip = (parsedPage - 1) * parsedPageSize;
 
     const [totalItems, tickets] = await Promise.all([
       prisma.ticket.count({ where }),
       prisma.ticket.findMany({
         where,
-        orderBy,
+        orderBy: [validSorts[sortKey], { id: "desc" }],
         skip,
         take: parsedPageSize,
         include: {
