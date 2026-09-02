@@ -6,6 +6,30 @@
 
 ---
 
+## PR #29: Issue 11 — My Tickets Search, Filters, Sorting, and Pagination
+
+- **Pull Request Link:** [PR #29: feature/lab2-my-tickets](https://github.com/lmaybelgracel/TokTickit/pull/29)
+- **Feature Branch:** `feature/lab2-my-tickets`
+- **Target Branch:** `lab2-staging`
+- **Status:** Review Received / Recommendations Addressed / Awaiting Final Approval and Merge
+
+### Reviewer Comments Received
+> ตรวจสอบ PR #29 เรียบร้อยแล้ว Backend รองรับ Requester Context, ownership filtering, case-insensitive search, category/priority/status filters, sorting และ pagination metadata ครบถ้วน Frontend เป็นไปตาม Zen Green Theme พร้อม badges, empty state, no-results state, Clear Filters และ pagination โดย automated tests ผ่านทั้งหมด
+>
+> **ข้อเสนอแนะเพิ่มเติม (Minor Recommendations):**
+> 1. เพิ่ม debounce ประมาณ 300 ms ให้ Search Input เพื่อลด HTTP requests
+> 2. ขจัด React `act(...)` warning ใน `MyTickets.test.tsx`
+
+### Author Response & Actions Taken
+> ขอบคุณสำหรับการรีวิวและข้อเสนอแนะค่ะ ได้ดำเนินการปรับปรุงบน PR #29 แล้วดังนี้:
+> 1. เพิ่ม debounce 250 ms สำหรับคำค้นหา และยกเลิกผลลัพธ์จาก request เก่าเมื่อ filter หรือ Requester Context เปลี่ยน เพื่อป้องกัน stale data
+> 2. ปรับ async assertions ใน `MyTickets.test.tsx` ให้รอ state update อย่างถูกต้อง ผลการรันล่าสุดไม่มี React `act(...)` warning
+> 3. เพิ่ม mobile ticket-card layout, accessible Search label และปุ่ม View detail ที่ใช้งานด้วยคีย์บอร์ดได้ เพื่อให้ตรงกับ responsive และ accessibility specification
+> 4. เพิ่ม API validation สำหรับ query parameters ที่ไม่ถูกต้อง พร้อม automated cases โดยคืน `400 INVALID_QUERY`
+> 5. ผลตรวจล่าสุด: Server tests 25/25 ผ่าน, Client tests 12/12 ผ่าน และ production build ทั้งสองฝั่งผ่าน
+
+---
+
 ## PR #27: Issue 9 — Development Requester Context & UI Selector
 
 - **Pull Request Link:** [PR #27: feature/lab2-requester-context](https://github.com/lmaybelgracel/TokTickit/pull/27)
