@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import multer from "multer";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { getPrisma } from "./prisma.js";
@@ -110,7 +110,8 @@ function generateTicketNumber(): string {
 }
 
 // Lab 2 — Issue 10: Create Ticket
-app.post("/api/tickets", async (req: Request, res: Response) => {
+app.post("/api/tickets", attachmentUpload.array("attachments", 5), async (req: Request, res: Response) => {
+  const storedPaths: string[] = [];
   try {
     const requesterHeader = req.headers["x-development-requester-id"];
     if (!requesterHeader) {
@@ -198,21 +199,49 @@ app.post("/api/tickets", async (req: Request, res: Response) => {
 
     const ticketNumber = generateTicketNumber();
 
-    const ticket = await prisma.ticket.create({
-      data: {
+    const ticketData = {
         ticketNumber,
         summary: trimmedSummary,
         description: trimmedDescription,
         requestedPriority,
-        currentStatus: "NEW",
+        currentStatus: "NEW" as const,
         requesterId,
         categoryId: parsedCategoryId,
         relatedSystemId: parsedRelatedSystemId,
-      },
+    };
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+
+    if (files.length === 0) {
+      const ticket = await prisma.ticket.create({ data: ticketData });
+      return res.status(201).json(ticket);
+    }
+
+    await mkdir(uploadsDirectory, { recursive: true });
+    const storedFiles: Array<{ filename: string; storedPath: string; fileSize: number; mimeType: string }> = [];
+    for (const file of files) {
+      const storedName = `${randomUUID()}${path.extname(file.originalname)}`;
+      const storedPath = path.join(uploadsDirectory, storedName);
+      await writeFile(storedPath, file.buffer);
+      storedPaths.push(storedPath);
+      storedFiles.push({
+        filename: file.originalname,
+        storedPath,
+        fileSize: file.size,
+        mimeType: file.mimetype,
+      });
+    }
+
+    const ticket = await prisma.$transaction(async (transaction) => {
+      const created = await transaction.ticket.create({ data: ticketData });
+      await transaction.attachment.createMany({
+        data: storedFiles.map((file) => ({ ...file, ticketId: created.id })),
+      });
+      return created;
     });
 
     return res.status(201).json(ticket);
   } catch (error) {
+    await Promise.all(storedPaths.map((storedPath) => unlink(storedPath).catch(() => undefined)));
     return res.status(500).json({
       error: {
         code: "SERVER_ERROR",
@@ -443,6 +472,9 @@ app.delete("/api/attachments/:id", async (req: Request, res: Response) => {
 app.use((_err: any, _req: Request, res: Response, _next: NextFunction) => {
   if (_err instanceof multer.MulterError && _err.code === "LIMIT_FILE_SIZE") {
     return res.status(400).json({ error: { code: "FILE_TOO_LARGE", message: "Attachment must not exceed 5 MB." } });
+  }
+  if (_err instanceof multer.MulterError && _err.code === "LIMIT_UNEXPECTED_FILE") {
+    return res.status(400).json({ error: { code: "ATTACHMENT_LIMIT", message: "A ticket can have no more than 5 initial attachments." } });
   }
   if (_err?.message === "UNSUPPORTED_FILE_TYPE") {
     return res.status(400).json({ error: { code: "UNSUPPORTED_FILE_TYPE", message: "Only JPG, PNG, WEBP, and PDF files are allowed." } });

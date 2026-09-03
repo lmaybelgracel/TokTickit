@@ -75,6 +75,7 @@ export interface CreateTicketPayload {
   requestedPriority: "LOW" | "MEDIUM" | "HIGH";
   summary: string;
   description: string;
+  attachments?: File[];
 }
 
 export async function fetchCategories(): Promise<Category[]> {
@@ -155,13 +156,31 @@ export async function createTicket(
   requesterId: number,
   payload: CreateTicketPayload
 ): Promise<Ticket> {
+  const hasAttachments = Boolean(payload.attachments?.length);
+  let body: BodyInit;
+  const headers: Record<string, string> = {
+    "X-Development-Requester-Id": requesterId.toString(),
+  };
+
+  if (hasAttachments) {
+    const form = new FormData();
+    form.append("categoryId", String(payload.categoryId));
+    form.append("relatedSystemId", String(payload.relatedSystemId));
+    form.append("requestedPriority", payload.requestedPriority);
+    form.append("summary", payload.summary);
+    form.append("description", payload.description);
+    payload.attachments?.forEach((file) => form.append("attachments", file));
+    body = form;
+  } else {
+    headers["Content-Type"] = "application/json";
+    const { attachments: _attachments, ...ticketFields } = payload;
+    body = JSON.stringify(ticketFields);
+  }
+
   const res = await fetch(`${BASE_URL}/api/tickets`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Development-Requester-Id": requesterId.toString(),
-    },
-    body: JSON.stringify(payload),
+    headers,
+    body,
   });
 
   const data = await res.json();

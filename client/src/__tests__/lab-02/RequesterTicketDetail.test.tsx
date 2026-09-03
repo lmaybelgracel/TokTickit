@@ -8,13 +8,13 @@ vi.mock("../../api", async () => {
   return { ...actual, fetchTicketDetail: vi.fn(), removeAttachment: vi.fn(), uploadAttachment: vi.fn(), downloadAttachment: vi.fn() };
 });
 
-describe("TicketDetail — Issue 12", () => {
-  const requester = { id: 1, name: "Alice", email: "alice@test", department: "IT", isActive: true };
-  const ticket = { id: 101, ticketNumber: "TKT-2026-000101", summary: "Laptop issue", description: "Battery drains very quickly", requestedPriority: "HIGH" as const, currentStatus: "NEW", requesterId: 1, categoryId: 1, relatedSystemId: 1, createdAt: "2026-09-01T10:00:00Z", updatedAt: "2026-09-01T10:00:00Z", category: { id: 1, name: "Hardware" }, relatedSystem: { id: 1, name: "Laptop" }, attachments: [{ id: 501, ticketId: 101, filename: "old.png", fileSize: 1024, mimeType: "image/png", isRemoved: true, uploadedAt: "2026-09-01T10:00:00Z", removedAt: "2026-09-01T11:00:00Z", removalReason: "Outdated screenshot" }] };
+export const requester = { id: 1, name: "Alice", email: "alice@test", department: "IT", isActive: true };
+export const ticket = { id: 101, ticketNumber: "TKT-2026-000101", summary: "Laptop issue", description: "Battery drains very quickly", requestedPriority: "HIGH" as const, currentStatus: "NEW", requesterId: 1, categoryId: 1, relatedSystemId: 1, createdAt: "2026-09-01T10:00:00Z", updatedAt: "2026-09-01T10:00:00Z", category: { id: 1, name: "Hardware" }, relatedSystem: { id: 1, name: "Laptop" }, attachments: [{ id: 501, ticketId: 101, filename: "old.png", fileSize: 1024, mimeType: "image/png", isRemoved: true, uploadedAt: "2026-09-01T10:00:00Z", removedAt: "2026-09-01T11:00:00Z", removalReason: "Outdated screenshot" }] };
 
+describe("Requester Ticket Detail", () => {
   beforeEach(() => { vi.mocked(api.fetchTicketDetail).mockResolvedValue(ticket); });
 
-  it("renders read-only detail and removed attachment metadata without an active download", async () => {
+  it("UI-05: renders read-only detail and removed attachment metadata without an active download", async () => {
     render(<TicketDetail activeRequester={requester} ticketId={101} onBack={vi.fn()} />);
     expect(await screen.findByText("TKT-2026-000101")).toBeInTheDocument();
     expect(screen.getByText("Outdated screenshot")).toBeInTheDocument();
@@ -29,14 +29,5 @@ describe("TicketDetail — Issue 12", () => {
     expect(confirm).toBeDisabled();
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "Old" } });
     await waitFor(() => expect(confirm).toBeEnabled());
-  });
-
-  it("rejects an unsupported file before calling the upload API", async () => {
-    vi.mocked(api.fetchTicketDetail).mockResolvedValue({ ...ticket, attachments: [] });
-    render(<TicketDetail activeRequester={requester} ticketId={101} onBack={vi.fn()} />);
-    const input = await screen.findByLabelText("Upload attachment");
-    fireEvent.change(input, { target: { files: [new File(["bad"], "notes.txt", { type: "text/plain" })] } });
-    expect(await screen.findByRole("alert")).toHaveTextContent("Only JPG, PNG, WEBP, and PDF files are allowed.");
-    expect(api.uploadAttachment).not.toHaveBeenCalled();
   });
 });

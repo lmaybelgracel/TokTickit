@@ -128,8 +128,36 @@ describe("CreateTicket Component (Issue 10)", () => {
         requestedPriority: "MEDIUM",
         summary: "Laptop battery drains quickly",
         description: "My laptop battery drains in 30 minutes after update.",
+        attachments: [],
       });
       expect(handleSuccess).toHaveBeenCalledWith(mockSuccessTicket);
     });
+  });
+
+  it("includes a valid initial attachment in the submitted ticket payload", async () => {
+    (api.createTicket as any).mockResolvedValue({ id: 101, ticketNumber: "TKT-2026-001234" });
+    render(<CreateTicket activeRequester={mockRequester} onSuccess={vi.fn()} onCancel={vi.fn()} />);
+    await screen.findByText("Create Support Ticket");
+    fireEvent.change(screen.getByLabelText(/Summary/i), { target: { value: "Laptop battery drains quickly" } });
+    fireEvent.change(screen.getByLabelText(/Description/i), { target: { value: "The laptop battery drains within thirty minutes." } });
+    const proof = new File(["proof"], "proof.png", { type: "image/png" });
+    fireEvent.change(screen.getByLabelText("Initial attachments"), { target: { files: [proof] } });
+    fireEvent.click(screen.getByRole("button", { name: /Submit Ticket/i }));
+
+    await waitFor(() => expect(api.createTicket).toHaveBeenCalledWith(1, expect.objectContaining({ attachments: [proof] })));
+  });
+
+  it("rejects an invalid initial attachment and preserves entered values", async () => {
+    render(<CreateTicket activeRequester={mockRequester} onSuccess={vi.fn()} onCancel={vi.fn()} />);
+    await screen.findByText("Create Support Ticket");
+    const summary = screen.getByLabelText(/Summary/i) as HTMLInputElement;
+    fireEvent.change(summary, { target: { value: "Laptop battery drains quickly" } });
+    fireEvent.change(screen.getByLabelText(/Description/i), { target: { value: "The laptop battery drains within thirty minutes." } });
+    fireEvent.change(screen.getByLabelText("Initial attachments"), { target: { files: [new File(["bad"], "notes.txt", { type: "text/plain" })] } });
+    fireEvent.click(screen.getByRole("button", { name: /Submit Ticket/i }));
+
+    expect(await screen.findByText("Only JPG, PNG, WEBP, and PDF files are allowed.")).toBeInTheDocument();
+    expect(summary.value).toBe("Laptop battery drains quickly");
+    expect(api.createTicket).not.toHaveBeenCalled();
   });
 });
