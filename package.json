@@ -2,6 +2,7 @@
   "name": "toktickit-lab-02",
   "private": true,
   "scripts": {
+    "install:e2e": "playwright install chromium",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
