@@ -50,16 +50,16 @@ Retrieve all active Development Requesters available for identity selection.
   [
     {
       "id": 1,
-      "name": "Jennifer Anderson",
-      "email": "jennifer.a@kmutt.ac.th",
-      "department": "Faculty of Engineering",
+      "name": "Pae Karn",
+      "email": "pae.karn@example.com",
+      "department": "Engineering",
       "isActive": true
     },
     {
       "id": 2,
-      "name": "Michael Brown",
-      "email": "michael.b@kmutt.ac.th",
-      "department": "School of Information Technology",
+      "name": "Miki Chan",
+      "email": "miki.chan@example.com",
+      "department": "Information Technology",
       "isActive": true
     }
   ]
@@ -196,7 +196,7 @@ Retrieve read-only ticket details owned by the active Development Requester.
     "description": "My laptop battery is draining much faster than usual...",
     "requestedPriority": "MEDIUM",
     "currentStatus": "NEW",
-    "requester": { "id": 1, "name": "Jennifer Anderson", "email": "jennifer.a@kmutt.ac.th" },
+    "requester": { "id": 1, "name": "Pae Karn", "email": "pae.karn@example.com" },
     "category": { "id": 2, "name": "Hardware" },
     "relatedSystem": { "id": 7, "name": "Corporate Laptop" },
     "attachments": [

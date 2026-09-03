@@ -50,8 +50,8 @@ export const RequesterSelector: React.FC<RequesterSelectorProps> = ({
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div className="requester-selector" style={styles.container}>
+      <div className="requester-selector__card" style={styles.card}>
         <div style={styles.iconCircle}>
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#006B3C" strokeWidth="2">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -103,6 +103,8 @@ export const RequesterSelector: React.FC<RequesterSelectorProps> = ({
               id="requester-select"
               style={styles.select}
               value={selectedId}
+              required
+              aria-required="true"
               onChange={(e) => setSelectedId(Number(e.target.value))}
             >
               {requesters.map((req) => (
@@ -114,7 +116,7 @@ export const RequesterSelector: React.FC<RequesterSelectorProps> = ({
 
             <div style={styles.actions}>
               <button type="submit" style={styles.continueButton} disabled={!selectedId}>
-                Continue
+                Continue to Application
               </button>
             </div>
           </form>

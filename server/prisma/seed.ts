@@ -21,33 +21,47 @@ const relatedSystemsData = [
 
 const requestersData = [
   {
-    name: "Jennifer Anderson",
-    email: "jennifer.a@kmutt.ac.th",
-    department: "Faculty of Engineering",
+    name: "Pae Karn",
+    email: "pae.karn@example.com",
+    department: "Engineering",
     isActive: true,
+    legacyEmail: "jennifer.a@kmutt.ac.th",
   },
   {
-    name: "Michael Brown",
-    email: "michael.b@kmutt.ac.th",
-    department: "School of Information Technology",
+    name: "Miki Chan",
+    email: "miki.chan@example.com",
+    department: "Information Technology",
     isActive: true,
+    legacyEmail: "michael.b@kmutt.ac.th",
   },
   {
-    name: "Sarah Johnson",
-    email: "sarah.j@kmutt.ac.th",
-    department: "Faculty of Science",
+    name: "Creammie Indiegurl",
+    email: "creammie.indiegurl@example.com",
+    department: "Digital Media",
     isActive: true,
+    legacyEmail: "sarah.j@kmutt.ac.th",
   },
   {
-    name: "David Lee",
-    email: "david.l@kmutt.ac.th",
-    department: "School of Architecture",
+    name: "Jessica Phrao",
+    email: "jessica.phrao@example.com",
+    department: "Business Administration",
     isActive: true,
+    legacyEmail: "david.l@kmutt.ac.th",
   },
   {
-    name: "John Doe",
-    email: "john.d@kmutt.ac.th",
-    department: "Discontinued Staff",
+    name: "Kanta Tawaan",
+    email: "kanta.tawaan@example.com",
+    department: "Computer Engineering",
+    isActive: true,
+    legacyEmail: "john.d@kmutt.ac.th",
+  },
+  { name: "Bewnoi Pink", email: "bewnoi.pink@example.com", department: "Information Technology", isActive: true },
+  { name: "Jeje Frappe", email: "jeje.frappe@example.com", department: "Creative Technology", isActive: true },
+  { name: "Bob Pueng", email: "bob.pueng@example.com", department: "Engineering", isActive: true },
+  {
+    name: "Pan Ctrl",
+    email: "pan.ctrl@example.com",
+    department: "Former Student",
     isActive: false,
   },
 ];
@@ -77,13 +91,22 @@ async function main() {
 
   // 3. Seed Development Requesters
   for (const req of requestersData) {
+    const { legacyEmail, ...requester } = req;
+    if (legacyEmail) {
+      const currentRecord = await prisma.requesterUser.findUnique({ where: { email: requester.email } });
+      if (currentRecord) {
+        await prisma.requesterUser.updateMany({ where: { email: legacyEmail }, data: { isActive: false } });
+      } else {
+        await prisma.requesterUser.updateMany({ where: { email: legacyEmail }, data: requester });
+      }
+    }
     await prisma.requesterUser.upsert({
-      where: { email: req.email },
-      update: { name: req.name, department: req.department, isActive: req.isActive },
-      create: req,
+      where: { email: requester.email },
+      update: { name: requester.name, department: requester.department, isActive: requester.isActive },
+      create: requester,
     });
   }
-  console.log("Successfully seeded 4 Active Requesters and 1 Inactive Requester.");
+  console.log("Successfully seeded 8 Active Requesters and 1 Inactive Requester.");
 }
 
 main()

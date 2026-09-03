@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 test("E2E-01: requester creates, finds, opens, and manages a ticket with isolated ownership", async ({ page }) => {
   const requesters = [
-    { id: 1, name: "Jennifer Anderson", email: "jennifer@example.test", department: "Engineering", isActive: true },
-    { id: 2, name: "Michael Brown", email: "michael@example.test", department: "IT", isActive: true },
+    { id: 1, name: "Pae Karn", email: "pae.karn@example.com", department: "Engineering", isActive: true },
+    { id: 2, name: "Miki Chan", email: "miki.chan@example.com", department: "Information Technology", isActive: true },
   ];
   const category = { id: 1, name: "Hardware", description: "Devices" };
   const system = { id: 1, name: "Corporate Laptop", category: "Hardware" };
@@ -46,7 +46,7 @@ test("E2E-01: requester creates, finds, opens, and manages a ticket with isolate
 
   await page.goto("/");
   await page.getByRole("combobox").selectOption("1");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Continue to Application", exact: true }).click();
   await page
     .getByRole("navigation")
     .getByRole("button", { name: "+ Create Ticket", exact: true })
@@ -74,7 +74,7 @@ test("E2E-01: requester creates, finds, opens, and manages a ticket with isolate
 
   await page.getByRole("button", { name: "Change" }).click();
   await page.getByRole("combobox").selectOption("2");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Continue to Application", exact: true }).click();
   await expect(page.getByRole("heading", { name: "No Tickets Yet" })).toBeVisible();
   await expect(page.getByText("You haven't submitted any IT support tickets.", { exact: false })).toBeVisible();
 });

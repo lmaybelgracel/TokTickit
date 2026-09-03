@@ -12,16 +12,16 @@ describe("RequesterSelector Component Tests (Issue 9)", () => {
   const mockRequesters = [
     {
       id: 1,
-      name: "Jennifer Anderson",
-      email: "jennifer.a@kmutt.ac.th",
-      department: "Faculty of Engineering",
+      name: "Pae Karn",
+      email: "pae.karn@example.com",
+      department: "Engineering",
       isActive: true,
     },
     {
       id: 2,
-      name: "Michael Brown",
-      email: "michael.b@kmutt.ac.th",
-      department: "School of Information Technology",
+      name: "Miki Chan",
+      email: "miki.chan@example.com",
+      department: "Information Technology",
       isActive: true,
     },
   ];
@@ -45,7 +45,7 @@ describe("RequesterSelector Component Tests (Issue 9)", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Select Development Requester")).toBeDefined();
-      expect(screen.getByText("Jennifer Anderson (jennifer.a@kmutt.ac.th) — Faculty of Engineering")).toBeDefined();
+      expect(screen.getByText("Pae Karn (pae.karn@example.com) — Engineering")).toBeDefined();
     });
   });
 
@@ -56,10 +56,10 @@ describe("RequesterSelector Component Tests (Issue 9)", () => {
     render(<RequesterSelector onSelectRequester={onSelectMock} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Continue")).toBeDefined();
+      expect(screen.getByText("Continue to Application")).toBeDefined();
     });
 
-    const submitBtn = screen.getByText("Continue");
+    const submitBtn = screen.getByText("Continue to Application");
     fireEvent.click(submitBtn);
 
     expect(onSelectMock).toHaveBeenCalledWith(mockRequesters[0]);

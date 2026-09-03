@@ -139,8 +139,8 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div className="create-ticket" style={styles.container}>
+      <div className="create-ticket__card" style={styles.card}>
         <div style={styles.headerTitleRow}>
           <h1 style={styles.heading}>Create Support Ticket</h1>
           <span style={styles.subHeading}>Submit an official IT service request</span>
@@ -154,7 +154,7 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
 
         <form onSubmit={handleSubmit} noValidate>
           {/* Read-Only System Generated Header Info */}
-          <div style={styles.readonlySection}>
+          <div className="create-ticket__readonly" style={styles.readonlySection}>
             <div style={styles.readonlyField}>
               <label style={styles.readonlyLabel}>Ticket Number</label>
               <span style={styles.readonlyValue}>Auto-generated (TKT-2026-XXXXXX)</span>
@@ -172,7 +172,7 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
           </div>
 
           {/* Classification Section */}
-          <div style={styles.gridRow}>
+          <div className="create-ticket__grid" style={styles.gridRow}>
             <div style={styles.formGroup}>
               <label htmlFor="category-select" style={styles.label}>
                 Category <span style={styles.required}>*</span>
@@ -180,6 +180,8 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
               <select
                 id="category-select"
                 value={categoryId}
+                required
+                aria-required="true"
                 onChange={(e) => setCategoryId(e.target.value)}
                 style={{
                   ...styles.select,
@@ -204,6 +206,8 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
               <select
                 id="system-select"
                 value={relatedSystemId}
+                required
+                aria-required="true"
                 onChange={(e) => setRelatedSystemId(e.target.value)}
                 style={{
                   ...styles.select,
@@ -267,6 +271,8 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
               id="ticket-summary"
               type="text"
               value={summary}
+              required
+              aria-required="true"
               onChange={(e) => setSummary(e.target.value)}
               placeholder="Brief summary of the issue (5–150 characters)"
               style={{
@@ -292,6 +298,8 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
             <textarea
               id="ticket-description"
               value={description}
+              required
+              aria-required="true"
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Provide full details, steps to reproduce, or symptoms (10–2000 characters)"
               rows={5}
@@ -339,7 +347,7 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
           </div>
 
           {/* Actions */}
-          <div style={styles.actionRow}>
+          <div className="create-ticket__actions" style={styles.actionRow}>
             <button
               type="button"
               onClick={onCancel}
