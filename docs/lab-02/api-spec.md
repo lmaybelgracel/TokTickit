@@ -104,7 +104,9 @@ Retrieve active related systems options.
 Create a new validated IT ticket for the active Development Requester.
 
 - **Headers:** `X-Development-Requester-Id: 1`
-- **Request Body (JSON):**
+- **Request Body:** `application/json` when no initial files are selected, or `multipart/form-data` with the same text fields and zero to five repeated `attachments` file fields.
+
+- **JSON Example (without initial attachments):**
   ```json
   {
     "categoryId": 2,
@@ -121,6 +123,8 @@ Create a new validated IT ticket for the active Development Requester.
   - `requestedPriority`: Required, Enum: `LOW`, `MEDIUM`, `HIGH`.
   - `summary`: Required, string 5–150 characters after trim.
   - `description`: Required, string 10–2000 characters after trim.
+  - `attachments`: Optional; zero to five JPG/JPEG, PNG, WEBP, or PDF files, maximum 5 MB each.
+  - Ticket data and initial Attachment metadata are committed in one database transaction. If file storage or metadata creation fails, the Ticket transaction is rolled back and any files already written by that request are removed as compensation.
 - **Response (201 Created):**
   ```json
   {

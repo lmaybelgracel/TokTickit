@@ -28,6 +28,7 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
   const [requestedPriority, setRequestedPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
   const [summary, setSummary] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [attachments, setAttachments] = useState<File[]>([]);
 
   const [isLoadingOptions, setIsLoadingOptions] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -78,6 +79,14 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
       errors.description = "Description must be between 10 and 2000 characters.";
     }
 
+    if (attachments.length > 5) {
+      errors.attachments = "You can attach up to 5 files.";
+    } else if (attachments.some((file) => file.size > 5 * 1024 * 1024)) {
+      errors.attachments = "Each attachment must not exceed 5 MB.";
+    } else if (attachments.some((file) => !["image/jpeg", "image/png", "image/webp", "application/pdf"].includes(file.type))) {
+      errors.attachments = "Only JPG, PNG, WEBP, and PDF files are allowed.";
+    }
+
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -96,6 +105,7 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
         requestedPriority,
         summary: summary.trim(),
         description: description.trim(),
+        attachments,
       });
       onSuccess(createdTicket);
     } catch (err: any) {
@@ -296,6 +306,39 @@ export const CreateTicket: React.FC<CreateTicketProps> = ({
           </div>
 
           {/* Actions */}
+          <div style={styles.formGroup}>
+            <label htmlFor="ticket-attachments" style={styles.label}>Attachments (optional, up to 5)</label>
+            <input
+              id="ticket-attachments"
+              aria-label="Initial attachments"
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              onChange={(event) => {
+                setAttachments(Array.from(event.target.files ?? []));
+                setFieldErrors((current) => {
+                  const { attachments: _attachmentError, ...rest } = current;
+                  return rest;
+                });
+              }}
+              disabled={isSubmitting}
+              style={{ ...styles.input, ...(fieldErrors.attachments ? styles.inputError : {}) }}
+            />
+            <span style={styles.attachmentHelp}>JPG, PNG, WEBP, or PDF; maximum 5 MB per file.</span>
+            {attachments.length > 0 && (
+              <ul style={styles.attachmentList} aria-label="Selected attachments">
+                {attachments.map((file, index) => (
+                  <li key={`${file.name}-${file.lastModified}-${index}`}>
+                    <span>{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
+                    <button type="button" onClick={() => setAttachments((files) => files.filter((_, itemIndex) => itemIndex !== index))}>Remove</button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {fieldErrors.attachments && <span style={styles.fieldErrorText}>{fieldErrors.attachments}</span>}
+          </div>
+
+          {/* Actions */}
           <div style={styles.actionRow}>
             <button
               type="button"
@@ -446,6 +489,18 @@ const styles: Record<string, React.CSSProperties> = {
   inputError: {
     borderColor: "#B71C1C",
     backgroundColor: "#FDF2F2",
+  },
+  attachmentHelp: {
+    fontSize: "0.75rem",
+    color: "#5A6E63",
+    marginTop: "0.25rem",
+  },
+  attachmentList: {
+    listStyle: "none",
+    padding: 0,
+    margin: "0.5rem 0 0",
+    display: "grid",
+    gap: "0.375rem",
   },
   fieldErrorText: {
     fontSize: "0.75rem",
