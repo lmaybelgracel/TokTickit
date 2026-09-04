@@ -68,3 +68,22 @@ textarea:disabled { cursor: not-allowed !important; opacity: 0.6; }
 
   .attachment-actions { width: 100%; flex-wrap: wrap; }
 }
+
+@media (max-width: 359px) {
+  .app-header__inner,
+  .app-main { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .app-header__inner { align-items: stretch !important; }
+  .requester-profile { margin-left: 0; width: 100%; }
+  .app-nav { gap: 0.35rem !important; }
+  .app-nav button { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+
+  .requester-selector__card,
+  .create-ticket__card,
+  .detail-card,
+  .remove-modal { padding: 1rem !important; }
+
+  .ticket-detail h1 { font-size: 1.45rem; overflow-wrap: anywhere; }
+  .badges { flex-wrap: wrap; }
+  .remove-modal > div { align-items: stretch; flex-direction: column-reverse; }
+  .remove-modal button { min-height: 44px; width: 100%; }
+}

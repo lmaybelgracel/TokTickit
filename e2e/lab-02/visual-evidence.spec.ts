@@ -40,6 +40,9 @@ test("captures Zen Green responsive evidence without horizontal overflow", async
   await page.setViewportSize({ width: 390, height: 844 });
   await assertNoHorizontalOverflow();
   await page.screenshot({ path: "artifacts/lab-02/screenshots/my-tickets/mobile-card.png", fullPage: true });
+  await page.setViewportSize({ width: 320, height: 568 });
+  await assertNoHorizontalOverflow();
+  await page.screenshot({ path: "artifacts/lab-02/screenshots/my-tickets/small-mobile-card.png", fullPage: true });
 
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole("navigation").getByRole("button", { name: "+ Create Ticket" }).click();
@@ -63,6 +66,11 @@ test("captures Zen Green responsive evidence without horizontal overflow", async
   await page.screenshot({ path: "artifacts/lab-02/screenshots/ticket-detail/desktop-active-attachment.png", fullPage: true });
   await page.getByRole("button", { name: "Soft Remove" }).click();
   await page.screenshot({ path: "artifacts/lab-02/screenshots/ticket-detail/removal-modal.png", fullPage: true });
+  await page.setViewportSize({ width: 320, height: 568 });
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await assertNoHorizontalOverflow();
+  await page.screenshot({ path: "artifacts/lab-02/screenshots/ticket-detail/small-mobile-removal-modal.png", fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.getByRole("textbox").fill("Outdated visual evidence");
   await page.getByRole("button", { name: "Confirm removal" }).click();
   await expect(page.getByText("Removed", { exact: true })).toBeVisible();

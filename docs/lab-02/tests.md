@@ -33,7 +33,7 @@ This document establishes the test plan and requirement traceability for TokTick
 | **UI-05** | UI | BR-07 | Soft-removed attachment visual state | Strikethrough text, muted color, "Removed" badge, and disabled download button | `client/src/__tests__/lab-02/RequesterTicketDetail.test.tsx`; `client/src/__tests__/lab-02/AttachmentSection.test.tsx` | Passed |
 | **E2E-01**| E2E | AC-01, AC-04, AC-06, AC-07 | Complete Requester browser workflow | Select Requester A -> reject invalid initial file -> create with valid initial file -> get number -> view My Tickets -> upload attachment -> soft-remove -> select Requester B (A's ticket hidden) | `e2e/lab-02/requester-ticket-flow.spec.ts` | Passed |
 | **UI-06** | UI Style | UI Spec 2, 5, 6, 8 | Zen Green surfaces, primary action hierarchy, read-only distinction, and required-field accessibility | Required classes, colors, labels, and `aria-required` attributes are present on rendered components | `client/src/__tests__/lab-02/UIStyle.test.tsx` | Passed |
-| **VIS-01** | Responsive / Visual | UI Spec 7, 9 | Desktop, tablet, and mobile layouts for all three ticket screens | No horizontal page overflow; table/card switch, stacked layouts, long filenames, modal, and removed state remain usable; screenshots saved to required paths | `e2e/lab-02/visual-evidence.spec.ts` | Passed |
+| **VIS-01** | Responsive / Visual | UI Spec 7, 9 | Desktop, tablet, mobile, and 320 px small-mobile layouts for all three ticket screens | No horizontal page overflow; table/card switch, stacked layouts, long filenames, modal, and removed state remain usable; screenshots saved to required paths | `e2e/lab-02/visual-evidence.spec.ts` | Passed |
 
 ---
 
