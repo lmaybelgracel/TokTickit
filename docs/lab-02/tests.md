@@ -8,7 +8,7 @@ This document establishes the test plan and requirement traceability for TokTick
 - **Unit & Integration / API Tests:** Backend API endpoints tested using **Vitest** and **Supertest** (`server/tests/lab-02/`).
 - **UI Component Tests:** Frontend React components and form states tested using **Vitest** and **React Testing Library** (`client/src/__tests__/lab-02/`).
 - **Responsive & Visual Checks:** CSS assertion checks and multi-viewport layout testing for Desktop, Tablet, and Mobile devices.
-- **End-to-End (E2E) Tests:** Full browser flow automation tested using **Playwright** (`e2e/lab-02/requester-ticket-flow.spec.ts`).
+- **End-to-End (E2E) Tests:** Full browser flow and deterministic submission-evidence states tested using **Playwright** (`e2e/lab-02/requester-ticket-flow.spec.ts`, `e2e/lab-02/visual-evidence.spec.ts`, and `e2e/lab-02/submission-evidence.spec.ts`).
 
 ---
 
@@ -34,6 +34,7 @@ This document establishes the test plan and requirement traceability for TokTick
 | **E2E-01**| E2E | AC-01, AC-04, AC-06, AC-07 | Complete Requester browser workflow | Select Requester A -> reject invalid initial file -> create with valid initial file -> get number -> view My Tickets -> upload attachment -> soft-remove -> select Requester B (A's ticket hidden) | `e2e/lab-02/requester-ticket-flow.spec.ts` | Passed |
 | **UI-06** | UI Style | UI Spec 2, 5, 6, 8 | Zen Green surfaces, primary action hierarchy, read-only distinction, and required-field accessibility | Required classes, colors, labels, and `aria-required` attributes are present on rendered components | `client/src/__tests__/lab-02/UIStyle.test.tsx` | Passed |
 | **VIS-01** | Responsive / Visual | UI Spec 7, 9 | Desktop, tablet, mobile, and 320 px small-mobile layouts for all three ticket screens | No horizontal page overflow; table/card switch, stacked layouts, long filenames, modal, and removed state remain usable; screenshots saved to required paths | `e2e/lab-02/visual-evidence.spec.ts` | Passed |
+| **VIS-02** | Submission Evidence | AC-02, AC-03, AC-07, AC-08, AC-09; UI Spec 9 | Requester loading/empty/failure; invalid attachment; preserved form on API failure; submitting/success; ticket-list states; forbidden access; Requester isolation | Every required state is visible and captured under `artifacts/lab-02/screenshots/` using deterministic browser API responses | `e2e/lab-02/submission-evidence.spec.ts` | Passed |
 
 ---
 
@@ -87,14 +88,14 @@ npm run test:e2e
 
 ## 6. Final Execution Results
 
-Latest execution completed on the Issue 14 feature branch on 2026-09-04. Counts below include Lab 2 tests only; full repository runs also passed (server 33/33 and client 21/21). Both server and client production builds passed. Playwright generated responsive screenshot evidence under `artifacts/lab-02/screenshots/`.
+Latest execution completed on the Issue 15 documentation branch on 2026-09-04. Counts below include Lab 2 tests only; full repository runs also passed (server 33/33 and client 21/21). Both server and client production builds passed. Playwright generated responsive and submission-state screenshot evidence under `artifacts/lab-02/screenshots/`.
 
 | Suite | Total Tests Planned | Passed | Failed | Skipped | Pass Rate |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | API / Integration Tests | 10 scenarios | 26 | 0 | 0 | 100% |
 | UI Component and Style Tests | 6 scenarios | 18 | 0 | 0 | 100% |
-| Playwright E2E / Visual Tests | 2 scenarios | 2 | 0 | 0 | 100% |
-| **Total** | **18 scenarios** | **46** | **0** | **0** | **100%** |
+| Playwright E2E / Visual Tests | 5 scenarios | 5 | 0 | 0 | 100% |
+| **Total** | **21 scenarios** | **49** | **0** | **0** | **100%** |
 
 ---
 
