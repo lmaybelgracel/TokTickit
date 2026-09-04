@@ -2,8 +2,8 @@
 
 ## Participants and Review Process
 
-- **Author:** `lmaybelgracel`
-- **Assigned peer reviewer:** `phatthidawadi`
+- **Author:** เกรซ (`@lmaybelgracel`)
+- **Assigned peer reviewer:** บิว (`@phatthidawadi`)
 - **Target branch for feature work:** `lab2-staging`
 - **Process used:** The reviewer inspected the PR against its Issue and specification, left actionable comments, checked the follow-up changes, submitted an approval, and merged the PR. The author replied to recommendations and pushed fixes to the same branch.
 

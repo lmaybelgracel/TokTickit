@@ -2,10 +2,11 @@
 
 ## AI Tools Used
 
-- **Primary coding assistant:** OpenAI Codex
-- **Supporting peer-review assistant:** AI-assisted review used by the assigned peer reviewer; all review decisions and merges were completed through the reviewer's GitHub account.
+- **Initial coding assistant:** Google Antigravity was used during the earlier implementation work. Its usage limit was reached before Lab 2 was complete.
+- **Continuation and verification assistant:** OpenAI Codex was then used to continue the implementation, review the existing repository state, address peer-review recommendations, run tests, verify GitHub workflow evidence, and prepare the delivery documentation.
+- **Model disclosure:** The exact Antigravity model name was not recorded during the work, so this document does not guess one. OpenAI Codex is identified by product name because that is the tool used for the continuation recorded here.
 
-AI was used to help interpret the labsheet, refine specifications, implement and test the application, inspect responsive evidence, and prepare documentation. The repository, executed tests, GitHub history, peer approvals, and final visual inspection remain the evidence of completion; an AI statement by itself is not treated as proof.
+AI was used to help interpret the labsheet, refine specifications, implement and test the application, inspect responsive evidence, and prepare documentation. Work was transferred from Antigravity to Codex after the former reached its usage limit. The repository, executed tests, GitHub history, peer approvals, and final visual inspection remain the evidence of completion; an AI statement by itself is not treated as proof.
 
 ## Selected Key Prompts and Outcomes
 
