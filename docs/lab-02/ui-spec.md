@@ -156,8 +156,8 @@ To maintain visual clarity across table lists, cards, and detail views, Priority
 
 ## 9. Visual Inspection Checklist & Screenshot Artifacts
 
-During QA execution (Issue 16), Playwright screenshots must be captured and saved under `artifacts/lab-02/screenshots/`:
+During responsive and visual QA (Issue 14), Playwright screenshots are captured and saved under `artifacts/lab-02/screenshots/`; they are re-verified during final integration (Issue 16):
 
 - `artifacts/lab-02/screenshots/create-ticket/` (Desktop, Tablet, Mobile, Validation error state, Submitting state, Success state)
-- `artifacts/lab-02/screenshots/my-tickets/` (Desktop table view, Mobile card view, Filtered state, No-results state, Dev Requester switched state)
-- `artifacts/lab-02/screenshots/ticket-detail/` (Read-only detail view, Active attachments list, Soft-removed attachments metadata, Removal modal)
+- `artifacts/lab-02/screenshots/my-tickets/` (Desktop table view, Mobile and 320 px small-mobile card views, Filtered state, No-results state, Dev Requester switched state)
+- `artifacts/lab-02/screenshots/ticket-detail/` (Read-only detail view, Active attachments list, Soft-removed attachments metadata, and removal modal including a 320 px small-mobile check)

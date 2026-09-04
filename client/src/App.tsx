@@ -45,10 +45,10 @@ export default function App() {
   };
 
   return (
-    <div style={styles.appWrapper}>
+    <div className="app-shell" style={styles.appWrapper}>
       {/* Zen Green Application Shell Header */}
-      <header style={styles.header}>
-        <div style={styles.headerInner}>
+      <header className="app-header" style={styles.header}>
+        <div className="app-header__inner" style={styles.headerInner}>
           <div style={styles.brandGroup}>
             <div style={styles.logoBadge}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
@@ -60,7 +60,7 @@ export default function App() {
           </div>
 
           {activeRequester && (
-            <nav style={styles.navGroup}>
+            <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
               <button
                 style={{
                   ...styles.navItem,
@@ -85,7 +85,7 @@ export default function App() {
 
           <div style={styles.userProfileGroup}>
             {activeRequester ? (
-              <div style={styles.profileBox}>
+              <div className="requester-profile" style={styles.profileBox}>
                 <div style={styles.userAvatar}>
                   {activeRequester.name.charAt(0)}
                 </div>
@@ -105,7 +105,7 @@ export default function App() {
       </header>
 
       {/* Main Content Area */}
-      <main style={styles.mainContent}>
+      <main className="app-main" style={styles.mainContent}>
         {!activeRequester || currentView === "selector" ? (
           <RequesterSelector
             onSelectRequester={handleSelectRequester}

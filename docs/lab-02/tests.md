@@ -32,6 +32,8 @@ This document establishes the test plan and requirement traceability for TokTick
 | **UI-04** | UI | AC-08 | My Tickets no-results state rendering | Displays clear no-results message and "Clear Filters" button when query matches 0 | `client/src/__tests__/lab-02/MyTickets.test.tsx` | Passed |
 | **UI-05** | UI | BR-07 | Soft-removed attachment visual state | Strikethrough text, muted color, "Removed" badge, and disabled download button | `client/src/__tests__/lab-02/RequesterTicketDetail.test.tsx`; `client/src/__tests__/lab-02/AttachmentSection.test.tsx` | Passed |
 | **E2E-01**| E2E | AC-01, AC-04, AC-06, AC-07 | Complete Requester browser workflow | Select Requester A -> reject invalid initial file -> create with valid initial file -> get number -> view My Tickets -> upload attachment -> soft-remove -> select Requester B (A's ticket hidden) | `e2e/lab-02/requester-ticket-flow.spec.ts` | Passed |
+| **UI-06** | UI Style | UI Spec 2, 5, 6, 8 | Zen Green surfaces, primary action hierarchy, read-only distinction, and required-field accessibility | Required classes, colors, labels, and `aria-required` attributes are present on rendered components | `client/src/__tests__/lab-02/UIStyle.test.tsx` | Passed |
+| **VIS-01** | Responsive / Visual | UI Spec 7, 9 | Desktop, tablet, mobile, and 320 px small-mobile layouts for all three ticket screens | No horizontal page overflow; table/card switch, stacked layouts, long filenames, modal, and removed state remain usable; screenshots saved to required paths | `e2e/lab-02/visual-evidence.spec.ts` | Passed |
 
 ---
 
@@ -53,12 +55,12 @@ This document establishes the test plan and requirement traceability for TokTick
 
 ## 4. Responsive & Visual Checklist
 
-- [ ] **Desktop Viewport ($\ge 992\text{px}$):** Multi-column layout, centered content container (max 1200px), full data table display without text clipping.
-- [ ] **Tablet Viewport ($768\text{px} - 991\text{px}$):** Two-column form fields, Summary & Description receive full width, responsive table with horizontal scrolling.
-- [ ] **Mobile Viewport ($< 768\text{px}$):** Single-column vertical stacked form fields, full-width touch-friendly buttons (min height 44px), card-based ticket list.
-- [ ] **Zen Green Badges:** Priority badges paired with explicit colors (High: Red, Medium: Amber, Low: Green) and Status badge (New: Primary Green).
-- [ ] **Soft-Removed Styling:** Strikethrough text, muted color (`#5A6E63`), "Removed" badge, and locked download icon.
-- [ ] **Keyboard & Focus Ring:** All interactive form controls maintain visible green focus outlines (`#0B7A46`).
+- [x] **Desktop Viewport ($\ge 992\text{px}$):** Multi-column layout, centered content container (max 1200px), full data table display without text clipping.
+- [x] **Tablet Viewport ($768\text{px} - 991\text{px}$):** Two-column form fields, Summary & Description receive full width, responsive table with horizontal scrolling.
+- [x] **Mobile Viewport ($< 768\text{px}$):** Single-column vertical stacked form fields, full-width touch-friendly buttons (min height 44px), card-based ticket list.
+- [x] **Zen Green Badges:** Priority badges paired with explicit colors (High: Red, Medium: Amber, Low: Green) and Status badge (New: Primary Green).
+- [x] **Soft-Removed Styling:** Strikethrough text, muted color (`#5A6E63`), "Removed" badge, and locked download icon.
+- [x] **Keyboard & Focus Ring:** All interactive form controls maintain visible green focus outlines (`#0B7A46`).
 
 ---
 
@@ -78,21 +80,21 @@ npm test -- src/__tests__/lab-02/
 
 ### Run Playwright E2E Tests
 ```bash
-npx playwright test e2e/lab-02/requester-ticket-flow.spec.ts
+npm run test:e2e
 ```
 
 ---
 
 ## 6. Final Execution Results
 
-Executed on the Issue 13 feature branch on 2026-09-03. Counts below include Lab 2 tests only; full repository runs also passed (server 33/33 and client 17/17). Both server and client production builds passed.
+Latest execution completed on the Issue 14 feature branch on 2026-09-04. Counts below include Lab 2 tests only; full repository runs also passed (server 33/33 and client 21/21). Both server and client production builds passed. Playwright generated responsive screenshot evidence under `artifacts/lab-02/screenshots/`.
 
 | Suite | Total Tests Planned | Passed | Failed | Skipped | Pass Rate |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | API / Integration Tests | 10 scenarios | 26 | 0 | 0 | 100% |
-| UI Component Tests | 5 scenarios | 14 | 0 | 0 | 100% |
-| Playwright E2E Tests | 1 scenario | 1 | 0 | 0 | 100% |
-| **Total** | **16 scenarios** | **41** | **0** | **0** | **100%** |
+| UI Component and Style Tests | 6 scenarios | 18 | 0 | 0 | 100% |
+| Playwright E2E / Visual Tests | 2 scenarios | 2 | 0 | 0 | 100% |
+| **Total** | **18 scenarios** | **46** | **0** | **0** | **100%** |
 
 ---
 
@@ -101,3 +103,4 @@ Executed on the Issue 13 feature branch on 2026-09-03. Counts below include Lab 
 1. Real Authentication & Authorization tests are deferred to Lab 3 (Lab 2 uses simulated Development Requester context via `X-Development-Requester-Id` header).
 2. IT Staff workflows (Claiming, Reassigning, Priority adjustment) are explicitly excluded from Lab 2 test coverage.
 3. The Playwright workflow uses deterministic browser-level API interception, while API tests exercise the real Express routes with a mocked Prisma boundary. The complete flow must therefore be re-verified against the configured PostgreSQL database during final release integration on `main`.
+4. The customized Requester seed is implemented and type-checked, but local database execution remains pending until a valid `server/.env` with `DATABASE_URL` is configured.
