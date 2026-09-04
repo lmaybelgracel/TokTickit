@@ -125,12 +125,12 @@ To maintain visual clarity across table lists, cards, and detail views, Priority
 - **Layout:** Two-column split on Desktop, stacked on Mobile.
 - **Main Detail Panel:** Read-only fields displaying Ticket No, Ticket Date, Requester, Category, Related System, Priority Badge, Status Badge, Summary, Description.
 - **Active Attachment Presentation:**
-  - Cards showing filename, size, upload date, "Download" button (`#0B7A46`), and "Soft Remove" button (`#B71C1C`).
+  - Cards showing filename, size, upload date, "Download" button (`#0B7A46`), and "Soft Remove" button (`#B71C1C`). Lab 2 does not render files inline; download is the only active-file retrieval action.
 - **Soft-Removed Attachment Visual State:**
   - Filename styling: Strikethrough text (`line-through`) with muted text color (`#5A6E63`).
   - Badge: Gray "Removed" pill badge (`#E0E6E2` background, `#5A6E63` text).
   - Metadata block: Displays removal timestamp (`Removed on YYYY-MM-DD HH:mm`) and removal reason callout box (`#F9F9F9` background, italic text).
-  - Action buttons: "Download" and "Preview" buttons are strictly hidden/disabled with a lock icon and tooltip: "File removed - download unavailable".
+  - Action buttons: the "Download" button is disabled with a lock icon and tooltip: "File removed - download unavailable"; no preview action is rendered.
 - **Soft Removal Dialog:** Modal prompting user for a required removal reason (3-250 chars) before confirming soft removal.
 
 ---

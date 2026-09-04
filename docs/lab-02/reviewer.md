@@ -1,79 +1,50 @@
-# Peer Review Log — Lab 2 TokTickIT
+# Peer Review Log - Lab 2 TokTickIT
 
-## Reviewer Information
-- **Reviewer Identity:** Peer Reviewer (phatthidawadi)
-- **Author Identity:** Author (lmaybelgracel)
+## Participants and Review Process
 
----
+- **Author:** `lmaybelgracel`
+- **Assigned peer reviewer:** `phatthidawadi`
+- **Target branch for feature work:** `lab2-staging`
+- **Process used:** The reviewer inspected the PR against its Issue and specification, left actionable comments, checked the follow-up changes, submitted an approval, and merged the PR. The author replied to recommendations and pushed fixes to the same branch.
 
-## PR #29: Issue 11 — My Tickets Search, Filters, Sorting, and Pagination
+All PR statuses below were verified from GitHub. PR #23 through PR #32 are approved, merged into `lab2-staging`, and linked to their corresponding Issues from the PR Development panel.
 
-- **Pull Request Link:** [PR #29: feature/lab2-my-tickets](https://github.com/lmaybelgracel/TokTickit/pull/29)
-- **Feature Branch:** `feature/lab2-my-tickets`
-- **Target Branch:** `lab2-staging`
-- **Status:** Review Received / Recommendations Addressed / Awaiting Final Approval and Merge
+## Reviews Received
 
-### Reviewer Comments Received
-> ตรวจสอบ PR #29 เรียบร้อยแล้ว Backend รองรับ Requester Context, ownership filtering, case-insensitive search, category/priority/status filters, sorting และ pagination metadata ครบถ้วน Frontend เป็นไปตาม Zen Green Theme พร้อม badges, empty state, no-results state, Clear Filters และ pagination โดย automated tests ผ่านทั้งหมด
->
-> **ข้อเสนอแนะเพิ่มเติม (Minor Recommendations):**
-> 1. เพิ่ม debounce ประมาณ 300 ms ให้ Search Input เพื่อลด HTTP requests
-> 2. ขจัด React `act(...)` warning ใน `MyTickets.test.tsx`
+| Issue | Pull Request | Main review comment received | Author response and verified action | Final evidence |
+| :-- | :-- | :-- | :-- | :-- |
+| Issue 5 - Sprint Engineering Specification | [PR #23](https://github.com/lmaybelgracel/TokTickit/pull/23) | Clarify attachment transaction strategy, removal-reason length, Prisma indexes, requester-context header, and no-results/error acceptance criteria. | Added BR-11 atomic rollback, the 3-250 character reason rule, required indexes, `X-Development-Requester-Id`, and AC-08/AC-09. | Approved and merged by `phatthidawadi`. |
+| Issue 6 - UI and API Specifications | [PR #24](https://github.com/lmaybelgracel/TokTickit/pull/24) | Add exact badge/soft-removed visual states and document status codes plus the removal request body. | Added priority/status colors, removed metadata presentation, HTTP 200/201/400/403/404/410 behavior, and `removalReason`. | Approved and merged by `phatthidawadi`. |
+| Issue 7 - Test Plan and Traceability | [PR #25](https://github.com/lmaybelgracel/TokTickit/pull/25) | Add tests for blocked removed download, reason limits, sixth active attachment, atomic rollback, retained form input, and correct evidence paths. | Added API-07 through API-10, UI-03, the AC mapping, final paths, and execution-result sections. | Approved and merged by `phatthidawadi`. |
+| Issue 8 - Database Schema and Seed Data | [PR #26](https://github.com/lmaybelgracel/TokTickit/pull/26) | Ensure Prisma migrations are committed and verify repeatable seed behavior. | Committed the Lab 2 migration and retained upsert-based idempotent seed data with required active/inactive Requesters and reference data. | Approved and merged by `phatthidawadi`. |
+| Issue 9 - Development Requester Context | [PR #27](https://github.com/lmaybelgracel/TokTickit/pull/27) | Include the Lab 2 component-test path in Vitest discovery and remove the `maxWdith` typo. | Updated `vite.config.ts`, removed the typo, corrected the API-test mock, and reran the requester tests. | Approved and merged by `phatthidawadi`. |
+| Issue 10 - Create Ticket Workflow and Reference Data APIs | [PR #28](https://github.com/lmaybelgracel/TokTickit/pull/28) | Validate that selected Category and Related System records are active before ticket creation. | Added active reference-data checks to `POST /api/tickets`, reran tests, and replied with the completed change. | Approved and merged by `phatthidawadi`. |
+| Issue 11 - My Tickets | [PR #29](https://github.com/lmaybelgracel/TokTickit/pull/29) | Consider search debounce and remove the React `act(...)` warning. | Added a 250 ms debounce and stale-request protection, corrected asynchronous test assertions, and added responsive/accessibility and invalid-query coverage. | Approved and merged by `phatthidawadi`. |
+| Issue 12 - Ticket Detail and Attachment Lifecycle | [PR #30](https://github.com/lmaybelgracel/TokTickit/pull/30) | Add active-Requester validation to attachment upload, client-side file validation, and long-filename wrapping. | Added the requester guard, client pre-validation, filename wrapping, and matching automated coverage. An earlier review message on this PR referred to unrelated schema work and is intentionally not used as Issue 12 evidence. | Approved and merged by `phatthidawadi`. |
+| Issue 13 - Automated Testing and End-to-End Tests | [PR #31](https://github.com/lmaybelgracel/TokTickit/pull/31) | Add a convenient root command for installing the Playwright Chromium dependency. | Added `npm run install:e2e`, reran the test suites/builds, and replied on the PR. | Approved and merged by `phatthidawadi`. |
+| Issue 14 - UI Style and Responsive/Visual Evidence | [PR #32](https://github.com/lmaybelgracel/TokTickit/pull/32) | Check screens below 360 px and verify that screenshot paths remain aligned. | Added 320 x 568 CSS/Playwright checks and two screenshots. Confirmed that tests, docs, and repository evidence consistently use `artifacts/lab-02/screenshots/`, so no duplicate-copy script was added. | Follow-up acknowledged; approved and merged by `phatthidawadi`. |
 
-### Author Response & Actions Taken
-> ขอบคุณสำหรับการรีวิวและข้อเสนอแนะค่ะ ได้ดำเนินการปรับปรุงบน PR #29 แล้วดังนี้:
-> 1. เพิ่ม debounce 250 ms สำหรับคำค้นหา และยกเลิกผลลัพธ์จาก request เก่าเมื่อ filter หรือ Requester Context เปลี่ยน เพื่อป้องกัน stale data
-> 2. ปรับ async assertions ใน `MyTickets.test.tsx` ให้รอ state update อย่างถูกต้อง ผลการรันล่าสุดไม่มี React `act(...)` warning
-> 3. เพิ่ม mobile ticket-card layout, accessible Search label และปุ่ม View detail ที่ใช้งานด้วยคีย์บอร์ดได้ เพื่อให้ตรงกับ responsive และ accessibility specification
-> 4. เพิ่ม API validation สำหรับ query parameters ที่ไม่ถูกต้อง พร้อม automated cases โดยคืน `400 INVALID_QUERY`
-> 5. ผลตรวจล่าสุด: Server tests 25/25 ผ่าน, Client tests 12/12 ผ่าน และ production build ทั้งสองฝั่งผ่าน
+## Response and Approval Evidence
 
----
+The linked PR conversations are the source of truth for the complete wording and timestamps. They show both the initial review and the follow-up approval. The author responded to recommendations before completion rather than treating an approval alone as sufficient review evidence.
 
-## PR #27: Issue 9 — Development Requester Context & UI Selector
+Notable final verification reported in the reviewed PRs:
 
-- **Pull Request Link:** [PR #27: feature/lab2-requester-context](https://github.com/lmaybelgracel/TokTickit/pull/27)
-- **Feature Branch:** `feature/lab2-requester-context`
-- **Target Branch:** `lab2-staging` / `main`
-- **Status:** PR Review & Fixes Pushed (Awaiting Final Approval / Merge)
+- Server Vitest: 33/33 passing in the complete repository run.
+- Client Vitest: 21/21 passing in the complete repository run.
+- Playwright E2E/visual: 2/2 passing.
+- Client and server production builds passing.
+- Responsive evidence verified at desktop, tablet, mobile, and 320 px.
 
-### Reviewer Comments Received
-> ฟีเจอร์ Development Requester Context ทำได้ตรงตามข้อกำหนด FR-01, FR-02, FR-03, BR-03, AC-02 และ AC-07 การแสดงผลหน้า Requester Selector มี Banner แจ้งเตือนสภาวะ Context Test ชัดเจน UI สวยงามตาม Zen Green Design System มี API Test ครอบคลุมการส่งคืนข้อมูล และการกรอง Inactive Users ออกจากระบบเรียบร้อยแล้ว
-> 
-> **ข้อเสนอแนะเพิ่มเติมก่อน Merge:**
-> 1. ใน `client/vite.config.ts` ควรอัปเดต include เป็น `["src/__tests__/**/*.test.tsx", "tests/**/*.test.tsx"]` เพื่อให้ Vitest สามารถตรวจพบและรันไฟล์ `RequesterSelector.test.tsx` ใน `npm test` ได้อย่างสมบูรณ์
-> 2. ใน `client/src/App.tsx` มี Typo property `maxWdith` ใน `styles.headerInner` แนะนำลบออกเพื่อความสะอาดของโค้ด
+## Reviews Given to a Peer
 
-### Author Response & Actions Taken
-> ขอบคุณสำหรับ Code Review มากๆ เลยนะคะ
-> ได้ดำเนินการแก้ไขตามข้อเสนอแนะเพิ่มเติมเรียบร้อยแล้วค่ะ:
-> 1. อัปเดตไฟล์ `client/vite.config.ts` โดยเพิ่ม include เป็น `["src/__tests__/**/*.test.tsx", "tests/**/*.test.tsx"]` เรียบร้อยแล้วค่ะ ทำให้ Vitest สามารถตรวจพบและรันไฟล์ `RequesterSelector.test.tsx` ผ่านครบทุกเคสแล้วค่ะ
-> 2. ลบ typo property `maxWdith` ออกจาก `styles.headerInner` ใน `client/src/App.tsx` เรียบร้อยแล้วค่ะ
-> 3. ปรับปรุง mock ใน `server/tests/lab-02/requester-context.api.test.ts` ทำให้ API Test รันผ่านสมบูรณ์ 100% แล้วค่ะ
-> 
----
+This section is intentionally pending because the peer's assigned work is still in progress. Before the final submission, replace this note with verifiable evidence containing:
 
-## PR #28: Issue 10 — Create Ticket Workflow and Reference Data APIs
+- peer repository and PR link;
+- reviewed Issue/acceptance criteria;
+- comments made by `lmaybelgracel`;
+- the peer author's reply and resulting changes;
+- final review decision; and
+- screenshot or rendered GitHub evidence used in Answer Part 1.
 
-- **Pull Request Link:** [PR #28: feature/lab2-create-ticket](https://github.com/lmaybelgracel/TokTickit/pull/28)
-- **Feature Branch:** `feature/lab2-create-ticket`
-- **Target Branch:** `lab2-staging`
-- **Status:** Approved / Merged
-
-### Reviewer Comments Received
-> ตรวจสอบโค้ดและผลการทดสอบของ Issue 10: Create Ticket Workflow and Reference Data APIs (#28) เรียบร้อยแล้ว:
-> - **Backend APIs:** Implement GET /api/categories, GET /api/related-systems, และ POST /api/tickets ได้ตรงตาม specification มีการตรวจเช็ก X-Development-Requester-Id, สถานะ active ของ Requester, validation ของ summary/description, และสร้างรหัส TKT-YYYY-XXXXXX พร้อมสถานะเริ่มต้น NEW ได้ถูกต้อง
-> - **Frontend UI:** หน้าจอ CreateTicket.tsx ตกแต่งได้สวยงามตาม Zen Green Theme มี Read-only section, Character Counter, Segmented Priority Buttons, และทำตามข้อกำหนด Form Data Retention (BR-09) เมื่อเกิด error ได้ครบถ้วน
-> - **Automated Tests:** รัน Vitest ทั้งฝั่ง Server (reference-data.api.test.ts, create-ticket.api.test.ts) และ Client (CreateTicket.test.tsx) ผ่าน 100% ครอบคลุมทุกสภาวะ
-> 
-> **ข้อเสนอแนะเล็กน้อย (Non-blocking):**
-> ใน `POST /api/tickets` อาจเพิ่มการเช็ก `category.isActive === true` และ `relatedSystem.isActive === true` เพื่อป้องกันการส่ง ID หมวดหมู่ที่ถูกปิดใช้งานเข้ามา
-
-### Author Response & Actions Taken
-> ขอบคุณสำหรับ Code Review และคำแนะนำที่มีประโยชน์มากเลยนะคะ
-> ได้นำข้อเสนอแนะเพิ่มเติมมาปรับปรุงในระบบเรียบร้อยแล้วค่ะ:
-> 1. อัปเดต API `POST /api/tickets` ใน `server/src/app.ts` ให้ตรวจสอบ `category.isActive === true` และ `relatedSystem.isActive === true` ก่อนสร้าง Ticket เพื่อป้องกันไม่ให้ผู้ใช้ส่ง ID ของหมวดหมู่หรือระบบที่ปิดใช้งานอยู่เข้ามาได้อย่างรัดกุม 100% ค่ะ
-> 2. พุชโค้ดที่ปรับปรุงเพิ่มเติมขึ้น PR #28 เรียบร้อยแล้วค่ะ ขอบคุณมากนะคะ
-
----
-
+No review-given claim will be included in the final PDF until the peer PR exists and the review has actually been submitted.

@@ -32,7 +32,7 @@ This document defines the REST API contract for TokTickIT Lab 2. All APIs follow
 | **400 Bad Request** | Validation Failure / Client Error | Missing required fields, invalid file type/size, attachment limit exceeded. |
 | **403 Forbidden** | Ownership Violation | Attempting to view or modify a ticket/attachment belonging to another Requester. |
 | **404 Not Found** | Resource Not Found | Requesting non-existent Ticket ID, Category ID, or Attachment ID. |
-| **410 Gone** | Resource Removed | Attempting to download or preview a soft-removed attachment. |
+| **410 Gone** | Resource Removed | Attempting to download a soft-removed attachment. |
 | **422 Unprocessable Entity** | Business Rule Violation | Inactive requester attempting operation, duplicate ticket submission. |
 | **500 Internal Server Error**| Server Error | Unexpected server or database error. Safe message returned to client. |
 
@@ -185,6 +185,8 @@ Retrieve paginated list of tickets owned by the active Development Requester.
 
 ### 3.6 `GET /api/tickets/:id`
 Retrieve read-only ticket details owned by the active Development Requester.
+
+This response is also the Lab 2 attachment-metadata retrieval capability: its `attachments` array returns the metadata for every active and soft-removed attachment on the owned ticket. A separate unscoped attachment-metadata endpoint is intentionally not exposed, which keeps metadata behind the same ticket-ownership check.
 
 - **Headers:** `X-Development-Requester-Id: 1`
 - **Response (200 OK):**
