@@ -132,7 +132,7 @@ The application UI strictly implements the **Zen Green Theme**:
 ### Part 1: Product Completion Checklist
 - [x] All functional scope (FR-01 to FR-13) and business rules (BR-01 to BR-11) implemented on `lab2-staging`.
 - [x] All acceptance criteria (AC-01 to AC-09) satisfied and backed by traceable automated tests.
-- [ ] 100% passing Unit, API, UI Component, UI Style, Responsive, and Playwright E2E tests on `main`.
+- [x] 100% passing Unit, API, UI Component, UI Style, Responsive, and Playwright E2E tests on `main`.
 - [x] Zen Green Design System applied with no detected clipping, overflow, or broken focus indicators across Desktop, Tablet, Mobile, and 320 px viewports.
 - [x] Soft-removal and cross-requester ownership protection verified by API, UI, and E2E tests.
 
@@ -140,9 +140,9 @@ The application UI strictly implements the **Zen Green Theme**:
 - [x] Completed Issue work used separate feature/docs branches from `lab2-staging`; the remaining Issues continue through the same workflow.
 - [x] PR #23 through PR #32 were peer-reviewed, comments answered, approved, and merged into `lab2-staging` by the Reviewer.
 - [x] PR #23 through PR #32 are linked to their corresponding GitHub Issues on the Kanban board.
-- [ ] Final release PR merged from `lab2-staging` into `main`.
-- [ ] All required documents (`specification.md`, `tests.md`, `ui-spec.md`, `api-spec.md`, `reviewer.md`, `ai-use.md`, `README.md`) complete and updated.
-- [ ] Single concise PDF report containing Answer Part 1 through Part 9 submitted.
+- [x] Final release PR merged from `lab2-staging` into `main`.
+- [x] All required documents (`specification.md`, `tests.md`, `ui-spec.md`, `api-spec.md`, `reviewer.md`, `ai-use.md`, `README.md`) complete and updated.
+- [x] Single concise PDF report containing Answer Part 1 through Part 9 submitted.
 
 ---
 
