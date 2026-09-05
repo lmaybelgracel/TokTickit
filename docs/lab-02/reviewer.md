@@ -238,6 +238,12 @@ The linked PR conversations are the source of truth for complete wording, timest
 
 **Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/34#pullrequestreview-5116488367), [first response](https://github.com/chanya06/toktickit/pull/34#issuecomment-5544766835), [second response](https://github.com/chanya06/toktickit/pull/34#issuecomment-5544838062), [final response](https://github.com/chanya06/toktickit/pull/34#issuecomment-5544892200), and [final approval](https://github.com/chanya06/toktickit/pull/34#pullrequestreview-5116665934).
 
-All nine partner PRs were merged after review. The linked GitHub conversations are the source of truth for the exact review wording, response history, timestamps, approval, and merge state. Readable review screenshots will be selected for the final submission evidence; screenshots will supplement, not replace, these working links.
+### Post-merge Follow-up Pending - Initial Attachments
+
+After the original partner PRs were merged, a later overall requirements audit identified a separate unresolved gap: the partner's Create Ticket flow did not yet provide initial attachment selection and atomic creation/compensation behavior, even though the partner specification described attachments during creation. This finding does not change the historical approval state of PR #34, which was approved after the issues raised in that PR were fixed, but it must not be represented as resolved.
+
+The partner's final QA work remains open in [Issue #21](https://github.com/chanya06/toktickit/issues/21). The partner plans to address the missing Create Ticket attachment flow during that final integration work. When a follow-up PR is available, I will review the implementation, failure behavior, and tests, record the GitHub review link and response, and only then mark this follow-up as resolved. Until that occurs, its status is **Follow-up pending - not yet verified or approved**.
+
+All nine original partner PRs were merged after their recorded review rounds. The linked GitHub conversations are the source of truth for the exact review wording, response history, timestamps, approval, and merge state. Readable review screenshots will be selected for the final submission evidence; screenshots will supplement, not replace, these working links.
 
 The Issue 15 documentation PR and the final release PR will be added to the received-review evidence after those reviews occur. The final release review cannot be recorded in this pre-release file in advance, so its post-review evidence will also be included in the final PDF generated from the merged `main` state.
