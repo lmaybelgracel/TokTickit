@@ -1,113 +1,266 @@
-import { useState, useEffect } from "react";
-import { checkSystem, Category } from "./api.js";
+import React, { useState, useEffect } from "react";
+import { RequesterUser, Ticket } from "./api";
+import { RequesterSelector } from "./components/RequesterSelector";
+import { CreateTicket } from "./components/CreateTicket";
+import { MyTickets } from "./components/MyTickets";
+import { TicketDetail } from "./components/TicketDetail";
 
-type UiState = "idle" | "loading" | "success" | "error";
+export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
 
 export default function App() {
-  const [state, setState] = useState<UiState>("idle");
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [activeRequester, setActiveRequester] = useState<RequesterUser | null>(() => {
+    const saved = localStorage.getItem("toktickit_dev_requester");
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+
+  const [currentView, setCurrentView] = useState<CurrentView>(() => {
+    return activeRequester ? "my-tickets" : "selector";
+  });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const paramState = params.get("state");
-    if (paramState === "success") {
-      setCategories([
-        { id: 1, name: "Account and Access" },
-        { id: 2, name: "Hardware" },
-        { id: 3, name: "Software" },
-        { id: 4, name: "Network" },
-      ]);
-      setState("success");
-    } else if (paramState === "error") {
-      setErrorMessage("Unable to connect to TokTickIT API");
-      setState("error");
+    if (activeRequester) {
+      localStorage.setItem("toktickit_dev_requester", JSON.stringify(activeRequester));
+    } else {
+      localStorage.removeItem("toktickit_dev_requester");
+      setCurrentView("selector");
     }
-  }, []);
+  }, [activeRequester]);
 
-  async function handleCheck() {
-    setState("loading");
-    try {
-      const res = await checkSystem();
-      setCategories(res.categories);
-      setState("success");
-    } catch (err: any) {
-      setErrorMessage(err.message || "Unable to connect to TokTickIT API");
-      setState("error");
-    }
-  }
+  const handleSelectRequester = (requester: RequesterUser) => {
+    setActiveRequester(requester);
+    setCurrentView("my-tickets");
+  };
+
+  const handleChangeRequester = () => {
+    setActiveRequester(null);
+    setCurrentView("selector");
+  };
+
+  const handleTicketCreated = (ticket: Ticket) => {
+    setCreatedSuccessTicket(ticket);
+    setCurrentView("my-tickets");
+  };
 
   return (
-    <div className="container py-5" style={{ maxWidth: 640 }}>
-      <div className="card shadow-sm border-0 rounded-4">
-        <div className="card-body p-4">
-          <h1 className="h3 fw-bold mb-4 text-dark d-flex align-items-center gap-2">
-            <span>TokTickIT</span>
-            <span className="badge bg-success-subtle text-success border border-success-subtle fs-6 rounded-pill px-3">
-              IT Service Desk
-            </span>
-          </h1>
-
-          <div className="mb-4">
-            <button
-              className="btn btn-success btn-lg px-4 rounded-pill shadow-sm"
-              onClick={handleCheck}
-              disabled={state === "loading"}
-            >
-              {state === "loading" ? (
-                <span>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  loading…
-                </span>
-              ) : (
-                "Check System"
-              )}
-            </button>
+    <div className="app-shell" style={styles.appWrapper}>
+      {/* Zen Green Application Shell Header */}
+      <header className="app-header" style={styles.header}>
+        <div className="app-header__inner" style={styles.headerInner}>
+          <div style={styles.brandGroup}>
+            <div style={styles.logoBadge}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 16 14" />
+              </svg>
+            </div>
+            <span style={styles.brandTitle}>TokTickIT</span>
           </div>
 
-          {state === "success" && (
-            <div className="mt-4 pt-3 border-top">
-              <div className="mb-3 fs-5 fw-medium">
-                System Status: <span className="badge bg-success px-3 py-2 rounded-pill fs-6 ms-1">Online</span>
-              </div>
+          {activeRequester && (
+            <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
+              <button
+                style={{
+                  ...styles.navItem,
+                  ...(currentView === "my-tickets" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("my-tickets")}
+              >
+                My Tickets
+              </button>
 
-              <div className="mt-4">
-                <h2 className="h6 text-secondary text-uppercase tracking-wider fw-bold mb-3">
-                  Supported Request Categories
-                </h2>
-                {categories.length > 0 ? (
-                  <ol className="list-group list-group-numbered shadow-sm rounded-3">
-                    {categories.map((cat) => (
-                      <li
-                        key={cat.id}
-                        className="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 fw-medium"
-                      >
-                        <span>{cat.name}</span>
-                        <span className="badge bg-light text-dark rounded-pill border">ID: {cat.id}</span>
-                      </li>
-                    ))}
-                  </ol>
-                ) : (
-                  <div className="alert alert-secondary text-muted rounded-3" role="status">
-                    No categories available
-                  </div>
-                )}
-              </div>
-            </div>
+              <button
+                style={{
+                  ...styles.navItem,
+                  ...(currentView === "create-ticket" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("create-ticket")}
+              >
+                + Create Ticket
+              </button>
+            </nav>
           )}
 
-          {state === "error" && (
-            <div className="mt-4 pt-3 border-top">
-              <div className="mb-3 fs-5 fw-medium">
-                System Status: <span className="badge bg-danger px-3 py-2 rounded-pill fs-6 ms-1">Offline</span>
+          <div style={styles.userProfileGroup}>
+            {activeRequester ? (
+              <div className="requester-profile" style={styles.profileBox}>
+                <div style={styles.userAvatar}>
+                  {activeRequester.name.charAt(0)}
+                </div>
+                <div style={styles.userInfo}>
+                  <span style={styles.userName}>{activeRequester.name}</span>
+                  <span style={styles.userRole}>Requester ({activeRequester.department})</span>
+                </div>
+                <button style={styles.changeUserBtn} onClick={handleChangeRequester} title="Change simulated user">
+                  Change
+                </button>
               </div>
-              <div className="alert alert-danger rounded-3 shadow-sm border-danger-subtle d-flex align-items-center" role="alert">
-                <div>{errorMessage}</div>
-              </div>
-            </div>
-          )}
+            ) : (
+              <span style={styles.testTag}>Testing Mode (Lab 2)</span>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="app-main" style={styles.mainContent}>
+        {!activeRequester || currentView === "selector" ? (
+          <RequesterSelector
+            onSelectRequester={handleSelectRequester}
+            currentRequesterId={activeRequester?.id}
+          />
+        ) : currentView === "create-ticket" ? (
+          <CreateTicket
+            activeRequester={activeRequester}
+            onSuccess={handleTicketCreated}
+            onCancel={() => setCurrentView("my-tickets")}
+          />
+        ) : currentView === "my-tickets" ? (
+          <div>
+            {createdSuccessTicket && (
+              <div style={{ maxWidth: "1200px", margin: "1rem auto 0 auto", padding: "0.75rem 1rem", backgroundColor: "#EAF6EF", border: "1px solid #B2DFDB", color: "#006B3C", borderRadius: "8px" }}>
+                Success! Created ticket <strong>{createdSuccessTicket.ticketNumber}</strong> ({createdSuccessTicket.summary})
+              </div>
+            )}
+            <MyTickets
+              activeRequester={activeRequester}
+              onNavigateCreate={() => setCurrentView("create-ticket")}
+              onSelectTicket={(ticket) => { setSelectedTicketId(ticket.id); setCurrentView("ticket-detail"); }}
+            />
+          </div>
+        ) : currentView === "ticket-detail" && selectedTicketId ? (
+          <TicketDetail activeRequester={activeRequester} ticketId={selectedTicketId} onBack={() => setCurrentView("my-tickets")} />
+        ) : null}
+      </main>
     </div>
   );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  appWrapper: {
+    minHeight: "100vh",
+    backgroundColor: "#F5F7F6",
+    fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    color: "#1A2E23",
+  },
+  header: {
+    backgroundColor: "#006B3C",
+    color: "#FFFFFF",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+  },
+  headerInner: {
+    maxWidth: "1200px",
+    margin: "0 auto",
+    padding: "0.75rem 1.5rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  brandGroup: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+  },
+  logoBadge: {
+    width: "32px",
+    height: "32px",
+    borderRadius: "8px",
+    backgroundColor: "rgba(255,255,255,0.2)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  brandTitle: {
+    fontSize: "1.25rem",
+    fontWeight: 700,
+    letterSpacing: "-0.02em",
+  },
+  navGroup: {
+    display: "flex",
+    gap: "0.5rem",
+  },
+  navItem: {
+    backgroundColor: "transparent",
+    color: "rgba(255,255,255,0.85)",
+    border: "none",
+    padding: "0.5rem 1rem",
+    borderRadius: "6px",
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    cursor: "pointer",
+  },
+  navItemActive: {
+    backgroundColor: "rgba(255,255,255,0.18)",
+    color: "#FFFFFF",
+    fontWeight: 600,
+  },
+  userProfileGroup: {
+    display: "flex",
+    alignItems: "center",
+  },
+  profileBox: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+    backgroundColor: "rgba(0,0,0,0.15)",
+    padding: "0.35rem 0.75rem",
+    borderRadius: "20px",
+  },
+  userAvatar: {
+    width: "28px",
+    height: "28px",
+    borderRadius: "50%",
+    backgroundColor: "#EAF6EF",
+    color: "#006B3C",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
+    fontSize: "0.8125rem",
+  },
+  userInfo: {
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "left",
+  },
+  userName: {
+    fontSize: "0.8125rem",
+    fontWeight: 600,
+    color: "#FFFFFF",
+    lineHeight: 1.2,
+  },
+  userRole: {
+    fontSize: "0.7rem",
+    color: "rgba(255,255,255,0.75)",
+  },
+  changeUserBtn: {
+    backgroundColor: "#FFFFFF",
+    color: "#006B3C",
+    border: "none",
+    borderRadius: "12px",
+    padding: "0.25rem 0.6rem",
+    fontSize: "0.75rem",
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  testTag: {
+    fontSize: "0.75rem",
+    backgroundColor: "rgba(255,255,255,0.2)",
+    padding: "0.3rem 0.75rem",
+    borderRadius: "12px",
+  },
+  mainContent: {
+    padding: "2rem 1.5rem",
+  },
+  placeholderContainer: {
+    maxWidth: "800px",
+    margin: "3rem auto",
+    padding: "2rem",
+    backgroundColor: "#FFFFFF",
+    borderRadius: "12px",
+    border: "1px solid #E0E6E2",
+    textAlign: "center",
+  },
+};
