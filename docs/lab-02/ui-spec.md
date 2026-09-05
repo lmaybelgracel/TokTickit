@@ -125,12 +125,12 @@ To maintain visual clarity across table lists, cards, and detail views, Priority
 - **Layout:** Two-column split on Desktop, stacked on Mobile.
 - **Main Detail Panel:** Read-only fields displaying Ticket No, Ticket Date, Requester, Category, Related System, Priority Badge, Status Badge, Summary, Description.
 - **Active Attachment Presentation:**
-  - Cards showing filename, size, upload date, "Download" button (`#0B7A46`), and "Soft Remove" button (`#B71C1C`).
+  - Cards showing filename, size, upload date, "Download" button (`#0B7A46`), and "Soft Remove" button (`#B71C1C`). Lab 2 does not render files inline; download is the only active-file retrieval action.
 - **Soft-Removed Attachment Visual State:**
   - Filename styling: Strikethrough text (`line-through`) with muted text color (`#5A6E63`).
   - Badge: Gray "Removed" pill badge (`#E0E6E2` background, `#5A6E63` text).
   - Metadata block: Displays removal timestamp (`Removed on YYYY-MM-DD HH:mm`) and removal reason callout box (`#F9F9F9` background, italic text).
-  - Action buttons: "Download" and "Preview" buttons are strictly hidden/disabled with a lock icon and tooltip: "File removed - download unavailable".
+  - Action buttons: the "Download" button is disabled with a lock icon and tooltip: "File removed - download unavailable"; no preview action is rendered.
 - **Soft Removal Dialog:** Modal prompting user for a required removal reason (3-250 chars) before confirming soft removal.
 
 ---
@@ -158,6 +158,6 @@ To maintain visual clarity across table lists, cards, and detail views, Priority
 
 During responsive and visual QA (Issue 14), Playwright screenshots are captured and saved under `artifacts/lab-02/screenshots/`; they are re-verified during final integration (Issue 16):
 
-- `artifacts/lab-02/screenshots/create-ticket/` (Desktop, Tablet, Mobile, Validation error state, Submitting state, Success state)
-- `artifacts/lab-02/screenshots/my-tickets/` (Desktop table view, Mobile and 320 px small-mobile card views, Filtered state, No-results state, Dev Requester switched state)
-- `artifacts/lab-02/screenshots/ticket-detail/` (Read-only detail view, Active attachments list, Soft-removed attachments metadata, and removal modal including a 320 px small-mobile check)
+- `artifacts/lab-02/screenshots/create-ticket/` (Desktop, Tablet, Mobile, requester loading/empty/API-failure states, field and attachment validation, API failure with preserved values, submitting state, and success state with generated ticket number)
+- `artifacts/lab-02/screenshots/my-tickets/` (Desktop table view, Mobile and 320 px small-mobile card views, empty state, no-results state, filters/sort/pagination, and Requester B isolation)
+- `artifacts/lab-02/screenshots/ticket-detail/` (Read-only detail view, active attachments, soft-removed attachment metadata, removal modal including a 320 px small-mobile check, and forbidden-access state)

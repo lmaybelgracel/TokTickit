@@ -81,7 +81,7 @@ The application UI strictly implements the **Zen Green Theme**:
   1. **Development Requester Selector Screen:** Card with user selection dropdown, notice banner, and Continue button.
   2. **Create Ticket Screen:** Form layout with system-generated read-only fields at top, category/system/priority classification fields, Summary & Description inputs, Attachment dropzone, and clear Primary Submit / Cancel actions.
   3. **My Tickets Screen:** Search input, filter dropdowns (Category, Priority, Status), Sort toggle, Clear Filters button, Responsive Table (Desktop) / Ticket Cards (Mobile), Pagination controls, Empty & No-results placeholders.
-  4. **Ticket Detail Screen:** Read-only header info, status/priority badges, tabbed or sectioned Attachment list showing active attachments (with Preview/Download/Delete actions) and soft-removed metadata (with removal reason).
+  4. **Ticket Detail Screen:** Read-only header info, status/priority badges, and a sectioned Attachment list showing active attachments with Download and Soft Remove actions plus soft-removed metadata and removal reason. Inline preview is not provided in Lab 2; the owned active-file download is the supported retrieval action.
 
 ---
 
@@ -130,16 +130,16 @@ The application UI strictly implements the **Zen Green Theme**:
 ## 10. Definition of Done (DoD)
 
 ### Part 1: Product Completion Checklist
-- [ ] All functional scope (FR-01 to FR-13) and business rules (BR-01 to BR-11) implemented.
-- [ ] All acceptance criteria (AC-01 to AC-09) satisfied and backed by traceable automated tests.
+- [x] All functional scope (FR-01 to FR-13) and business rules (BR-01 to BR-11) implemented on `lab2-staging`.
+- [x] All acceptance criteria (AC-01 to AC-09) satisfied and backed by traceable automated tests.
 - [ ] 100% passing Unit, API, UI Component, UI Style, Responsive, and Playwright E2E tests on `main`.
-- [ ] Zen Green Design System fully applied with zero clipping, overflow, or broken focus indicators across Desktop, Tablet, and Mobile viewports.
-- [ ] Soft-removal and cross-requester ownership protection verified.
+- [x] Zen Green Design System applied with no detected clipping, overflow, or broken focus indicators across Desktop, Tablet, Mobile, and 320 px viewports.
+- [x] Soft-removal and cross-requester ownership protection verified by API, UI, and E2E tests.
 
 ### Part 2: Course Delivery Checklist
-- [ ] Git workflow strictly followed: all 12 Issues developed on separate feature branches from `lab2-staging`.
-- [ ] All PRs peer-reviewed, comments answered, approved, and merged into `lab2-staging` by Reviewer.
-- [ ] PRs linked to corresponding GitHub Issues on Kanban board.
+- [x] Completed Issue work used separate feature/docs branches from `lab2-staging`; the remaining Issues continue through the same workflow.
+- [x] PR #23 through PR #32 were peer-reviewed, comments answered, approved, and merged into `lab2-staging` by the Reviewer.
+- [x] PR #23 through PR #32 are linked to their corresponding GitHub Issues on the Kanban board.
 - [ ] Final release PR merged from `lab2-staging` into `main`.
 - [ ] All required documents (`specification.md`, `tests.md`, `ui-spec.md`, `api-spec.md`, `reviewer.md`, `ai-use.md`, `README.md`) complete and updated.
 - [ ] Single concise PDF report containing Answer Part 1 through Part 9 submitted.
