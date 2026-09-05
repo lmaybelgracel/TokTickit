@@ -231,7 +231,7 @@ app.post("/api/tickets", attachmentUpload.array("attachments", 5), async (req: R
       });
     }
 
-    const ticket = await prisma.$transaction(async (transaction) => {
+    const ticket = await prisma.$transaction(async (transaction: any) => {
       const created = await transaction.ticket.create({ data: ticketData });
       await transaction.attachment.createMany({
         data: storedFiles.map((file) => ({ ...file, ticketId: created.id })),
