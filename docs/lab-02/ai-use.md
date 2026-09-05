@@ -8,7 +8,9 @@ The exact Antigravity model name was not recorded during the work, so I have not
 
 ## Selected Key Prompts (6-10)
 
-| Prompt Name | Actual Prompt Text | My Reflection |
+The entries below are concise summaries of the actual multi-turn requests used during development. They preserve the intent and scope of the conversations but are not presented as verbatim quotations.
+
+| Prompt Name | Selected Prompt Summary | My Reflection |
 |-------------|--------------------|---------------|
 | **Plan the Lab 2 Engineering Contract** | Read the Lab 2 stakeholder request and prepare numbered functional requirements, business rules, acceptance criteria, exclusions, and a two-part Definition of Done. Do not add authentication, IT Staff workflow, comments, notes, Actions Taken, or later ticket-status features. | This gave the project a clear boundary before feature implementation. Peer review helped fill gaps in transaction behavior, validation, indexing, and failure states. |
 | **Define UI and API Specifications** | Define the Zen Green UI tokens, responsive layouts, loading/empty/error states, requester-context header, REST endpoints, request and response bodies, ownership failures, and HTTP status codes required by Lab 2. | Separating UI and API contracts reduced ambiguity between the client and server. The reviewer identified missing badge, removed-file, status-code, and removal-reason details. |

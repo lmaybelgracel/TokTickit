@@ -128,7 +128,7 @@
 - Server complete repository run: 33/33 tests passed.
 - Client complete repository run: 21/21 tests passed.
 - Lab 2-only runs: Server 26/26 and Client 18/18 tests passed.
-- Playwright E2E and visual scenarios: 2/2 passed.
+- Playwright E2E and visual scenarios: 5/5 passed.
 - Server and Client production builds passed.
 - Desktop, tablet, mobile, and 320 px visual checks passed without detected horizontal overflow.
 
