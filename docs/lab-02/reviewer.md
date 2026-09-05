@@ -21,6 +21,7 @@
 | [#31](https://github.com/lmaybelgracel/TokTickit/pull/31) | Issue 13 / `feature/lab2-automated-e2e-tests` | Approved and merged by @phatthidawadi |
 | [#32](https://github.com/lmaybelgracel/TokTickit/pull/32) | Issue 14 / `feature/lab2-visual-evidence` | Approved and merged by @phatthidawadi |
 | [#33](https://github.com/lmaybelgracel/TokTickit/pull/33) | Issue 15 / `docs/lab2-delivery-evidence` | Reviewed, approved, and merged by @phatthidawadi |
+| [#34](https://github.com/lmaybelgracel/TokTickit/pull/34) | Issue 16 / `lab2-staging` -> `main` | Approved and merged by @phatthidawadi |
 
 ### PR #23 - Sprint Engineering Specification
 
@@ -135,6 +136,18 @@
 **Evidence:** [Documentation review](https://github.com/lmaybelgracel/TokTickit/pull/33#pullrequestreview-5120605745) and [final approval](https://github.com/lmaybelgracel/TokTickit/pull/33#pullrequestreview-5120676607).
 
 **Final result:** Approved and merged by @phatthidawadi into `lab2-staging`.
+
+---
+
+### PR #34 - Issue 16: Release Integration (Release to Main)
+
+**Reviewer comment I received:** ตรวจสอบ PR #34 เรียบร้อยแล้ว ภาพรวมงานมีคุณภาพดีมาก ครอบคลุม FR-01–FR-13, BR-01–BR-11 และ AC-01–AC-09 ครบถ้วนตาม Specification Tests ผ่าน 100% ทุก Suite (API 26, UI 18, E2E 2) และ UI ปฏิบัติตาม Zen Green Design System อย่างสม่ำเสมอ โดยชื่นชม Backend validation, Atomic transaction พร้อม compensation cleanup (BR-11), Ownership enforcement, Frontend debounce 250ms + stale request cancellation และ Soft-removal UI ตาม UI-05
+
+**How I responded:** Thanked the reviewer for the thorough review and feedback throughout the sprint.
+
+**Evidence:** [Final approval](https://github.com/lmaybelgracel/TokTickit/pull/34#pullrequestreview-5122421398)
+
+**Final result:** Approved and merged by @phatthidawadi into `main`.
 
 ## Final Verification Reported in the Reviewed PRs
 
@@ -264,4 +277,4 @@ The linked PR conversations are the source of truth for complete wording, timest
 
 All ten partner PRs were reviewed and approved after their recorded review rounds. The linked GitHub conversations are the source of truth for the exact review wording, response history, timestamps, approval, and merge state. Readable review screenshots will be selected for the final submission evidence; screenshots will supplement, not replace, these working links.
 
-The Issue 15 documentation PR is recorded above. The final release review cannot be recorded in this pre-release file in advance, so its post-review evidence will be included in the final PDF generated from the merged `main` state.
+The Issue 16 release PR (#34) is recorded above. All feature PRs and the release PR were reviewed, approved, and merged by the peer reviewer into their target branches.
