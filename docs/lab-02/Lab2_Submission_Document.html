@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>TokTickIT Lab 2 Submission Report — CPE 334</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Sarabun', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1A2E23;
+    background-color: #ffffff;
+    line-height: 1.6;
+    margin: 30px auto;
+    max-width: 960px;
+    padding: 0 24px;
+  }
+  .print-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #006B3C;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 107, 60, 0.35);
+    z-index: 9999;
+    transition: all 0.2s ease;
+  }
+  .print-btn:hover {
+    background-color: #0B7A46;
+    transform: translateY(-2px);
+  }
+  @media print {
+    .print-btn { display: none; }
+    body {
+      margin: 0;
+      max-width: 100%;
+      padding: 0;
+      color: #111;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    a { text-decoration: none; color: #006B3C; }
+    pre { white-space: pre-wrap !important; word-break: break-all !important; }
+  }
+  .header-card {
+    border: 2px solid #006B3C;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #F5F7F6 0%, #EAF6EF 100%);
+    padding: 24px 28px;
+    margin-bottom: 30px;
+  }
+  .header-title {
+    color: #006B3C;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+  }
+  .header-subtitle {
+    color: #5A6E63;
+    font-size: 15px;
+    margin: 0 0 16px 0;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+    font-size: 14px;
+  }
+  .meta-item strong {
+    color: #006B3C;
+  }
+  h1 {
+    color: #006B3C;
+    font-size: 22px;
+    border-bottom: 3px solid #006B3C;
+    padding-bottom: 8px;
+    margin-top: 36px;
+  }
+  h2 {
+    color: #006B3C;
+    font-size: 19px;
+    border-left: 5px solid #0B7A46;
+    padding-left: 12px;
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+  h3 {
+    color: #1A2E23;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+  p, li {
+    font-size: 14px;
+    color: #2D3748;
+  }
+  ul, ol {
+    padding-left: 24px;
+    margin: 8px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  th {
+    background-color: #006B3C;
+    color: #ffffff;
+    padding: 9px 12px;
+    text-align: left;
+    border: 1px solid #0B7A46;
+  }
+  td {
+    padding: 8px 12px;
+    border: 1px solid #E0E6E2;
+  }
+  tr:nth-child(even) td {
+    background-color: #F8FAF9;
+  }
+  .badge-pass {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-high {
+    background-color: #FDF2F2;
+    color: #B71C1C;
+    border: 1px solid #F5C6CB;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-medium {
+    background-color: #FFF3E0;
+    color: #E65100;
+    border: 1px solid #FFE0B2;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-low {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #C8E6C9;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-new {
+    background-color: #EAF6EF;
+    color: #006B3C;
+    border: 1px solid #B2DFDB;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  pre {
+    background-color: #1A2E23;
+    color: #F5F7F6;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-family: 'Fira Code', 'Cascadia Code', Consolas, Monaco, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    border: 1px solid #0B7A46;
+  }
+  code {
+    background-color: #EAF6EF;
+    color: #006B3C;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+  .image-container {
+    margin: 18px 0;
+    text-align: center;
+    border: 1px solid #E0E6E2;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #FBFDFB;
+  }
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .image-caption {
+    font-size: 13px;
+    color: #5A6E63;
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .callout-box {
+    background-color: #EAF6EF;
+    border-left: 4px solid #006B3C;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+    font-size: 13.5px;
+  }
+  .score-badge {
+    float: right;
+    background-color: #006B3C;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">Save as PDF / Print</button>
+
+<div class="header-card">
+  <div class="header-title">CPE 334: Introduction to Software Engineering in the Age of AI Agents</div>
+  <div class="header-subtitle">Lab 2. TokTickIT Requester Ticketing MVP with UI Foundation &bull; ภาคเรียนที่ 1/2569</div>
+  <div class="meta-grid">
+    <div class="meta-item"><strong>Student / Author:</strong> เกรซ (Grace) — <a href="https://github.com/lmaybelgracel" target="_blank">@lmaybelgracel</a></div>
+    <div class="meta-item"><strong>GitHub Repository:</strong> <a href="https://github.com/lmaybelgracel/TokTickit" target="_blank">https://github.com/lmaybelgracel/TokTickit</a></div>
+    <div class="meta-item"><strong>Peer Reviewer:</strong> บิว (Bew) — <a href="https://github.com/phatthidawadi" target="_blank">@phatthidawadi</a></div>
+    <div class="meta-item"><strong>Partner Reviewed:</strong> ชัญญา (Chanya) — <a href="https://github.com/chanya06" target="_blank">@chanya06</a></div>
+    <div class="meta-item"><strong>GitHub Project:</strong> <a href="https://github.com/users/lmaybelgracel/projects/1" target="_blank">TokTickIT Individual Sprints</a></div>
+    <div class="meta-item"><strong>Score Assessment:</strong> _____ / 60 คะแนน</div>
+  </div>
+</div>
+
+<hr style="border: none; border-top: 1px solid #E0E6E2; margin: 24px 0;">
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 1 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 1: Git Use with Engineering Workflow <span class="score-badge">10 คะแนน</span></h1>
+
+<h3>1.1 Working Links to Repository Artifacts</h3>
+<ul>
+  <li><strong>GitHub Repository:</strong> <a href="https://github.com/lmaybelgracel/TokTickit" target="_blank">https://github.com/lmaybelgracel/TokTickit</a></li>
+  <li><strong>GitHub Project Kanban Board:</strong> <a href="https://github.com/users/lmaybelgracel/projects/1" target="_blank">https://github.com/users/lmaybelgracel/projects/1</a></li>
+  <li><strong>Peer Review Record:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/docs/lab-02/reviewer.md" target="_blank">docs/lab-02/reviewer.md</a></li>
+  <li><strong>README.md:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/README.md" target="_blank">README.md</a></li>
+  <li><strong>.gitignore:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/.gitignore" target="_blank">.gitignore</a></li>
+</ul>
+
+<h3>1.2 Git Workflow & Pull Requests Summary (All Merged into lab2-staging via Peer Review)</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Issue</th>
+      <th>Branch Name</th>
+      <th>Pull Request</th>
+      <th>Reviewer Verdict &amp; Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Issue 5</td><td><code>feature/lab2-engineering-spec</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/23" target="_blank">PR #23</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 6</td><td><code>feature/lab2-ui-api-spec</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/24" target="_blank">PR #24</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 7</td><td><code>feature/lab2-test-plan</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/25" target="_blank">PR #25</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 8</td><td><code>feature/lab2-database-seed</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/26" target="_blank">PR #26</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 9</td><td><code>feature/lab2-requester-context</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/27" target="_blank">PR #27</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 10</td><td><code>feature/lab2-create-ticket</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/28" target="_blank">PR #28</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 11</td><td><code>feature/lab2-my-tickets</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/29" target="_blank">PR #29</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 12</td><td><code>feature/lab2-ticket-detail-attachments</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/30" target="_blank">PR #30</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 13</td><td><code>feature/lab2-automated-e2e-tests</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/31" target="_blank">PR #31</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 14</td><td><code>feature/lab2-visual-evidence</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/32" target="_blank">PR #32</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Issue 15</td><td><code>docs/lab2-delivery-evidence</code></td><td><a href="https://github.com/lmaybelgracel/TokTickit/pull/33" target="_blank">PR #33</a></td><td><span class="badge-pass">Approved &amp; Merged</span> by @phatthidawadi</td></tr>
+    <tr><td>Release</td><td><code>lab2-staging</code> &rarr; <code>main</code></td><td><em>Release PR</em></td><td><span class="badge-pass">Release Merged into main</span></td></tr>
+  </tbody>
+</table>
+
+<div class="callout-box">
+  <strong>การปฏิบัติตามคู่มือ GitHub Workflow (PDF 1):</strong> ทุก Pull Request ถูกเชื่อมโยงเข้ากับ Issue ผ่าน <em>Development Panel (Method 1)</em> เพื่อให้ระบบติดตามการ์ดบน Project Board อย่างถูกต้อง และยึดข้อตกลงที่ให้ Peer Reviewer เป็นผู้กด Merge เข้า Staging เท่านั้น
+</div>
+
+<h3>1.3 Directory Structure</h3>
+<pre><code>TokTickIT/
+|-- client/                         # Frontend React + TypeScript + Vite
+|   |-- src/
+|   |   |-- components/             # CreateTicket, MyTickets, TicketDetail, RequesterSelector
+|   |   |-- __tests__/lab-02/       # Vitest UI Component tests
+|   |   |-- api.ts                  # Client API client with X-Development-Requester-Id
+|   |   |-- App.tsx                 # Main application shell & router state
+|   |   `-- lab2.css                # Zen Green theme styles & responsive rules
+|-- server/                         # Backend Node.js + Express + Prisma
+|   |-- prisma/
+|   |   |-- schema.prisma           # RequesterUser, Category, RelatedSystem, Ticket, Attachment
+|   |   |-- seed.ts                 # Idempotent seed data (4 categories, 7 systems, 8+1 users)
+|   |   `-- migrations/             # Committed Prisma migrations
+|   |-- src/app.ts                  # Express REST APIs with ownership enforcement
+|   `-- tests/lab-02/               # Supertest API & integration tests
+|-- e2e/lab-02/                     # Playwright E2E and visual test specs
+|-- docs/lab-02/                    # All 6 required specification & delivery documents
+|-- artifacts/lab-02/screenshots/   # 26 responsive & submission state screenshot artifacts
+|-- .gitignore                      # Properly excludes node_modules, .env, dist, and uploads
+`-- README.md                       # Comprehensive setup and test documentation</code></pre>
+
+<h3>1.4 Pull Requests I Reviewed for My Partner (@chanya06) &mdash; 10 PRs</h3>
+<table>
+  <thead>
+    <tr>
+      <th>PR</th>
+      <th>Partner Feature</th>
+      <th>Review Verdict &amp; Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/23" target="_blank">PR #23</a></td><td>Feature 5 - Sprint Specifications &amp; Test Plan</td><td><span class="badge-pass">Approved &amp; Merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/25" target="_blank">PR #25</a></td><td>Feature 6 - Database Schema &amp; Idempotent Seed</td><td><span class="badge-pass">Changes requested, rechecked, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/27" target="_blank">PR #27</a></td><td>Feature 7 - Development Requester Context</td><td><span class="badge-pass">Changes requested, rechecked, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/29" target="_blank">PR #29</a></td><td>Feature 8 - Ticket Creation API &amp; Number Generator</td><td><span class="badge-pass">Multiple review rounds, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/30" target="_blank">PR #30</a></td><td>Feature 9 - Create Ticket UI</td><td><span class="badge-pass">Multiple review rounds, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/31" target="_blank">PR #31</a></td><td>Feature 10 - My Tickets API</td><td><span class="badge-pass">Changes requested, rechecked, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/32" target="_blank">PR #32</a></td><td>Feature 11 - My Tickets UI</td><td><span class="badge-pass">Changes requested, rechecked, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/33" target="_blank">PR #33</a></td><td>Feature 12 - Ticket Detail &amp; Ownership Guard</td><td><span class="badge-pass">Changes requested, rechecked, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/34" target="_blank">PR #34</a></td><td>Feature 13 - Attachment Lifecycle</td><td><span class="badge-pass">Changes requested, rechecked, approved &amp; merged</span></td></tr>
+    <tr><td><a href="https://github.com/chanya06/toktickit/pull/35" target="_blank">PR #35</a></td><td>Feature 14 - QA, Automated Tests, Screenshots &amp; PDF</td><td><span class="badge-pass">Changes requested, rechecked, approved</span></td></tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 2 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 2: Spec DD (Specification-Driven Development) <span class="score-badge">5 คะแนน</span></h1>
+
+<p><strong>Link to Specification:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/docs/lab-02/specification.md" target="_blank">docs/lab-02/specification.md</a></p>
+
+<h3>2.1 โครงสร้างเอกสาร Engineering Specification (ครบถ้วน 11 Sections ตามข้อกำหนด 8.10)</h3>
+<ol>
+  <li><strong>Sprint Goal:</strong> ส่งมอบระบบ Requester Ticketing MVP ที่ให้ผู้ใช้งานสร้างตั๋ว ค้นหา จัดการไฟล์แนบ ภายใต้ระบบจำลอง Development Requester และดีไซน์ Zen Green</li>
+  <li><strong>Stakeholder Request Interpretation:</strong> วิเคราะห์ขอบเขตงานจาก Stakeholder อย่างเป็นระบบ</li>
+  <li><strong>Scope:</strong> ระบุ Included และ Excluded ชัดเจน (ไม่รวม Auth จริง, IT Staff workflow, Comments)</li>
+  <li><strong>Functional Requirements:</strong> กำหนด FR-01 ถึง FR-13 ครอบคลุม Requester Context, Ticket Creation, My Tickets, Ticket Detail และ Attachment Lifecycle</li>
+  <li><strong>Business Rules:</strong> กำหนดกฎธุรกิจหมายเลข BR-01 ถึง BR-11 (เช่น รูปแบบ Ticket Number, ขีดจำกัดไฟล์ 5MB/5ไฟล์, Soft Removal พร้อมเหตุผล 3-250 ตัวอักษร, Atomic Database Transaction)</li>
+  <li><strong>UI Specification Summary:</strong> สรุป Zen Green Palette, Badges, Layouts</li>
+  <li><strong>Data Changes:</strong> กำหนด Prisma Schema ครบทั้ง 5 Models พร้อม Foreign Keys และ Indexes</li>
+  <li><strong>API Contract:</strong> กำหนด Endpoints, Context Header <code>X-Development-Requester-Id</code>, Payload shapes, และ HTTP Statuses</li>
+  <li><strong>Acceptance Criteria:</strong> กำหนดในรูปแบบ Given-When-Then หมายเลข AC-01 ถึง AC-09</li>
+  <li><strong>Definition of Done:</strong> แบ่งเป็น Product Completion และ Course Delivery Checklist</li>
+  <li><strong>Assumptions and Decisions:</strong> บันทึกข้อตัดสินใจทางเทคนิค เช่น LocalStorage persistence และ Server disk storage</li>
+</ol>
+
+<div class="callout-box">
+  <strong>หลักฐานการทำ Spec DD ก่อนเริ่มเขียนโค้ด:</strong> เอกสาร <code>specification.md</code> ถูกจัดทำและเปิด PR แรก (<a href="https://github.com/lmaybelgracel/TokTickit/pull/23" target="_blank">PR #23</a>) ก่อนเริ่มงาน Database, API หรือ Frontend ใน Issue ถัดไปตามแนวทาง Spec-Driven Development
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 3 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 3: Test DD and Traceability <span class="score-badge">10 คะแนน</span></h1>
+
+<p><strong>Link to Test Plan:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/docs/lab-02/tests.md" target="_blank">docs/lab-02/tests.md</a></p>
+
+<h3>3.1 Planned Tests Table &amp; Traceability</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Test ID</th>
+      <th>Level</th>
+      <th>Req / AC</th>
+      <th>คำอธิบายการทดสอบ</th>
+      <th>ผลลัพธ์ที่คาดหวัง</th>
+      <th>ไฟล์ทดสอบจริง</th>
+      <th>สถานะ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>API-01</strong></td><td>API</td><td>AC-01, FR-05</td><td>สร้างตั๋วที่มีข้อมูลถูกต้อง</td><td>201 Created ได้รหัส TKT-YYYY-XXXXXX</td><td><code>server/.../create-ticket.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-02</strong></td><td>API</td><td>AC-01, BR-02</td><td>สถานะตั๋วเริ่มต้น</td><td>currentStatus เป็น NEW เสมอ</td><td><code>server/.../create-ticket.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-03</strong></td><td>API</td><td>BR-08</td><td>Validation ความยาว Summary &amp; Description</td><td>400 Bad Request เมื่อต่ำหรือเกินเกณฑ์</td><td><code>server/.../create-ticket.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-04</strong></td><td>API</td><td>FR-01, FR-03</td><td>ดึงรายชื่อ Active Requesters</td><td>200 OK ไม่พบ Inactive Requester</td><td><code>server/.../requester-context.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-05</strong></td><td>API</td><td>FR-07, FR-08</td><td>ดึงตั๋วเฉพาะเจ้าของ (Paginated)</td><td>200 OK กรองตาม Requester ID</td><td><code>server/.../my-tickets.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-06</strong></td><td>API</td><td>AC-03, BR-04</td><td>ป้องกันการเข้าถึงตั๋วข้าม Requester</td><td>403 Forbidden เมื่อผู้ใช้อื่นพยายามเปิด</td><td><code>server/.../ticket-detail.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-07</strong></td><td>API</td><td>AC-04, AC-05</td><td>ตรวจไฟล์แนบเกิน 5MB หรือเกิน 5 ไฟล์</td><td>400 Bad Request ปฏิเสธไฟล์ผิดเงื่อนไข</td><td><code>server/.../attachments.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-08</strong></td><td>API</td><td>AC-06, BR-07</td><td>Soft Removal และเหตุผล 3-250 ตัวอักษร</td><td>200 OK บันทึก isRemoved และ reason</td><td><code>server/.../attachments.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-09</strong></td><td>API</td><td>AC-06, BR-07</td><td>บล็อกการดาวน์โหลดไฟล์ที่ถูก Soft Remove</td><td>410 Gone ปฏิเสธการดาวน์โหลด</td><td><code>server/.../attachments.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>API-10</strong></td><td>API</td><td>BR-11, AC-09</td><td>Atomic Rollback เมื่อไฟล์แนบล้มเหลว</td><td>Rollback ตั๋วทั้งหมด ไม่สร้าง orphaned row</td><td><code>server/.../create-ticket.api.test.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>UI-01</strong></td><td>UI</td><td>AC-02</td><td>Redirect เมื่อยังไม่เลือก Requester</td><td>เปิดหน้าเลือก Requester ทันที</td><td><code>client/.../RequesterSelector.test.tsx</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>UI-02</strong></td><td>UI</td><td>AC-07, FR-02</td><td>สลับตัวผู้ใช้งาน (Context Switching)</td><td>รีโหลดรายการตั๋วของผู้ใช้คนใหม่ทันที</td><td><code>client/.../RequesterSelector.test.tsx</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>UI-03</strong></td><td>UI</td><td>BR-09, AC-04</td><td>Form validation &amp; รักษาข้อมูลเดิมเมื่อ error</td><td>แสดง Error ใต้ฟิลด์ และข้อมูลที่กรอกไม่หาย</td><td><code>client/.../CreateTicket.test.tsx</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>UI-04</strong></td><td>UI</td><td>AC-08</td><td>แสดงสถานะ No-results เมื่อไม่พบข้อมูล</td><td>แสดงข้อความแจ้งเตือนและปุ่ม Clear Filters</td><td><code>client/.../MyTickets.test.tsx</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>UI-05</strong></td><td>UI</td><td>BR-07</td><td>แสดงไฟล์แนบที่ถูก Soft Remove</td><td>ขีดฆ่าชื่อไฟล์ ขึ้นป้าย Removed ปุ่มโหลดล็อก</td><td><code>client/.../AttachmentSection.test.tsx</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>UI-06</strong></td><td>UI</td><td>UI Spec</td><td>ตรวจ CSS Zen Green และ Accessibility</td><td>สี ขอบ ป้าย และ aria-required ถูกต้อง</td><td><code>client/.../UIStyle.test.tsx</code></td><td><span class="badge-pass">Passed</span></td></tr>
+    <tr><td><strong>E2E-01</strong></td><td>E2E</td><td>AC-01..07</td><td>Full Browser Workflow Flow</td><td>สร้างตั๋ว &rarr; ดูรายการ &rarr; เพิ่มไฟล์ &rarr; Soft remove &rarr; สลับคน</td><td><code>e2e/.../requester-ticket-flow.spec.ts</code></td><td><span class="badge-pass">Passed</span></td></tr>
+  </tbody>
+</table>
+
+<h3>3.2 Test Execution Results (100% Pass Rate)</h3>
+<pre><code>=== SERVER API & INTEGRATION TESTS (vitest run) ===
+Test Files  6 passed (6)
+     Tests  33 passed (33)
+  Duration  1.84s
+
+=== CLIENT UI COMPONENT TESTS (vitest run) ===
+Test Files  6 passed (6)
+     Tests  21 passed (21)
+  Duration  2.12s
+
+=== PLAYWRIGHT E2E & VISUAL SCENARIOS (npx playwright test) ===
+Running 5 tests using 1 worker
+  [chromium] &rsaquo; requester-ticket-flow.spec.ts (full workflow) &mdash; passed
+  [chromium] &rsaquo; visual-evidence.spec.ts (desktop, tablet, mobile, 320px) &mdash; passed
+  [chromium] &rsaquo; submission-evidence.spec.ts (all 9 grading states) &mdash; passed
+  5 passed (8.4s)</code></pre>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 4 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 4: AI Use with Reflection <span class="score-badge">5 คะแนน</span></h1>
+
+<p><strong>Link to AI Record:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/docs/lab-02/ai-use.md" target="_blank">docs/lab-02/ai-use.md</a></p>
+
+<h3>4.1 AI Tools Used</h3>
+<p>เริ่มต้นใช้ <strong>Google Antigravity</strong> สำหรับการวางโครงสร้างและพัฒนา Feature ช่วงต้น และใช้ <strong>OpenAI Codex</strong> ในการต่อยอดแก้ข้อเสนอแนะจากการทำ Peer Review, การเขียนชุดทดสอบ Playwright และตรวจสอบเอกสารให้สอดคล้องกับเกณฑ์การส่งงานของอาจารย์</p>
+
+<h3>4.2 Selected Key Prompts (10 Prompts)</h3>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 25%;">Prompt Name</th>
+      <th style="width: 45%;">Selected Prompt Summary</th>
+      <th style="width: 30%;">My Reflection</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Plan Contract</strong></td><td>ร่างข้อกำหนด FR, BR, AC, Scope และ Definition of Done ห้ามใส่ Auth หรือ IT Staff</td><td>ช่วยกำหนดกรอบการทำงานชัดเจน ไม่ให้ AI เขียนโค้ดเกินขอบเขตแล็บ</td></tr>
+    <tr><td><strong>UI &amp; API Spec</strong></td><td>กำหนด Zen Green tokens, responsive rules, endpoints, request/response, errors</td><td>แยกงาน UI และ API ชัดเจน ลดความผิดพลาดระหว่าง Frontend และ Backend</td></tr>
+    <tr><td><strong>Test Matrix</strong></td><td>แมป AC ทุกข้อเข้ากับตาราง Planned Test ครอบคลุม Unit, API, UI, E2E</td><td>ช่วยให้เห็น Test Cases ที่มักถูกมองข้าม เช่น การจำกัดไฟล์ที่ 6 และการบล็อกโหลด 410</td></tr>
+    <tr><td><strong>DB &amp; Seed</strong></td><td>เขียน Prisma schema, relations, indexes และ idempotent seed data</td><td>การใช้ upsert ช่วยให้ seed ซ้ำได้ไม่พัง และทำให้เข้าใจการทำ Foreign Key บน Prisma</td></tr>
+    <tr><td><strong>Dev Requester</strong></td><td>ทำตัวเลือกจำลอง Login, Context header, LocalStorage และสลับผู้ใช้</td><td>ช่วยจำลองสิทธิ์เจ้าของข้อมูลได้สมจริง โดยไม่ต้องเสียเวลาเขียนระบบ Auth จริง</td></tr>
+    <tr><td><strong>Create &amp; My Tickets</strong></td><td>ทำฟอร์มสร้างตั๋ว Gen เลขตั๋ว และหน้ารายการตั๋วพร้อม Debounce Search, Filters</td><td>การใส่ Debounce และ AbortController ป้องกันบั๊กแสดงข้อมูลข้าม Requester ได้ดี</td></tr>
+    <tr><td><strong>Ticket Detail &amp; Attach</strong></td><td>ทำหน้าแสดงตั๋ว Read-only จัดการไฟล์แนบ และ Soft Removal บันทึกเหตุผล</td><td>ทำให้เห็นความสำคัญของการตรวจสิทธิ์ทั้งตอนดูตั๋วและตอนดาวน์โหลดไฟล์</td></tr>
+    <tr><td><strong>Automated &amp; E2E</strong></td><td>เขียน Vitest, React Testing Library และ Playwright E2E แบบ Full Flow</td><td>การรันเทสต์จริงให้ผลชัดเจนกว่าการเชื่อ AI เพียงอย่างเดียวว่าโค้ดทำงานได้</td></tr>
+    <tr><td><strong>Visual Evidence</strong></td><td>ตรวจหน้าจอ Desktop, Tablet, Mobile และ 320px ไม่ให้มี Overflow</td><td>การตรวจที่จอ 320px ช่วยจับปัญหา Modal และชื่อไฟล์แนบยาวเกินจอได้จริง</td></tr>
+    <tr><td><strong>Audit Delivery</strong></td><td>ตรวจสอบความครบถ้วนของเอกสาร ประวัติ Git และภาพ Screenshot 9 ส่วน</td><td>ทำให้รู้ว่าต้องตรวจสอบหลักฐานจาก GitHub จริง ไม่ทึกทักเอาเอง</td></tr>
+  </tbody>
+</table>
+
+<h3>4.3 My Reflection</h3>
+<p>การใช้ AI เข้ามาช่วยในการพัฒนาซอฟต์แวร์ทำให้การแบ่งงานตามขั้นตอน (Spec &rarr; Test &rarr; Code &rarr; Review) ทำได้อย่างมีประสิทธิภาพและรวดเร็ว โดยเฉพาะการตั้ง Prompt ให้ทำงานทีละ Issue ย่อย อย่างไรก็ตาม ข้อคิดสำคัญที่ได้คือ <em>เราต้องไม่เชื่อโค้ดหรือคำตอบของ AI ในทันทีโดยไม่มีการทดสอบ</em> เพราะมีหลายจุดที่ AI ละเลยเงื่อนไขทางธุรกิจ เช่น การอนุญาตให้ดาวน์โหลดไฟล์ที่ถูกลบไปแล้ว หรือปัญหาการโหลดข้อมูลช้าจนข้อมูลสลับ Requester ซ้อนทับกัน การเขียนชุด Automated Tests และการทำ Peer Review อย่างเข้มงวดจึงเป็นสิ่งที่พิสูจน์ความถูกต้องได้อย่างแท้จริง</p>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 5 & PART 6 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 5: Development Requester Select Screen <span class="score-badge">รวมใน Part 6</span></h1>
+<p>ระบบจัดเตรียมหน้าต่างจำลองการเข้าสู่ระบบ <strong>Development Requester Selector</strong> โดยโหลดเฉพาะผู้ใช้งานที่เป็น Active จากฐานข้อมูล PostgreSQL มาแสดงใน Dropdown มีคำเตือนระบุชัดเจนว่าเป็นกลไกสำหรับทดสอบใน Lab 2 เท่านั้น</p>
+
+<h1>Answer Part 6: Working Ticket Screen: Create Mode <span class="score-badge">10 คะแนน</span></h1>
+
+<h3>6.1 ข้อกำหนดหลัก 5 ประการที่ผ่านการตรวจสอบ</h3>
+<ol>
+  <li><strong>Requester Field Populated:</strong> ฟิลด์ชื่อ Requester ถูกดึงมาจากผู้ใช้งานที่เลือกไว้ในระบบจำลองอัตโนมัติ และตั๋วที่บันทึกมี <code>requesterId</code> ตรงกัน</li>
+  <li><strong>Reference Data Loaded:</strong> หมวดหมู่ (Categories) และระบบที่เกี่ยวข้อง (Related Systems) โหลดมาจาก PostgreSQL อย่างถูกต้อง</li>
+  <li><strong>Field-Level Validation:</strong> เมื่อกรอกข้อมูลไม่ครบหรือสั้นเกินไป ระบบแสดงข้อความแจ้งเตือนสีแดงใต้ฟิลด์นั้น ๆ ทันที</li>
+  <li><strong>Attachment Constraints:</strong> ทดสอบอัปโหลดไฟล์ที่ถูกต้อง (ผ่าน) และไฟล์เกินขนาด/ผิดประเภท (ถูกปฏิเสธพร้อมข้อความเตือน)</li>
+  <li><strong>Form Value Retention on Error:</strong> เมื่อเกิดความล้มเหลวในการส่งข้อมูล ค่าต่าง ๆ ที่ผู้ใช้กรอกไว้จะไม่สูญหาย</li>
+</ol>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/desktop.png" alt="Create Ticket Desktop View">
+  <div class="image-caption">ภาพที่ 6.1: หน้า Create Ticket บน Desktop Viewport โหลดข้อมูล Category และ Related System จากฐานข้อมูล</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/requester-selection-desktop.png" alt="Development Requester Selection">
+  <div class="image-caption">ภาพที่ 6.2: หน้าจอ Development Requester Selection Screen แสดงเฉพาะ Active Requesters</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/validation-mobile.png" alt="Validation Messages on Mobile">
+  <div class="image-caption">ภาพที่ 6.3: การแจ้งเตือน Field-level Validation Messages บนหน้าจอ Mobile เมื่อไม่กรอกข้อมูลสำคัญ</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/invalid-attachment.png" alt="Invalid Attachment Rejection">
+  <div class="image-caption">ภาพที่ 6.4: การปฏิเสธไฟล์แนบที่มีขนาดเกิน 5 MB หรือนามสกุลไฟล์ไม่ถูกต้องตามกฎ BR-05</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/submitting.png" alt="Submitting State">
+  <div class="image-caption">ภาพที่ 6.5: สถานะกำลังส่งข้อมูล (Busy State) ปุ่มถูกปิดการใช้งานเพื่อป้องกันการกดซ้ำ</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/success-ticket-number.png" alt="Success Ticket Created">
+  <div class="image-caption">ภาพที่ 6.6: สร้างตั๋วสำเร็จ ระบบแสดงหมายเลขตั๋วทางการที่สร้างจาก Backend (TKT-YYYY-XXXXXX)</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/api-failure-values-preserved.png" alt="API Failure Form Retained">
+  <div class="image-caption">ภาพที่ 6.7: กรณีจำลอง Backend Failure ระบบแสดง Error Alert ชัดเจนโดยค่าที่กรอกไว้ในฟอร์มยังคงอยู่ครบ</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 7 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 7: Working My Tickets Screen <span class="score-badge">10 คะแนน</span></h1>
+
+<h3>7.1 การทดสอบการแยกข้อมูลผู้ใช้ (Data Isolation) &amp; ความสามารถของหน้ารายการ</h3>
+<ul>
+  <li>เมื่อเลือก <strong>Requester A</strong>: ระบบแสดงเฉพาะรายการตั๋วที่ Requester A เป็นเจ้าของ</li>
+  <li>เมื่อสลับเป็น <strong>Requester B</strong>: ตั๋วของ Requester A จะหายไปทันที และแสดงเฉพาะตั๋วของ Requester B</li>
+  <li>รองรับการค้นหา (Search Debounce 250ms), การกรอง (Category, Priority, Status), การจัดเรียง (Sorting) และการแบ่งหน้า (Pagination)</li>
+</ul>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/desktop-table.png" alt="My Tickets Desktop Table">
+  <div class="image-caption">ภาพที่ 7.1: หน้า My Tickets บน Desktop แบบ Table View แสดงตั๋วของ Requester A พร้อมป้ายสถานะ Zen Green</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/requester-b-isolation.png" alt="Requester B Isolation">
+  <div class="image-caption">ภาพที่ 7.2: การสลับไปที่ Requester B ยืนยันการแยกสิทธิ์ข้อมูล (Data Isolation) ตั๋วของ Requester A หายไปทั้งหมด</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/filters-sort-pagination.png" alt="Filters and Pagination">
+  <div class="image-caption">ภาพที่ 7.3: การกรองตามหมวดหมู่ ความสำคัญ การจัดเรียงตามวันที่ และระบบ Pagination</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/no-results.png" alt="No Results State">
+  <div class="image-caption">ภาพที่ 7.4: หน้าจอ No-results State พร้อมปุ่ม "Clear Filters" เมื่อค้นหาแล้วไม่พบข้อมูล</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/empty-state.png" alt="Empty State">
+  <div class="image-caption">ภาพที่ 7.5: หน้าจอ Empty State เมื่อ Requester คนนั้นยังไม่เคยสร้างตั๋วในระบบ</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/mobile-card.png" alt="Mobile Card View">
+  <div class="image-caption">ภาพที่ 7.6: การแสดงผลบนอุปกรณ์พกพา (Mobile View) เปลี่ยนจาก Table เป็น Ticket Card อย่างสวยงาม</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 8 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 8: Working Ticket Screen: View Mode and Attachments <span class="score-badge">5 คะแนน</span></h1>
+
+<h3>8.1 วงจรชีวิตของไฟล์แนบและการรักษาความปลอดภัย</h3>
+<ul>
+  <li><strong>Read-only Detail:</strong> ข้อมูลตั๋วทั้งหมดแสดงผลแบบอ่านอย่างเดียว พร้อม Badges สีชัดเจน</li>
+  <li><strong>Active File Download:</strong> ผู้ใช้ที่เป็นเจ้าของสามารถคลิกดาวน์โหลดไฟล์แนบที่ยังใช้งานอยู่ได้</li>
+  <li><strong>Soft Removal:</strong> การลบไฟล์แนบถูกบังคับให้ระบุเหตุผล (3-250 ตัวอักษร) ไฟล์ไม่ถูกลบจริงจากฐานข้อมูล แต่ถูกเปลี่ยนสถานะเป็น <code>isRemoved: true</code></li>
+  <li><strong>Download Protection (410 Gone):</strong> ไฟล์ที่ถูกลบไปแล้วจะไม่สามารถดาวน์โหลดได้อีก ปุ่มดาวน์โหลดจะถูกล็อกพร้อมไอคอนกุญแจ</li>
+  <li><strong>Cross-Requester Protection (403 Forbidden):</strong> หาก Requester อื่นพยายามเข้าถึงตั๋วหรือไฟล์ผ่าน URL จะถูกปฏิเสธด้วย HTTP 403 Forbidden</li>
+</ul>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/ticket-detail/desktop-active-attachment.png" alt="Ticket Detail Active Attachments">
+  <div class="image-caption">ภาพที่ 8.1: หน้า Ticket Detail แสดงข้อมูลแบบ Read-only และรายการไฟล์แนบที่พร้อมใช้งาน (Active)</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/ticket-detail/removal-modal.png" alt="Soft Removal Modal">
+  <div class="image-caption">ภาพที่ 8.2: หน้าต่าง Modal ยืนยันการทำ Soft Removal บังคับให้ระบุเหตุผลในการลบ</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/ticket-detail/desktop-removed-attachment.png" alt="Soft Removed Attachment State">
+  <div class="image-caption">ภาพที่ 8.3: การแสดงผลไฟล์ที่ถูก Soft Remove — ชื่อไฟล์ถูกขีดฆ่า แสดงเหตุผลและวันเวลาที่ลบ ปุ่มโหลดถูกบล็อก</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/ticket-detail/forbidden-access.png" alt="403 Forbidden Access">
+  <div class="image-caption">ภาพที่ 8.4: การป้องกันความปลอดภัย เมื่อพยายามเข้าถึงตั๋วของผู้ใช้อื่น ระบบตอบกลับ 403 Forbidden</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ========================================================================= -->
+<!-- ANSWER PART 9 -->
+<!-- ========================================================================= -->
+<h1>Answer Part 9: Zen Green UI and Responsive Evidence <span class="score-badge">5 คะแนน</span></h1>
+
+<p><strong>Link to UI Spec:</strong> <a href="https://github.com/lmaybelgracel/TokTickit/blob/main/docs/lab-02/ui-spec.md" target="_blank">docs/lab-02/ui-spec.md</a></p>
+
+<h3>9.1 Zen Green Color Tokens Summary</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Color Token</th>
+      <th>Hex Code</th>
+      <th>การนำไปใช้งานในระบบ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Primary green</strong></td><td><code>#006B3C</code></td><td>แถบ App Header, ปุ่ม Primary CTA, ข้อความเน้นความสำคัญ</td></tr>
+    <tr><td><strong>Secondary green</strong></td><td><code>#0B7A46</code></td><td>เส้น Focus outline, ลิงก์, สถานะ Hover, ปุ่ม Secondary</td></tr>
+    <tr><td><strong>Pale green</strong></td><td><code>#EAF6EF</code></td><td>พื้นหลังแถวที่ถูกเลือก, แบนเนอร์ Success, ป้ายสถานะ NEW</td></tr>
+    <tr><td><strong>Page background</strong></td><td><code>#F5F7F6</code></td><td>สีพื้นหลังหน้าเว็บโทนสว่างสบายตา</td></tr>
+    <tr><td><strong>Surface / cards</strong></td><td><code>#FFFFFF</code></td><td>การ์ดเนื้อหา ขอบเส้นสี <code>#E0E6E2</code> พร้อมเงาบางเบา</td></tr>
+    <tr><td><strong>Text main</strong></td><td><code>#1A2E23</code></td><td>ตัวอักษรสีเขียวเข้มชาร์โคล อ่านง่าย สบายตา ไม่ใช้สีดำสนิท</td></tr>
+    <tr><td><strong>Error / Warning</strong></td><td><code>#B71C1C / #E65100</code></td><td>ข้อความแจ้งเตือนสีแดง และป้ายเตือนระดับความสำคัญสีส้ม</td></tr>
+  </tbody>
+</table>
+
+<h3>9.2 Completed Visual Inspection Checklist</h3>
+<ul>
+  <li>[x] <strong>Desktop Viewport (&ge; 992px):</strong> หน้าจอจัดคอลัมน์กว้าง จัดกึ่งกลางกว้างสุด 1200px ตัวหนังสือไม่ตกขอบ</li>
+  <li>[x] <strong>Tablet Viewport (768px - 991px):</strong> ฟอร์มจัด 2 คอลัมน์ Summary และ Description ขยายเต็มความกว้าง</li>
+  <li>[x] <strong>Mobile Viewport (&lt; 768px):</strong> ฟิลด์เรียงซ้อนแนวตั้ง ปุ่มสัมผัสขนาดใหญ่ (&ge; 44px) เปลี่ยนตารางเป็น Cards</li>
+  <li>[x] <strong>Small Mobile Viewport (320px):</strong> ทดสอบบนหน้าจอขนาดเล็กพิเศษ 320x568px ไม่มีข้อความล้นทะลุจอ หรือปุ่มทับซ้อน</li>
+  <li>[x] <strong>Accessibility:</strong> ฟิลด์บังคับมีดอกจันสีแดงและ <code>aria-required="true"</code> ปุ่มไอคอนมีข้อความกำกับสำหรับ Screen reader</li>
+</ul>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/tablet.png" alt="Tablet Layout">
+  <div class="image-caption">ภาพที่ 9.1: การแสดงผลบน Tablet Viewport (768px - 991px)</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/create-ticket/mobile.png" alt="Mobile Layout">
+  <div class="image-caption">ภาพที่ 9.2: การแสดงผลบน Mobile Viewport (&lt; 768px) เรียงฟิลด์แบบ Stack สวยงาม</div>
+</div>
+
+<div class="image-container">
+  <img src="../../artifacts/lab-02/screenshots/my-tickets/small-mobile-card.png" alt="Small Mobile 320px Check">
+  <div class="image-caption">ภาพที่ 9.3: การทดสอบบนหน้าจอขนาดเล็กพิเศษ 320px ยืนยันว่าไม่มีการ Overflow แนวนอน</div>
+</div>
+
+<hr style="margin-top: 40px;">
+<div style="text-align: center; color: #5A6E63; font-size: 13px; padding-bottom: 30px;">
+  TokTickIT Project &bull; Computer Engineering, KMUTT &bull; End of Lab 2 Submission Document
+</div>
+
+</body>
+</html>
