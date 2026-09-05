@@ -136,12 +136,108 @@ The linked PR conversations are the source of truth for complete wording, timest
 
 ## Pull Requests I Reviewed for My Partners
 
-The assigned peer work is still in progress. This section will be completed only after the review is actually submitted. The final record will follow the Lab 1 format and include:
+**Partner author:** Chanya - GitHub: [@chanya06](https://github.com/chanya06)
 
-| PR | Author / Branch | Reviewer verdict |
+| PR | Partner feature | My final verdict |
 |----|-----------------|------------------|
-| Pending | Waiting for the peer's Lab 2 PR link | Not yet reviewed |
+| [#23](https://github.com/chanya06/toktickit/pull/23) | Feature 5 - Sprint Specifications & Test Plan | Commented, rechecked, approved; merged |
+| [#25](https://github.com/chanya06/toktickit/pull/25) | Feature 6 - Database Schema & Idempotent Seed | Changes requested, rechecked, approved; merged |
+| [#27](https://github.com/chanya06/toktickit/pull/27) | Feature 7 - Development Requester Context | Changes requested, rechecked, approved; merged |
+| [#29](https://github.com/chanya06/toktickit/pull/29) | Feature 8 - Ticket Creation API & Number Generator | Multiple review rounds, approved; merged |
+| [#30](https://github.com/chanya06/toktickit/pull/30) | Feature 9 - Create Ticket UI | Multiple review rounds, approved; merged |
+| [#31](https://github.com/chanya06/toktickit/pull/31) | Feature 10 - My Tickets API | Changes requested, rechecked, approved; merged |
+| [#32](https://github.com/chanya06/toktickit/pull/32) | Feature 11 - My Tickets UI | Changes requested, rechecked, approved; merged |
+| [#33](https://github.com/chanya06/toktickit/pull/33) | Feature 12 - Ticket Detail & Ownership Guard | Changes requested, rechecked, approved; merged |
+| [#34](https://github.com/chanya06/toktickit/pull/34) | Feature 13 - Attachment Lifecycle | Changes requested, rechecked, approved; merged |
 
-For each completed peer review, this document will include the PR link, the Issue/acceptance criteria checked, my actual review comment, the partner's response or fix, my final decision, and a readable screenshot under `docs/lab-02/reviews/`.
+### Partner PR #23 - Specifications and Test Plan
 
-No review-given claim will be included in the final report until it can be verified on GitHub.
+**What I reviewed:** I compared the six Lab 2 documents with the handout and checked the business rules, API capabilities, UI palette, traceability, reviewer record, and AI-use reflection. I recommended adding the Appendix B `Known Limitations or Deferred Tests` section.
+
+**Partner response and my follow-up:** Chanya added the missing section and documented the Lab 3 exclusions. I checked the update and approved the PR.
+
+**Evidence:** [Initial review](https://github.com/chanya06/toktickit/pull/23#pullrequestreview-5080265496), [partner response](https://github.com/chanya06/toktickit/pull/23#issuecomment-5496878304), and [final approval](https://github.com/chanya06/toktickit/pull/23#pullrequestreview-5080437870).
+
+---
+
+### Partner PR #25 - Database Schema and Seed Data
+
+**What I reviewed:** I found that `Attachment.removedByRequesterId` was an optional integer without a foreign-key relation to the Development Requester table, allowing an invalid requester ID to be stored. I requested the relation, inverse relation, index, migration, repeated seed verification, and tests.
+
+**Partner response and my follow-up:** Chanya added the foreign key and inverse relation, used `ON DELETE SET NULL`, added the index and migration, and reported two successful idempotent seed runs. I inspected the update and approved it.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/25#pullrequestreview-5087275062), [partner response](https://github.com/chanya06/toktickit/pull/25#issuecomment-5507351064), and [final approval](https://github.com/chanya06/toktickit/pull/25#pullrequestreview-5104718434).
+
+---
+
+### Partner PR #27 - Development Requester Context
+
+**What I reviewed:** I found that an inactive or missing persisted Requester reopened the selection modal without clearing the previous React state and `localStorage` value. I requested identity cleanup, a regression test, and the Issue wording `Change Requester` in the header.
+
+**Partner response and my follow-up:** Chanya cleared both stored and in-memory identity when the saved Requester is invalid, updated the button text, and added the regression test. I rechecked the behavior and approved the PR.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/27#pullrequestreview-5105306292), [partner response](https://github.com/chanya06/toktickit/pull/27#issuecomment-5530262250), and [final approval](https://github.com/chanya06/toktickit/pull/27#pullrequestreview-5105463081).
+
+---
+
+### Partner PR #29 - Ticket Creation API and Number Generator
+
+**What I reviewed:** I checked validation and Ticket Number generation. I identified invalid numeric IDs reaching Prisma as server errors and a race condition when concurrent requests derived the same next number. I asked for stronger validation, concurrency-safe creation, and matching tests.
+
+**Partner response and my follow-up:** Chanya added positive-integer validation, moved number creation into a transaction, and retried Prisma `P2002` collisions. After multiple review rounds and a small unused-import cleanup recommendation, I confirmed that no blocking issue remained and approved the PR.
+
+**Evidence:** [First review](https://github.com/chanya06/toktickit/pull/29#pullrequestreview-5105574575), [concurrency follow-up](https://github.com/chanya06/toktickit/pull/29#pullrequestreview-5105656599), [post-fix review](https://github.com/chanya06/toktickit/pull/29#pullrequestreview-5105804375), and [final approval](https://github.com/chanya06/toktickit/pull/29#pullrequestreview-5105855050).
+
+---
+
+### Partner PR #30 - Create Ticket UI
+
+**What I reviewed:** I checked the form, reference-data integration, previews, validation, loading/error states, cancellation, and retained values. Review rounds caught an API/model field mismatch and date handling that could show the previous UTC date in Thailand.
+
+**Partner response and my follow-up:** Chanya aligned the Related Systems endpoint and fields, added the missing UI states and tests, and corrected the date behavior. I rechecked the updates and approved the PR after the blocking items were resolved.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/30#pullrequestreview-5105942745), [follow-up review](https://github.com/chanya06/toktickit/pull/30#pullrequestreview-5106012704), [partner response](https://github.com/chanya06/toktickit/pull/30#issuecomment-5531097161), and [final approval](https://github.com/chanya06/toktickit/pull/30#pullrequestreview-5106052359).
+
+---
+
+### Partner PR #31 - My Tickets API
+
+**What I reviewed:** I found that search included `description` outside the contract, filters were not truly multi-select, sorting lacked a deterministic secondary key, invalid query values were not consistently rejected, and some tests could pass on empty fixtures.
+
+**Partner response and my follow-up:** Chanya restricted search to Ticket Number and summary, added multi-value filters and validation, used `id` as a secondary sort key, repaired test fixtures, and corrected the Issue link. I verified the changes and approved the PR.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/31#pullrequestreview-5115113908), [partner response](https://github.com/chanya06/toktickit/pull/31#issuecomment-5543025600), and [final approval](https://github.com/chanya06/toktickit/pull/31#pullrequestreview-5115261974).
+
+---
+
+### Partner PR #32 - My Tickets UI
+
+**What I reviewed:** I identified missing debounce and stale-response protection, including a risk that Requester A's late response could appear after switching to Requester B. I also requested a real multi-select UI, restored pagination/empty/no-results tests, retry interaction coverage, and responsive assertions tied to the implementation.
+
+**Partner response and my follow-up:** Chanya added debounce and `AbortController`, implemented checkbox-based multi-select filters, and restored the missing behavioral tests. I checked both update rounds and approved the PR.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/32#pullrequestreview-5115590487), [first response](https://github.com/chanya06/toktickit/pull/32#issuecomment-5543588293), [second response](https://github.com/chanya06/toktickit/pull/32#issuecomment-5543698443), and [final approval](https://github.com/chanya06/toktickit/pull/32#pullrequestreview-5115724466).
+
+---
+
+### Partner PR #33 - Ticket Detail and Ownership Guard
+
+**What I reviewed:** I found ambiguity between Requester identity in the API query and header, missing mismatch coverage, and a stale Ticket state risk while switching Requesters during an in-flight request.
+
+**Partner response and my follow-up:** Chanya aligned and tested the identity contract, cleared the old Ticket immediately, and added an abort/stale-response test that switches Requesters while the first request is pending. I rechecked the fix and approved the PR.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/33#pullrequestreview-5115820550), [first response](https://github.com/chanya06/toktickit/pull/33#issuecomment-5544009438), [stale-state response](https://github.com/chanya06/toktickit/pull/33#issuecomment-5544062990), and [final approval](https://github.com/chanya06/toktickit/pull/33#pullrequestreview-5116042688).
+
+---
+
+### Partner PR #34 - Attachment Lifecycle
+
+**What I reviewed:** I requested server-side content validation beyond filename extension, concurrency protection for the five-active-file limit, and stale-response/busy-state protection when switching Requesters during upload or removal. A follow-up also found that a `try/catch` could allow the transaction to continue when row locking failed.
+
+**Partner response and my follow-up:** Chanya added MIME and magic-byte validation, PostgreSQL row-level locking before count/create, strict rollback when the lock fails, file cleanup, Requester-switch protection, busy-state reset, and regression tests. I reviewed the final commit, recorded one non-blocking test-depth observation, and approved the PR.
+
+**Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/34#pullrequestreview-5116488367), [first response](https://github.com/chanya06/toktickit/pull/34#issuecomment-5544766835), [second response](https://github.com/chanya06/toktickit/pull/34#issuecomment-5544838062), [final response](https://github.com/chanya06/toktickit/pull/34#issuecomment-5544892200), and [final approval](https://github.com/chanya06/toktickit/pull/34#pullrequestreview-5116665934).
+
+All nine partner PRs were merged after review. The linked GitHub conversations are the source of truth for the exact review wording, response history, timestamps, approval, and merge state. Readable review screenshots will be selected for the final submission evidence; screenshots will supplement, not replace, these working links.
+
+The Issue 15 documentation PR and the final release PR will be added to the received-review evidence after those reviews occur. The final release review cannot be recorded in this pre-release file in advance, so its post-review evidence will also be included in the final PDF generated from the merged `main` state.
