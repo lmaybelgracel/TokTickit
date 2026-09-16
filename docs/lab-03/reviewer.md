@@ -13,7 +13,8 @@
 | PR | Issue / Branch | Reviewer Verdict | Link |
 |:---|:---------------|:-----------------|:-----|
 | [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Approved and Merged into `lab3-staging` | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
-| [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Addressed Review Feedback (Ready for Approval) | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
+| [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
+| [Pending] | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Ready for Peer Review | [PR Link] |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
@@ -46,8 +47,12 @@
 ### Issue 18 - Database Schema Evolution, User Migration & Idempotent Seed Data
 
 - **Summary:** Evolved database schema to introduce unified `User` model, `PublicComment`, `InternalNote`, extended `Priority` and `TicketStatus` enums, ticket ownership relations, and idempotent seed data with comprehensive test coverage.
-- **Reviewer Verdict & Summary:** Commented by @titayaaa:
-  > "เราไล่ดูรายละเอียดใน PR #47 ให้แล้วนะ การจัดโครงสร้าง Seed Data กับชุดเทสต์ 13 เคสใน database-schema-seed.test.ts ทำออกมาได้ครอบคลุมและละเอียดมากเลย แต่มีจุดสำคัญเรื่อง Database Migration และความเสี่ยงที่ข้อมูลเดิมจะพัง อยากให้ช่วยปรับแก้ก่อน Merge ตามนี้น้า..."
+- **Reviewer Verdict & Summary:** Commented and Approved by @titayaaa (commit `b108cd3`):
+  > "ตรวจเช็ค commit 3a2e156 เรียบร้อยแล้ว แก้ไขครบถ้วนทั้ง 4 จุดได้อย่างยอดเยี่ยมมาก
+  > 1. เพิ่มไฟล์ Prisma Migration พร้อม SQL Backfill ข้อมูล Requester เดิม ช่วยรักษาตั๋ว Lab 2 ได้อย่างสมบูรณ์แบบ
+  > 2. ปรับปรุง Seed Data และตัดฟิลด์ department ออกตรงตามข้อกำหนดของ Lab 3
+  > 3. ชุดเทสต์ 17 เคสใน database-schema-seed.test.ts ครอบคลุมและผ่านหมด
+  > 4. บันทึก reviewer.md เรียบร้อย"
 - **Reviewer Feedback Items & My Responses:**
   1. **Prisma Migration Files in PR:**
      - *Reviewer Feedback:* In PR #47, `schema.prisma` was modified but there was no migration folder in `server/prisma/migrations/`.
@@ -61,7 +66,20 @@
   4. **Path Import in `database-schema-seed.test.ts`:**
      - *Reviewer Feedback:* Check module import conventions in tests.
      - *My Action:* Verified ESM bundler path resolution across environments and added explicit test cases validating migration file existence, ID preservation during backfill, and department exclusion.
-- **Current Status:** All 4 review items resolved and committed. Ready for @titayaaa final review and merge.
+- **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `b108cd3`).
+
+---
+
+### Issue 19 - Authentication, Session & Mandatory Password Change
+
+- **Summary:** Implemented production-grade JWT authentication, session management, password complexity rules, inactive user access blocking, first-login mandatory password change guard, and Zen Green Login and Change Password user interfaces with full test coverage.
+- **Key Deliverables:**
+  - Backend auth endpoints: `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`, `POST /api/auth/change-password`.
+  - Password complexity validator and bcryptjs hashing (10 rounds).
+  - Authentication and role guard middlewares (`authenticateToken`, `requireAuth`, `enforcePasswordChange`, `requireRole`).
+  - Frontend `AuthContext`, `Login` component, `ChangePassword` component with dynamic real-time complexity checklist, and role-based app shell.
+  - Comprehensive test suite: 17 server tests (`auth.api.test.ts`) and 8 client tests (`Login.test.tsx`, `ChangePassword.test.tsx`), with 100% regression pass on all Lab 1 and Lab 2 tests (95/95 tests total).
+- **Reviewer Verdict & Summary:** [Awaiting Peer Review by @titayaaa]
 
 ---
 

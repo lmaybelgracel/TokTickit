@@ -5,6 +5,8 @@ import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { getPrisma } from "./prisma.js";
+import { authRouter } from "./routes/auth.routes.js";
+import { authenticateToken } from "./middleware/auth.middleware.js";
 
 // The Express app is exported separately from app.listen() (see index.ts) so
 // Supertest can import `app` without opening a port. Do not merge these files.
@@ -12,6 +14,9 @@ export const app = express();
 
 app.use(cors());          // lets the Vite dev server call this API
 app.use(express.json());
+app.use(authenticateToken);
+
+app.use("/api/auth", authRouter);
 
 const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024;
 const ALLOWED_ATTACHMENT_TYPES = new Set([
@@ -28,6 +33,9 @@ const attachmentUpload = multer({
 const uploadsDirectory = path.resolve(process.cwd(), "uploads");
 
 function requesterIdFrom(req: Request): number | null {
+  if (req.user) {
+    return req.user.id;
+  }
   const value = req.headers["x-development-requester-id"];
   const parsed = Number(Array.isArray(value) ? value[0] : value);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
@@ -113,32 +121,45 @@ function generateTicketNumber(): string {
 app.post("/api/tickets", attachmentUpload.array("attachments", 5), async (req: Request, res: Response) => {
   const storedPaths: string[] = [];
   try {
-    const requesterHeader = req.headers["x-development-requester-id"];
-    if (!requesterHeader) {
-      return res.status(400).json({
-        error: {
-          code: "VALIDATION_ERROR",
-          message: "X-Development-Requester-Id header is required",
-        },
-      });
-    }
+    let requesterId: number | null = null;
+    if (req.user) {
+      requesterId = req.user.id;
+    } else {
+      const requesterHeader = req.headers["x-development-requester-id"];
+      if (!requesterHeader) {
+        return res.status(400).json({
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "X-Development-Requester-Id header is required",
+          },
+        });
+      }
 
-    const requesterId = parseInt(Array.isArray(requesterHeader) ? requesterHeader[0] : requesterHeader, 10);
-    if (isNaN(requesterId)) {
-      return res.status(400).json({
-        error: {
-          code: "VALIDATION_ERROR",
-          message: "Invalid X-Development-Requester-Id header",
-        },
-      });
+      requesterId = parseInt(Array.isArray(requesterHeader) ? requesterHeader[0] : requesterHeader, 10);
+      if (isNaN(requesterId)) {
+        return res.status(400).json({
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Invalid X-Development-Requester-Id header",
+          },
+        });
+      }
     }
 
     const prisma = getPrisma();
 
-    // Verify Requester existence and isActive === true
-    const requester = await prisma.requesterUser.findUnique({
-      where: { id: requesterId },
-    });
+    // Verify Requester existence and isActive === true (checks User first, then RequesterUser)
+    let requester: any = null;
+    if (prisma.user) {
+      requester = await prisma.user.findUnique({
+        where: { id: requesterId },
+      });
+    }
+    if (!requester && prisma.requesterUser) {
+      requester = await prisma.requesterUser.findUnique({
+        where: { id: requesterId },
+      });
+    }
 
     if (!requester || !requester.isActive) {
       return res.status(422).json({
@@ -404,10 +425,19 @@ app.post("/api/tickets/:id/attachments", attachmentUpload.single("file"), async 
       return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "A valid requester, ticket id, and file are required." } });
     }
     const prisma = getPrisma();
-    const requester = await prisma.requesterUser.findUnique({
-      where: { id: requesterId },
-      select: { isActive: true },
-    });
+    let requester: any = null;
+    if (prisma.user) {
+      requester = await prisma.user.findUnique({
+        where: { id: requesterId },
+        select: { isActive: true },
+      });
+    }
+    if (!requester && prisma.requesterUser) {
+      requester = await prisma.requesterUser.findUnique({
+        where: { id: requesterId },
+        select: { isActive: true },
+      });
+    }
     if (!requester || !requester.isActive) {
       return res.status(422).json({ error: { code: "INACTIVE_REQUESTER", message: "Selected Development Requester is inactive or does not exist." } });
     }
