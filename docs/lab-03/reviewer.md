@@ -12,12 +12,12 @@
 
 | PR | Issue / Branch | Reviewer Verdict | Link |
 |:---|:---------------|:-----------------|:-----|
-| [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Addressed Review Feedback (Ready for Approval) | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
+| [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Approved by @titayaaa | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
 - **Summary:** Delivers the initial Sprint 3 specification suite under `docs/lab-03/` covering `specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, and `ai-use.md`.
-- **Reviewer Verdict & Summary:** Commented by @titayaaa:
+- **Initial Reviewer Feedback:** Commented by @titayaaa:
   > "นอกนั้นพวก Flow การทำงาน, แบ่ง Role 3 ระดับ, โทนสี UI Zen Green กับกล่อง Internal Notes สีเหลืองส้มอันนี้ทำมาดีมาก ชัดเจนดีแล้ว ฝากแก้จุดข้างบนนี้นิดนึง เดี๋ยวแก้เสร็จทักมาเลย เรามากด Approve ให้น้า"
 
 - **Reviewer Feedback Items & My Responses:**
@@ -40,7 +40,9 @@
      - *Reviewer Feedback:* Add explicit test cases for Requester hitting `GET /api/tickets/:id/notes` getting 403 Forbidden, and resolving a ticket without `resolutionSummary` getting 422.
      - *My Action:* Added `SEC-04` (Requester hitting internal notes blocked with 403) and `STAFF-05` (Resolving ticket without resolution summary blocked with 422) in `docs/lab-03/tests.md`.
 
-- **Current Status:** All 6 review items resolved and committed. Ready for @titayaaa final approval.
+- **Final Approval Verdict:** Approved by @titayaaa on 2026-09-17:
+  > "ขอบคุณที่อธิบายเรื่อง Format เลขตั๋วอย่างละเอียดน้า ตรวจสอบ commit ล่าสุดแล้ว แก้ไขเรื่อง Data Leak, Validation ดัก Resolve, Priority Enum, และเพิ่ม Test Cases ได้ครบถ้วนสมบูรณ์มากเลยค่ะ เอกสารสเปกพร้อมสำหรับเริ่ม Implement แล้ว ขอ Approve ให้เลยค่า"
+- **Final Result:** Approved and ready to merge into `lab3-staging`.
 
 ---
 
