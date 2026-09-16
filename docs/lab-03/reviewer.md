@@ -14,7 +14,7 @@
 |:---|:---------------|:-----------------|:-----|
 | [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Approved and Merged into `lab3-staging` | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
 | [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
-| [Pending] | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Ready for Peer Review | [PR Link] |
+| [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Ready for Peer Review | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
