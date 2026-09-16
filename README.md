@@ -122,6 +122,7 @@ Playwright writes visual evidence to `artifacts/lab-02/screenshots/`. See the [t
 - [API specification](docs/lab-02/api-spec.md)
 - [Peer review log](docs/lab-02/reviewer.md)
 - [AI-use record and reflection](docs/lab-02/ai-use.md)
+- [Final deliverable engineering submission report (PDF)](TokTickIT_Lab2_Submission_Grace.pdf)
 
 ## Git Workflow
 

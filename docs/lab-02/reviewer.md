@@ -1,8 +1,8 @@
 # Lab 2 - Peer Review Record
 
-**Author:** เกรซ - GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
+**Author:** Patitaya Kaewwichain 67070505220 - GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
 
-**Peer reviewer:** บิว - GitHub: [@phatthidawadi](https://github.com/phatthidawadi)
+**Peer reviewer:** Phatthidawadi Aunkham 67070505225 - GitHub: [@phatthidawadi](https://github.com/phatthidawadi)
 
 **Feature PR target:** `lab2-staging`
 
@@ -162,7 +162,7 @@ The linked PR conversations are the source of truth for complete wording, timest
 
 ## Pull Requests I Reviewed for My Partners
 
-**Partner author:** Chanya - GitHub: [@chanya06](https://github.com/chanya06)
+**Partner author:** Chanya Poolketkij 67070501058 - GitHub: [@chanya06](https://github.com/chanya06)
 
 | PR | Partner feature | My final verdict |
 |----|-----------------|------------------|
@@ -176,6 +176,10 @@ The linked PR conversations are the source of truth for complete wording, timest
 | [#33](https://github.com/chanya06/toktickit/pull/33) | Feature 12 - Ticket Detail & Ownership Guard | Changes requested, rechecked, approved; merged |
 | [#34](https://github.com/chanya06/toktickit/pull/34) | Feature 13 - Attachment Lifecycle | Changes requested, rechecked, approved; merged |
 | [#35](https://github.com/chanya06/toktickit/pull/35) | Feature 14 - QA, Automated Tests, Screenshots & PDF | Changes requested, rechecked, approved |
+| [#39](https://github.com/chanya06/toktickit/pull/39) | Feature 16 - Refine Reviewer Documentation & Sync Test Metrics | Approved; merged |
+| [#41](https://github.com/chanya06/toktickit/pull/41) | Release: TokTickIT Lab 2 Requester Ticketing MVP (main) | Approved; merged |
+| [#42](https://github.com/chanya06/toktickit/pull/42) | docs(lab-02): update peer review record with verbatim GitHub review data | Approved; merged |
+| [#43](https://github.com/chanya06/toktickit/pull/43) | Release: TokTickIT Lab 2 Peer Review & Final Documentation Sync (main) | Approved; merged |
 
 ### Partner PR #23 - Specifications and Test Plan
 
@@ -275,6 +279,48 @@ The linked PR conversations are the source of truth for complete wording, timest
 
 **Evidence:** [Changes requested](https://github.com/chanya06/toktickit/pull/35#pullrequestreview-5121816323), [second review](https://github.com/chanya06/toktickit/pull/35#pullrequestreview-5122190039), and [final approval](https://github.com/chanya06/toktickit/pull/35#pullrequestreview-5122264494).
 
-All ten partner PRs were reviewed and approved after their recorded review rounds. The linked GitHub conversations are the source of truth for the exact review wording, response history, timestamps, approval, and merge state. Readable review screenshots will be selected for the final submission evidence; screenshots will supplement, not replace, these working links.
+---
+
+### Partner PR #39 - Refine Reviewer Documentation & Sync Test Metrics
+
+**What I reviewed:** ตรวจสอบการปรับปรุงเอกสาร `reviewer.md` เพิ่มคอลัมน์ Peer Reviewer Comment / Feedback, เพิ่ม clickable markdown links สำหรับ PRs ทั้งหมด, ซิงค์ตัวเลขชุดทดสอบอัตโนมัติใน `tests.md` (Client 42, Server 54, Playwright 4 รวม 100 tests), และรีคอมไพล์ `final-deliverable.pdf`
+
+**Partner response and my follow-up:** Chanya ได้อัปเดตไฟล์ครบถ้วนตาม Issue #38 และรันชุดทดสอบผ่าน 100% ตรวจสอบแล้วไม่มีข้อบกพร่องขัดขวาง จึงทำการ Approve และ Merge PR #39 เข้าสู่ `lab2-staging`.
+
+**Evidence:** [Review approval](https://github.com/chanya06/toktickit/pull/39#pullrequestreview-5122416972).
+
+---
+
+### Partner PR #41 - Release: TokTickIT Lab 2 Requester Ticketing MVP (Release to main)
+
+**What I reviewed:** ตรวจสอบความสมบูรณ์ระดับ Release ของระบบทั้งหมดก่อนผสานเข้าสู่ `main` ตรวจสอบความสอดคล้องกับ FR-01–FR-15, BR-01–BR-20, AC-01–AC-10, สถาปัตยกรรมความปลอดภัย (Atomic sequencing, Binary magic bytes, Row-level lock, Requester data isolation 403 Forbidden, Soft removal with reason), UI Zen Green theme บนทุก viewport, และชุดทดสอบอัตโนมัติผ่านครบ 99 tests
+
+**Partner response and my follow-up:** โค้ดและเอกสารส่งงานของ Lab 2 ทั้งหมดสมบูรณ์แบบ จึงทำการ Approve และ Merge PR #41 เข้าสู่ `main`.
+
+**Evidence:** [Final release approval](https://github.com/chanya06/toktickit/pull/41#pullrequestreview-5122420950).
+
+---
+
+### Partner PR #42 - Update Peer Review Record with Verbatim GitHub Review Data
+
+**What I reviewed:** ตรวจสอบการอัปเดตเอกสาร `docs/lab-02/reviewer.md` ด้วยข้อมูลบทสนทนารีวิวแบบ Verbatim ที่ดึงมาจาก GitHub API จริง ครบถ้วนทั้ง 13 PRs ฝั่งตนเอง (PR #23–#41) และ 12 PRs ฝั่งคู่ตรวจ (PR #23–#34), ตรวจสอบการอัปเดต `final-deliverable.md` (เพิ่ม Release PR #41 ในตาราง, ปลด inline code backticks เพื่อให้ภาพ 15 ภาพแสดงผลได้อย่างถูกต้อง, ปรับปรุงตาราง Section 9.3 Visual Inspection Checklist) และตรวจสอบการ re-compile `final-deliverable.pdf` (3.22 MB) ด้วย Headless Edge
+
+**Partner response and my follow-up:** Chanya ดำเนินการอัปเดตเอกสาร บันทึกบทสนทนาจริงแบบ Verbatim ครบถ้วน และสร้างไฟล์ PDF ส่งมอบงานใหม่เรียบร้อยแล้ว จึงทำการ Approve และ Merge PR #42 เข้าสู่ `lab2-staging`.
+
+**Evidence:** [Review approval](https://github.com/chanya06/toktickit/pull/42#pullrequestreview-5123019082).
+
+---
+
+### Partner PR #43 - Release: TokTickIT Lab 2 Peer Review & Final Documentation Sync (Release to main)
+
+**What I reviewed:** ตรวจสอบ Release Pull Request #43 ในการผสานโค้ดและเอกสารส่งงานชุดสุดท้ายจาก `lab2-staging` เข้าสู่ `main` ยืนยันการปฏิบัติตาม Git Workflow, Separation of Duties, ความสมบูรณ์ของ Verbatim `reviewer.md`, รายงาน `final-deliverable.md` และ PDF ครบ 9 หมวด 15 ภาพ, Automated Tests ผ่าน 100% รวม 107 Tests (Server Vitest 54, Client Vitest 42, Playwright E2E/Visual 11), และความสะอาดของ Repository ปราศจากไฟล์ขยะ
+
+**Partner response and my follow-up:** ทุกรายการผ่านเกณฑ์การส่งมอบงานตาม Definition of Done ของ Lab 2 อย่างสมบูรณ์ จึงทำการอนุมัติ Approve และ Merge PR #43 เข้าสู่ `main`.
+
+**Evidence:** [Final release approval](https://github.com/chanya06/toktickit/pull/43#pullrequestreview-5123028308).
+
+---
+
+All 14 partner PRs were reviewed and approved after their recorded review rounds. The linked GitHub conversations are the source of truth for the exact review wording, response history, timestamps, approval, and merge state. Readable review screenshots will be selected for the final submission evidence; screenshots will supplement, not replace, these working links.
 
 The Issue 16 release PR (#34) is recorded above. All feature PRs and the release PR were reviewed, approved, and merged by the peer reviewer into their target branches.
