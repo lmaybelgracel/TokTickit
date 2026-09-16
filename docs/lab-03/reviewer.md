@@ -12,14 +12,14 @@
 
 | PR | Issue / Branch | Reviewer Verdict | Link |
 |:---|:---------------|:-----------------|:-----|
-| [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Addressed Review Feedback (Ready for Approval) | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
+| [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Approved and Merged into `lab3-staging` | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
+| [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Addressed Review Feedback (Ready for Approval) | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
 - **Summary:** Delivers the initial Sprint 3 specification suite under `docs/lab-03/` covering `specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, and `ai-use.md`.
-- **Reviewer Verdict & Summary:** Commented by @titayaaa:
+- **Reviewer Verdict & Summary:** Commented and Approved by @titayaaa:
   > "นอกนั้นพวก Flow การทำงาน, แบ่ง Role 3 ระดับ, โทนสี UI Zen Green กับกล่อง Internal Notes สีเหลืองส้มอันนี้ทำมาดีมาก ชัดเจนดีแล้ว ฝากแก้จุดข้างบนนี้นิดนึง เดี๋ยวแก้เสร็จทักมาเลย เรามากด Approve ให้น้า"
-
 - **Reviewer Feedback Items & My Responses:**
   1. **Comment on Data Leak in Ticket Detail Response (`docs/lab-03/api-spec.md`):**
      - *Reviewer Feedback:* In `GET /api/tickets/:id`, returning `internalNotes` to Requesters causes a confidential data leak. Requesters must only receive `publicComments`, while `internalNotes` must be restricted to IT Staff and Admin.
@@ -39,8 +39,29 @@
   6. **Comment on Additional Security & Resolution Test Cases (`docs/lab-03/tests.md`):**
      - *Reviewer Feedback:* Add explicit test cases for Requester hitting `GET /api/tickets/:id/notes` getting 403 Forbidden, and resolving a ticket without `resolutionSummary` getting 422.
      - *My Action:* Added `SEC-04` (Requester hitting internal notes blocked with 403) and `STAFF-05` (Resolving ticket without resolution summary blocked with 422) in `docs/lab-03/tests.md`.
+- **Final Result:** Approved by @titayaaa and merged into `lab3-staging` (commit `2abef9f`).
 
-- **Current Status:** All 6 review items resolved and committed. Ready for @titayaaa final approval.
+---
+
+### Issue 18 - Database Schema Evolution, User Migration & Idempotent Seed Data
+
+- **Summary:** Evolved database schema to introduce unified `User` model, `PublicComment`, `InternalNote`, extended `Priority` and `TicketStatus` enums, ticket ownership relations, and idempotent seed data with comprehensive test coverage.
+- **Reviewer Verdict & Summary:** Commented by @titayaaa:
+  > "เราไล่ดูรายละเอียดใน PR #47 ให้แล้วนะ การจัดโครงสร้าง Seed Data กับชุดเทสต์ 13 เคสใน database-schema-seed.test.ts ทำออกมาได้ครอบคลุมและละเอียดมากเลย แต่มีจุดสำคัญเรื่อง Database Migration และความเสี่ยงที่ข้อมูลเดิมจะพัง อยากให้ช่วยปรับแก้ก่อน Merge ตามนี้น้า..."
+- **Reviewer Feedback Items & My Responses:**
+  1. **Prisma Migration Files in PR:**
+     - *Reviewer Feedback:* In PR #47, `schema.prisma` was modified but there was no migration folder in `server/prisma/migrations/`.
+     - *My Action:* Created and committed `server/prisma/migrations/20260917000000_lab3_users_and_ticket_evolution/migration.sql` containing full DDL commands for enums, `users` table, altered `tickets` columns/indexes/foreign keys, `public_comments`, and `internal_notes`.
+  2. **Foreign Key of `Ticket.requesterId` & Lab 2 Data Preservation:**
+     - *Reviewer Feedback:* Changing `Ticket.requesterId` to reference `User.id` directly risks breaking existing Lab 2 tickets if requester IDs do not match user IDs.
+     - *My Action:* Added automated backfill in both the migration SQL and `server/prisma/seed.ts`. It copies existing `requester_users` into `users` table preserving the exact primary key `id`s (`INSERT INTO "users" ... SELECT "id", ... FROM "requester_users"`), ensuring complete data integrity, matching foreign keys, and zero data loss.
+  3. **Department Field in `model User` (Exclusion Rule):**
+     - *Reviewer Feedback:* In `model User`, `department String?` was added, but Lab 3 handout Section 4.2 & 5.1 explicitly states departments are excluded from Lab 3 User model.
+     - *My Action:* Removed `department` attribute from `model User` in `server/prisma/schema.prisma` and updated `server/prisma/seed.ts` and tests to ensure strict compliance with course exclusions without scope creep.
+  4. **Path Import in `database-schema-seed.test.ts`:**
+     - *Reviewer Feedback:* Check module import conventions in tests.
+     - *My Action:* Verified ESM bundler path resolution across environments and added explicit test cases validating migration file existence, ID preservation during backfill, and department exclusion.
+- **Current Status:** All 4 review items resolved and committed. Ready for @titayaaa final review and merge.
 
 ---
 
