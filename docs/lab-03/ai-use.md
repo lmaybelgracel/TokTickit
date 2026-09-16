@@ -1,6 +1,6 @@
 # Lab 3 - AI Use Record and Reflection
 
-**Author:** เกรซ - GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
+**Author:** Patitaya Kaewwichain 67070505220 - GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
 
 ## 1. AI Tools Used
 - **Google Antigravity:** Used for initial requirement parsing, system architecture decomposition, and draft specification generation.
