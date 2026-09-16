@@ -28,11 +28,10 @@ const TEMP_PASSWORD = "Pass1234!";
 const tempHash = bcrypt.hashSync(TEMP_PASSWORD, DEFAULT_SALT_ROUNDS);
 
 export const usersData = [
-  // Requesters (Active & Inactive)
+  // Requesters (Active & Inactive) - Department excluded per Lab 3 specification (Section 4.2 & 5.1)
   {
     name: "Pae Karn",
     email: "pae.karn@example.com",
-    department: "Engineering",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -41,7 +40,6 @@ export const usersData = [
   {
     name: "Miki Chan",
     email: "miki.chan@example.com",
-    department: "Information Technology",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: true,
@@ -50,7 +48,6 @@ export const usersData = [
   {
     name: "Creammie Indiegurl",
     email: "creammie.indiegurl@example.com",
-    department: "Digital Media",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -59,7 +56,6 @@ export const usersData = [
   {
     name: "Jessica Phrao",
     email: "jessica.phrao@example.com",
-    department: "Business Administration",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -68,7 +64,6 @@ export const usersData = [
   {
     name: "Kanta Tawaan",
     email: "kanta.tawaan@example.com",
-    department: "Computer Engineering",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -77,7 +72,6 @@ export const usersData = [
   {
     name: "Bewnoi Pink",
     email: "bewnoi.pink@example.com",
-    department: "Information Technology",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -86,7 +80,6 @@ export const usersData = [
   {
     name: "Jeje Frappe",
     email: "jeje.frappe@example.com",
-    department: "Creative Technology",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -95,7 +88,6 @@ export const usersData = [
   {
     name: "Bob Pueng",
     email: "bob.pueng@example.com",
-    department: "Engineering",
     role: Role.REQUESTER,
     isActive: true,
     mustChangePassword: false,
@@ -104,7 +96,6 @@ export const usersData = [
   {
     name: "Pan Ctrl",
     email: "pan.ctrl@example.com",
-    department: "Former Student",
     role: Role.REQUESTER,
     isActive: false,
     mustChangePassword: false,
@@ -115,7 +106,6 @@ export const usersData = [
   {
     name: "Somchai Prasert",
     email: "somchai.it@toktickit.com",
-    department: "Information Technology",
     role: Role.IT_STAFF,
     isActive: true,
     mustChangePassword: false,
@@ -124,7 +114,6 @@ export const usersData = [
   {
     name: "Suda Jaidee",
     email: "suda.staff@toktickit.com",
-    department: "Information Technology",
     role: Role.IT_STAFF,
     isActive: true,
     mustChangePassword: false,
@@ -133,7 +122,6 @@ export const usersData = [
   {
     name: "Wichai Somboon",
     email: "wichai.tech@toktickit.com",
-    department: "Infrastructure",
     role: Role.IT_STAFF,
     isActive: true,
     mustChangePassword: true,
@@ -142,7 +130,6 @@ export const usersData = [
   {
     name: "Nat Deactivated",
     email: "nat.retired@toktickit.com",
-    department: "Information Technology",
     role: Role.IT_STAFF,
     isActive: false,
     mustChangePassword: false,
@@ -153,7 +140,6 @@ export const usersData = [
   {
     name: "Root Administrator",
     email: "admin@toktickit.com",
-    department: "IT Operations",
     role: Role.ADMINISTRATOR,
     isActive: true,
     mustChangePassword: false,
@@ -162,7 +148,6 @@ export const usersData = [
   {
     name: "Backup Administrator",
     email: "backup.admin@toktickit.com",
-    department: "IT Operations",
     role: Role.ADMINISTRATOR,
     isActive: true,
     mustChangePassword: false,
@@ -347,14 +332,39 @@ export async function seedDatabase(client = prisma) {
   }
   console.log(`Successfully seeded ${relatedSystemsData.length} Related Systems.`);
 
-  // 3. Users (Requesters, IT Staff, Administrators)
+  // 3. User Migration / Backfill from Lab 2 requester_users
+  // Ensures existing Lab 2 requester IDs map identically to User IDs with zero data loss
+  try {
+    const existingRequesters = await client.requesterUser.findMany();
+    for (const req of existingRequesters) {
+      await client.user.upsert({
+        where: { email: req.email },
+        update: {
+          name: req.name,
+          isActive: req.isActive,
+        },
+        create: {
+          id: req.id,
+          name: req.name,
+          email: req.email,
+          role: Role.REQUESTER,
+          isActive: req.isActive,
+          mustChangePassword: true,
+          passwordHash: tempHash,
+        },
+      });
+    }
+  } catch (e) {
+    // If table doesn't exist yet, continue
+  }
+
+  // 4. Users (Requesters, IT Staff, Administrators)
   const userMap = new Map<string, any>();
   for (const user of usersData) {
     const record = await client.user.upsert({
       where: { email: user.email },
       update: {
         name: user.name,
-        department: user.department,
         role: user.role,
         isActive: user.isActive,
         mustChangePassword: user.mustChangePassword,
@@ -370,13 +380,13 @@ export async function seedDatabase(client = prisma) {
         where: { email: user.email },
         update: {
           name: user.name,
-          department: user.department || "General",
+          department: "General",
           isActive: user.isActive,
         },
         create: {
           name: user.name,
           email: user.email,
-          department: user.department || "General",
+          department: "General",
           isActive: user.isActive,
         },
       });
@@ -391,7 +401,7 @@ export async function seedDatabase(client = prisma) {
   const systemRecords = await client.relatedSystem.findMany();
   const sysMap = new Map(systemRecords.map((s) => [s.name, s.id]));
 
-  // 4. Tickets
+  // 5. Tickets
   for (const tkt of ticketsData) {
     const requester = userMap.get(tkt.requesterEmail);
     const owner = tkt.ownerEmail ? userMap.get(tkt.ownerEmail) : null;
@@ -434,7 +444,7 @@ export async function seedDatabase(client = prisma) {
       },
     });
 
-    // 5. Comments
+    // 6. Comments
     for (const c of tkt.comments) {
       const author = userMap.get(c.authorEmail);
       if (author) {
@@ -453,7 +463,7 @@ export async function seedDatabase(client = prisma) {
       }
     }
 
-    // 6. Internal Notes
+    // 7. Internal Notes
     for (const n of tkt.notes) {
       const author = userMap.get(n.authorEmail);
       if (author) {

@@ -39,7 +39,6 @@ model User {
   email              String          @unique
   passwordHash       String
   name               String
-  department         String?
   role               Role            @default(REQUESTER)
   isActive           Boolean         @default(true)
   mustChangePassword Boolean         @default(false)

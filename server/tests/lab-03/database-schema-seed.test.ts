@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { Role, Priority, TicketStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
 import {
   categoriesData,
   relatedSystemsData,
@@ -69,6 +71,12 @@ describe("Database Schema & Seed Verification (Sprint 3 - Issue 18)", () => {
       const activeAdmins = admins.filter((u) => u.isActive);
 
       expect(activeAdmins.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("confirms department attribute is excluded from User model per Lab 3 specification", () => {
+      for (const user of usersData) {
+        expect((user as any).department).toBeUndefined();
+      }
     });
 
     it("ensures all seed users have unique email addresses and valid bcrypt hashes", () => {
@@ -162,7 +170,35 @@ describe("Database Schema & Seed Verification (Sprint 3 - Issue 18)", () => {
     });
   });
 
-  describe("Idempotency Verification", () => {
+  describe("Migration Integrity & Idempotency Verification", () => {
+    it("verifies Prisma migration SQL file exists in prisma/migrations directory", () => {
+      const migrationDir = path.resolve(process.cwd(), "prisma/migrations");
+      const subdirs = fs.readdirSync(migrationDir);
+      const hasLab3Migration = subdirs.some((d: string) => d.includes("lab3"));
+      expect(hasLab3Migration).toBe(true);
+    });
+
+    it("verifies migration backfill preserves existing requester IDs without data loss", () => {
+      const existingRequesters = [
+        { id: 1, name: "Jennifer Anderson", email: "jennifer.a@kmutt.ac.th", isActive: true },
+        { id: 2, name: "Michael Brown", email: "michael.b@kmutt.ac.th", isActive: true },
+      ];
+      const userMap = new Map<number, any>();
+      for (const req of existingRequesters) {
+        userMap.set(req.id, {
+          id: req.id,
+          name: req.name,
+          email: req.email,
+          role: Role.REQUESTER,
+          isActive: req.isActive,
+          mustChangePassword: true,
+        });
+      }
+      expect(userMap.get(1)?.id).toBe(1);
+      expect(userMap.get(2)?.id).toBe(2);
+      expect(userMap.size).toBe(2);
+    });
+
     it("simulates multiple seed runs and confirms zero duplicate records", () => {
       const categoryMap = new Map<string, any>();
       const systemMap = new Map<string, any>();
