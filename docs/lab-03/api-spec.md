@@ -84,7 +84,7 @@
 #### `POST /api/tickets`
 - **Access:** Authenticated (`REQUESTER`, `IT_STAFF`)
 - **Request Body:** Multipart form-data with `categoryId`, `relatedSystemId`, `requestedPriority`, `summary`, `description`, optional attachments.
-- **Behavior:** Stamps `requesterId = req.user.id`, generates `TKT-YYYYMMDD-XXXX` (e.g. `TKT-20260913-0001`, preserving Lab 2 format), initializes `itPriority = requestedPriority`, sets `currentStatus = NEW`.
+- **Behavior:** Stamps `requesterId = req.user.id`, generates `TKT-YYYY-XXXXXX` (e.g. `TKT-2026-000142`, exactly matching our repository's `server/src/app.ts`, Lab 2 regex tests, and Lab 3 handout Section 8.3/8.4 mockups), initializes `itPriority = requestedPriority`, sets `currentStatus = NEW`.
 - **Response:** `201 Created` with created Ticket object.
 
 #### `GET /api/tickets/:id`
