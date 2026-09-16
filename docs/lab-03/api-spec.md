@@ -84,13 +84,16 @@
 #### `POST /api/tickets`
 - **Access:** Authenticated (`REQUESTER`, `IT_STAFF`)
 - **Request Body:** Multipart form-data with `categoryId`, `relatedSystemId`, `requestedPriority`, `summary`, `description`, optional attachments.
-- **Behavior:** Stamps `requesterId = req.user.id`, generates `TKT-YYYY-XXXXXX`, initializes `itPriority = requestedPriority`, sets `currentStatus = NEW`.
+- **Behavior:** Stamps `requesterId = req.user.id`, generates `TKT-YYYYMMDD-XXXX` (e.g. `TKT-20260913-0001`, preserving Lab 2 format), initializes `itPriority = requestedPriority`, sets `currentStatus = NEW`.
 - **Response:** `201 Created` with created Ticket object.
 
 #### `GET /api/tickets/:id`
 - **Access:** Authenticated (Owner Requester, IT Staff, Administrator)
 - **Behavior:** Checks ownership if Requester (`requesterId === req.user.id`); IT Staff & Admin can view any ticket.
-- **Response:** `200 OK` Detailed ticket object with Category, Related System, Attachments, and Public Comments.
+- **Data Privacy & Leak Prevention:**
+  - If requested by `REQUESTER`: Response strictly returns `publicComments` only. The `internalNotes` array/field is strictly stripped and omitted from the response to prevent data leakage of confidential IT discussions to Requesters.
+  - If requested by `IT_STAFF` or `ADMINISTRATOR`: Response includes both `publicComments` and `internalNotes` (or internal notes can be fetched via `GET /api/tickets/:id/notes`).
+- **Response:** `200 OK` Detailed ticket object with Category, Related System, Attachments, and permitted comments.
 - **Error:** `403 Forbidden` if another Requester attempts access.
 
 ---
@@ -103,8 +106,8 @@
   - `search`: string (matches Ticket Number or Summary)
   - `category`: number (Category ID)
   - `status`: string (e.g. `NEW`, `OPEN`, `IN_PROGRESS`)
-  - `priority`: string (Requested Priority)
-  - `itPriority`: string (IT Priority)
+  - `priority`: string (Requested Priority: `LOW`, `MEDIUM`, `HIGH`, `URGENT`)
+  - `itPriority`: string (IT Priority: `LOW`, `MEDIUM`, `HIGH`, `URGENT`)
   - `ownerId`: number | "unassigned" | "me"
   - `sort`: string (`createdAt`, `itPriority`, `currentStatus`, `ticketNumber`)
   - `order`: `asc` | `desc`
@@ -140,14 +143,29 @@
 - **Request Body:**
   ```json
   {
-    "status": "RESOLVED",
+    "status": "IN_PROGRESS"
+  }
+  ```
+- **Behavior:** Validates transition from current status against BR-19 State Transition Matrix (`OPEN`, `IN_PROGRESS`, `WAITING_FOR_REQUESTER`, `CLOSED`, `REOPENED`, `CANCELLED`).
+- **Resolution Summary Guard:** Direct transition to `RESOLVED` via this general status endpoint is strictly rejected (`422 Unprocessable Entity`). Resolving a ticket requires providing a `resolutionSummary` and must be executed via `PATCH /api/staff/tickets/:id/resolve`.
+- **Responses:**
+  - `200 OK`: Updated Ticket object.
+  - `400 Bad Request`: Invalid transition.
+  - `422 Unprocessable Entity`: Attempting to transition to `RESOLVED` directly without resolution endpoint.
+
+#### `PATCH /api/staff/tickets/:id/resolve`
+- **Access:** Authenticated (`IT_STAFF`, `ADMINISTRATOR`)
+- **Request Body:**
+  ```json
+  {
     "resolutionSummary": "Hardware battery replaced with new OEM battery unit."
   }
   ```
-- **Behavior:** Validates transition from current status against BR-19 State Transition Matrix. Requires `resolutionSummary` if transitioning to `RESOLVED`.
+- **Behavior:** Transitions ticket status to `RESOLVED` per BR-19 & BR-20. Validates that `resolutionSummary` is present, non-empty, non-whitespace, and between 3 and 500 characters.
 - **Responses:**
-  - `200 OK`: Updated Ticket object.
-  - `400 Bad Request`: Invalid transition or missing resolution summary.
+  - `200 OK`: Updated Ticket object with status `RESOLVED`.
+  - `400 Bad Request`: Current status does not permit transition to `RESOLVED`.
+  - `422 Unprocessable Entity`: Missing, empty, or invalid `resolutionSummary`.
 
 ---
 

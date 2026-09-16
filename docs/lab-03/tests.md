@@ -22,6 +22,7 @@ Sprint 3 implements a rigorous **Test-Driven Development (TDD)** and **Test-Driv
 | **AUTH-06** | API | FR-04 | Logout invalidates user session | 200 OK, session revoked | `server/tests/lab-03/auth.api.test.ts` | Planned |
 | **SEC-01** | API | AC-03, BR-03 | Requester accessing another's ticket | 403 Forbidden | `server/tests/lab-03/authorization.api.test.ts` | Planned |
 | **SEC-02** | API | AC-04, BR-13 | Requester accessing Internal Notes API | 403 Forbidden without leaking content | `server/tests/lab-03/authorization.api.test.ts` | Planned |
+| **SEC-04** | API | AC-04, BR-13 | Requester attempts `GET /api/tickets/:id/notes` | 403 Forbidden without exposing note content | `server/tests/lab-03/authorization.api.test.ts` | Planned |
 | **SEC-03** | API | FR-18, BR-05 | Non-Admin accessing User Management API | 403 Forbidden | `server/tests/lab-03/authorization.api.test.ts` | Planned |
 | **QUEUE-01**| API | AC-05, FR-10 | IT Staff retrieves shared ticket queue | 200 OK with all organization tickets | `server/tests/lab-03/staff-queue.api.test.ts` | Planned |
 | **QUEUE-02**| API | FR-11 | IT Queue multi-filter, search, and sorting | 200 OK with matching filtered results | `server/tests/lab-03/staff-queue.api.test.ts` | Planned |
@@ -29,6 +30,7 @@ Sprint 3 implements a rigorous **Test-Driven Development (TDD)** and **Test-Driv
 | **STAFF-02**| API | FR-14, BR-17 | IT Staff updates IT Priority | 200 OK with updated IT Priority | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Planned |
 | **STAFF-03**| API | AC-07, BR-19 | Permitted status transition to RESOLVED | 200 OK with resolution summary saved | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Planned |
 | **STAFF-04**| API | AC-08, BR-19 | Invalid status transition rejected | 400 Bad Request with validation error | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Planned |
+| **STAFF-05**| API | AC-07, BR-20 | Resolve ticket without resolution summary | 422 Unprocessable Entity (resolution blocked) | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Planned |
 | **COMM-01** | API | AC-11, FR-17 | Create and retrieve Public Comments | 201 Created with author & timestamp | `server/tests/lab-03/comments-notes.api.test.ts` | Planned |
 | **COMM-02** | API | FR-16, BR-13 | Create and retrieve Internal Notes (IT/Admin) | 201 Created with private flag | `server/tests/lab-03/comments-notes.api.test.ts` | Planned |
 | **ADM-01** | API | FR-19, BR-10 | Admin creates user with duplicate email | 409 Conflict | `server/tests/lab-03/users-admin.api.test.ts` | Planned |

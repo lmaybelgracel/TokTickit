@@ -117,7 +117,7 @@ The stakeholder requires transitioning TokTickIT from a prototype testing setup 
   - Fields: `id`, `email`, `passwordHash`, `name`, `role` (Enum: `REQUESTER`, `IT_STAFF`, `ADMINISTRATOR`), `isActive`, `mustChangePassword`, `createdAt`, `updatedAt`.
   - Relations: `submittedTickets` (1:N with Ticket), `assignedTickets` (1:N with Ticket), `comments` (1:N with PublicComment), `notes` (1:N with InternalNote).
 - **Update Model:** `Ticket`:
-  - New fields: `ownerId` (FK to User, nullable), `itPriority` (Enum: `LOW`, `MEDIUM`, `HIGH`), `resolutionSummary` (String, nullable), `requesterResolvedIndication` (Boolean, default false).
+  - New fields: `ownerId` (FK to User, nullable), `itPriority` (Enum: `LOW`, `MEDIUM`, `HIGH`, `URGENT`), `resolutionSummary` (String, nullable), `requesterResolvedIndication` (Boolean, default false).
   - Extended Status Enum: `NEW`, `OPEN`, `IN_PROGRESS`, `WAITING_FOR_REQUESTER`, `RESOLVED`, `CLOSED`, `REOPENED`, `CANCELLED`.
 - **New Model:** `PublicComment`:
   - Fields: `id`, `ticketId` (FK), `authorId` (FK to User), `content`, `createdAt`.

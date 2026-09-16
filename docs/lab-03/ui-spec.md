@@ -26,6 +26,8 @@ Sprint 3 reuses and extends the **Zen Green Design System** established in Lab 2
 | **IT Staff** | `#E3F2FD` | `#1565C0` | 1px solid `#BBDEFB` |
 | **Administrator** | `#F3E5F5` | `#6A1B9A` | 1px solid `#E1BEE7` |
 
+> **Enum Mapping Note:** The database and API contracts use SCREAMING_SNAKE_CASE enum values (`REQUESTER`, `IT_STAFF`, `ADMINISTRATOR`). The UI badges use human-readable title casing display strings (`Requester`, `IT Staff`, `Administrator`). Frontend components map database enum keys to these display strings when rendering.
+
 ### 1.3. Ticket Status Badges
 - `New`: Background `#EAF6EF`, Text `#006B3C`
 - `Open`: Background `#E1F5FE`, Text `#0277BD`
