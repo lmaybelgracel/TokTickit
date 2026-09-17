@@ -17,6 +17,8 @@
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
 | [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Approved and Merged into `lab3-staging` | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
+| [#51](https://github.com/lmaybelgracel/TokTickit/pull/51) | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Pending Peer Review | [PR #51](https://github.com/lmaybelgracel/TokTickit/pull/51) |
+
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
@@ -173,6 +175,33 @@
   4. **Test Quality & Coverage:** Confirmed 100% pass across all 16 ticket detail API tests, 12 comments/notes API tests, and 8 frontend component tests.
   5. **Minor Recommendation Noted:** Consider adding explicit max length validation (`content.trim().length <= 2000`) on comments per BR-15.
 - **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `f63cc9c`).
+
+---
+
+### Issue 22 - Administrator User Management
+
+- **Pull Request:** [#51](https://github.com/lmaybelgracel/TokTickit/pull/51)
+- **Branch:** `feature/22-admin-user-management`
+- **Target:** `lab3-staging`
+- **Summary:** Implements complete Administrator User Management API and UI according to Sprint 3 specifications and Course Rubric Part 6 (10 pts).
+  - Backend API (`server/src/routes/admin.routes.ts` & `server/src/app.ts`):
+    - Mounted at `/api/admin/users` protected by `requireAuth`, `enforcePasswordChange`, and `requireRole(Role.ADMINISTRATOR)`.
+    - `GET /api/admin/users`: Search (name/email/dept), role filter, active status filter, ordered by creation date, excludes password hashes.
+    - `POST /api/admin/users`: Validates full name, department, role, email uniqueness (409), password complexity (min 8 chars, uppercase, lowercase, number, symbol), bcrypt hashing with 10 rounds, sets `mustChangePassword = true`.
+    - `PATCH /api/admin/users/:id`: Supports updating name, department, role, active status, email uniqueness (409), and enforces BR-07 (Admin cannot deactivate self - 400), BR-08 (Admin cannot demote self - 400), and BR-09 (Cannot deactivate or demote last active Administrator - 400).
+    - `POST /api/admin/users/:id/reset-password`: Validates password complexity, updates hash, forces `mustChangePassword = true`.
+  - Frontend Component Suite:
+    - `AdminUserManagement.tsx` & `AdminUserManagement.css`:
+      - Zen Green roster table and mobile responsive card view (<768px) with role badges, status chips, and credential indicators.
+      - Search input with debounce, role filter dropdown, and active status filter dropdown.
+      - Create User modal with real-time password complexity checklist and input validation.
+      - Edit User modal with built-in safety disabled guards for current admin self-deactivation/demotion and last active admin demotion.
+      - Reset Password modal with real-time password complexity checklist and confirmation state.
+    - `App.tsx`: Admin navigation button for "User Management" visible exclusively to Administrator role.
+  - Test Suites:
+    - 26 automated tests in `server/tests/lab-03/admin-users.api.test.ts`.
+    - 8 automated tests in `client/src/__tests__/lab-03/AdminUserManagement.test.tsx`.
+- **Reviewer Verdict & Summary:** [Pending Review from @titayaaa]
 
 ---
 

@@ -8,17 +8,19 @@ import { Login } from "./components/Login";
 import { ChangePassword } from "./components/ChangePassword";
 import { StaffTicketQueue } from "./components/StaffTicketQueue";
 import { StaffTicketDetail } from "./components/StaffTicketDetail";
+import { AdminUserManagement } from "./components/AdminUserManagement";
 
-export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue";
+export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users";
 
 function AppContent() {
   const { user, logout, isLoading } = useAuth();
 
-  const isStaffOrAdmin = user?.role === "IT_STAFF" || user?.role === "ADMINISTRATOR";
+  const isAdmin = user?.role === "ADMINISTRATOR";
+  const isStaffOrAdmin = user?.role === "IT_STAFF" || isAdmin;
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<CurrentView>(
-    isStaffOrAdmin ? "staff-queue" : "my-tickets"
+    isAdmin ? "admin-users" : isStaffOrAdmin ? "staff-queue" : "my-tickets"
   );
 
   // If loading auth state from localStorage token
@@ -82,6 +84,18 @@ function AppContent() {
           </div>
 
           <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
+            {isAdmin && (
+              <button
+                style={{
+                  ...styles.navItem,
+                  ...(currentView === "admin-users" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("admin-users")}
+              >
+                User Management
+              </button>
+            )}
+
             {isStaffOrAdmin && (
               <button
                 style={{
@@ -147,7 +161,18 @@ function AppContent() {
 
       {/* Main Content Area */}
       <main className="app-main" style={styles.mainContent}>
-        {currentView === "staff-queue" ? (
+        {currentView === "admin-users" ? (
+          isAdmin ? (
+            <AdminUserManagement />
+          ) : (
+            <StaffTicketQueue
+              onSelectTicket={(ticket) => {
+                setSelectedTicketId(ticket.id);
+                setCurrentView("ticket-detail");
+              }}
+            />
+          )
+        ) : currentView === "staff-queue" ? (
           <StaffTicketQueue
             onSelectTicket={(ticket) => {
               setSelectedTicketId(ticket.id);
