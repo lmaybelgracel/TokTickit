@@ -5,7 +5,7 @@ import * as prismaModule from "../../src/prisma.js";
 import { generateToken } from "../../src/utils/auth.js";
 import { Role } from "@prisma/client";
 
-describe("Administrator User Management API Suite (Sprint 3 - Issue 22)", () => {
+describe("Administrator User Management API Suite - ADM-01 to ADM-04 (Sprint 3 - Issue 22 & 23)", () => {
   const adminUser = {
     userId: 1,
     email: "admin@toktickit.com",
@@ -261,7 +261,7 @@ describe("Administrator User Management API Suite (Sprint 3 - Issue 22)", () => 
       expect(res.body.details).toBeDefined();
     });
 
-    it("enforces BR-10: returns 409 Conflict if email is already registered", async () => {
+    it("ADM-01: enforces BR-10: returns 409 Conflict if email is already registered", async () => {
       mockPrisma.user.findFirst.mockResolvedValue({ id: 99, email: "john@toktickit.com" });
 
       const res = await request(app)
@@ -330,7 +330,7 @@ describe("Administrator User Management API Suite (Sprint 3 - Issue 22)", () => 
       expect(res.body.error).toMatch(/User not found/i);
     });
 
-    it("enforces BR-07: returns 400 Bad Request if admin tries to deactivate own account", async () => {
+    it("ADM-02: enforces BR-07: returns 400 Bad Request if admin tries to deactivate own account", async () => {
       // adminUser has id: 1
       mockPrisma.user.findUnique.mockResolvedValue({
         id: 1,
@@ -368,7 +368,7 @@ describe("Administrator User Management API Suite (Sprint 3 - Issue 22)", () => 
       expect(res.body.error).toMatch(/Administrators cannot change their own role/i);
     });
 
-    it("enforces BR-09: returns 400 Bad Request if deactivating the last active Administrator", async () => {
+    it("ADM-03: enforces BR-09: returns 400 Bad Request if deactivating the last active Administrator", async () => {
       // Another admin target (id: 2), but activeAdminCount is 1
       mockPrisma.user.findUnique.mockResolvedValue({
         id: 2,

@@ -50,6 +50,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     setError(null);
     try {
+      try {
+        sessionStorage.removeItem("toktickit_current_view");
+        sessionStorage.removeItem("toktickit_selected_ticket_id");
+      } catch {}
       const response: LoginResponse = await loginUser({ email, password });
       localStorage.setItem(TOKEN_KEY, response.token);
       setToken(response.token);
@@ -71,6 +75,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // Ignore network errors on logout
     } finally {
+      try {
+        sessionStorage.removeItem("toktickit_current_view");
+        sessionStorage.removeItem("toktickit_selected_ticket_id");
+      } catch {}
       localStorage.removeItem(TOKEN_KEY);
       setToken(null);
       setUser(null);

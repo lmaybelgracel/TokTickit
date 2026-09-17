@@ -226,7 +226,7 @@ describe("Security & Role-Based Authorization API Suite (Sprint 3 - Issue 23)", 
       const res1 = await request(app).get("/api/admin/users");
       expect(res1.status).toBe(401);
 
-      const res2 = await request(app).get("/api/staff/queue");
+      const res2 = await request(app).get("/api/staff/tickets");
       expect(res2.status).toBe(401);
 
       const res3 = await request(app).get("/api/tickets/101/notes");
