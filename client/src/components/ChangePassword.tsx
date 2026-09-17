@@ -15,6 +15,7 @@ export const ChangePassword: React.FC = () => {
   const hasLowercase = /[a-z]/.test(newPassword);
   const hasNumber = /[0-9]/.test(newPassword);
   const passwordsMatch = newPassword.length > 0 && newPassword === confirmPassword;
+  const isSameAsCurrent = currentPassword.length > 0 && newPassword.length > 0 && newPassword === currentPassword;
 
   const isFormValid =
     hasMinLength &&
@@ -22,6 +23,7 @@ export const ChangePassword: React.FC = () => {
     hasLowercase &&
     hasNumber &&
     passwordsMatch &&
+    !isSameAsCurrent &&
     currentPassword.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,6 +33,11 @@ export const ChangePassword: React.FC = () => {
 
     if (!currentPassword) {
       setLocalError("Please enter your current temporary password.");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      setLocalError("New password cannot be the same as current password.");
       return;
     }
 
@@ -121,8 +128,16 @@ export const ChangePassword: React.FC = () => {
               placeholder="Create a new secure password"
               required
               disabled={isLoading}
-              style={styles.input}
+              style={{
+                ...styles.input,
+                borderColor: isSameAsCurrent ? "#B71C1C" : "#E0E6E2",
+              }}
             />
+            {isSameAsCurrent && (
+              <span style={{ color: "#B71C1C", fontSize: "11px" }}>
+                New password must be different from current password
+              </span>
+            )}
           </div>
 
           {/* Real-time Password Complexity Checklist */}

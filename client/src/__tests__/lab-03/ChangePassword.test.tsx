@@ -75,6 +75,12 @@ describe("ChangePassword Component Tests (Sprint 3 - Issue 19)", () => {
     fireEvent.change(confirmInput, { target: { value: "SecurePassword123!" } });
 
     expect(screen.getByRole("button", { name: /Save New Password & Continue/i })).not.toBeDisabled();
+
+    // If new password is identical to current password, it must disable button and show warning
+    fireEvent.change(newInput, { target: { value: "Pass1234!" } });
+    fireEvent.change(confirmInput, { target: { value: "Pass1234!" } });
+    expect(screen.getByRole("button", { name: /Save New Password & Continue/i })).toBeDisabled();
+    expect(screen.getByText(/New password must be different from current password/i)).toBeInTheDocument();
   });
 
   it("submits password change and calls changePassword API with current and new password", async () => {

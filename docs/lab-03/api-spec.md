@@ -3,19 +3,21 @@
 ## 1. Authentication & Security Contract
 
 ### 1.1. Protocol & Headers
-- **Authentication Mechanism:** Bearer JWT Token passed via `Authorization: Bearer <token>` header or Secure HTTP-only Cookie (`toktickit_session`).
+- **Authentication Mechanism:** Bearer JWT Token passed via `Authorization: Bearer <token>` header.
+- **Client Storage (SPA):** In the React Single Page Application frontend, the token is persisted in `localStorage` under `toktickit_auth_token` and automatically included in `Authorization: Bearer <token>` headers for all authenticated API requests.
 - **Session Payload:** `{ userId: number, email: string, role: "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR", mustChangePassword: boolean }`.
 - **Token Expiration:** 24 hours. Explicit logout invalidates the client session.
 
 ### 1.2. HTTP Status Code Conventions
 - `200 OK`: Request succeeded, returns requested data.
 - `201 Created`: Resource successfully created.
-- `400 Bad Request`: Validation failure, ill-formatted body, or invalid state transition.
+- `400 Bad Request`: Validation failure or missing required fields.
 - `401 Unauthorized`: Unauthenticated request (missing or invalid token).
 - `403 Forbidden`: Authenticated user lacks permission for the role, ownership, or must change password.
 - `404 Not Found`: Resource does not exist.
 - `409 Conflict`: Business conflict (e.g. duplicate email).
 - `410 Gone`: Resource removed (e.g. soft-removed attachment).
+- `422 Unprocessable Entity`: Semantic validation failure (e.g. password complexity failure, new password identical to current password).
 - `500 Internal Server Error`: Unexpected server fault (sanitized, no internal stack traces leaked).
 
 ---
@@ -69,7 +71,8 @@
   ```
 - **Responses:**
   - `200 OK`: `{ "message": "Password changed successfully", "mustChangePassword": false }`
-  - `400 Bad Request`: Invalid current password, or new password fails complexity rules.
+  - `400 Bad Request`: Missing `currentPassword` or `newPassword`, or invalid current password.
+  - `422 Unprocessable Entity`: New password fails complexity rules, or new password is identical to current password.
 
 ---
 

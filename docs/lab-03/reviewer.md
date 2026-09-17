@@ -78,8 +78,22 @@
   - Password complexity validator and bcryptjs hashing (10 rounds).
   - Authentication and role guard middlewares (`authenticateToken`, `requireAuth`, `enforcePasswordChange`, `requireRole`).
   - Frontend `AuthContext`, `Login` component, `ChangePassword` component with dynamic real-time complexity checklist, and role-based app shell.
-  - Comprehensive test suite: 17 server tests (`auth.api.test.ts`) and 8 client tests (`Login.test.tsx`, `ChangePassword.test.tsx`), with 100% regression pass on all Lab 1 and Lab 2 tests (95/95 tests total).
-- **Reviewer Verdict & Summary:** [Awaiting Peer Review by @titayaaa]
+- **Reviewer Verdict & Summary:** Changes Requested by @titayaaa:
+  > "เราไล่ตรวจโค้ดใน PR #48 ให้แล้วนะ ทำออกมาได้ครบวงจรมาก ทั้ง Backend Auth, JWT Middleware, Context, และหน้า UI สวยงาม คุมธีม Zen Green และ Amber Callout ตรงตามสเปกเลย แต่มีจุดสำคัญที่อยากให้ช่วยปรับแก้ก่อน Merge..."
+- **Reviewer Feedback Items & My Responses:**
+  1. **Removal of "Select Development Requester" in Login Screen:**
+     - *Reviewer Feedback:* Under the Login form in `client/src/App.tsx`, there was a button to toggle back to the old Lab 2 Development Requester Selector, violating Handout Sections 1, 2, and 8.2 ("The Development Requester selector and Change Requester action must be removed").
+     - *My Action:* Completely removed the Dev Selector button and legacy selector toggle from `App.tsx`, ensuring 100% of unauthenticated access goes strictly through the production Login form. Updated `client/tests/lab-01/App.test.tsx` to assert the Login entrypoint and authenticated shell.
+  2. **Password Rotation Policy (Preventing Identical New Password):**
+     - *Reviewer Feedback:* Under Mandatory First-Login Password Rotation, setting `newPassword` identical to `currentPassword` must be prevented.
+     - *My Action:* Added server-side validation in `server/src/routes/auth.routes.ts` returning `422 Unprocessable Entity` (`{ error: "New password cannot be the same as current password" }`), and added frontend client check and warning in `ChangePassword.tsx` that keeps the submit button disabled if both passwords match. Added test coverage in both `auth.api.test.ts` and `ChangePassword.test.tsx`.
+  3. **HTTP Status Code for Password Complexity Failure:**
+     - *Reviewer Feedback:* In `POST /api/auth/change-password`, complexity failure returned 400 Bad Request, whereas API Spec Section 1.4 defines 422 Unprocessable Entity for semantic validation errors.
+     - *My Action:* Updated status code to `422 Unprocessable Entity` in `auth.routes.ts`, updated `auth.api.test.ts` assertions, and aligned `docs/lab-03/api-spec.md`.
+  4. **Token Storage Clarification:**
+     - *Reviewer Feedback:* Clarify token storage convention between cookie and `localStorage`.
+     - *My Action:* Documented in both `specification.md` and `api-spec.md` that the React Single Page Application (SPA) stores the Bearer JWT in `localStorage` (`toktickit_auth_token`) and transmits it via `Authorization: Bearer <token>` for all API requests.
+- **Current Status:** All 4 review items addressed, verified, and committed. Ready for final review and merge by @titayaaa.
 
 ---
 

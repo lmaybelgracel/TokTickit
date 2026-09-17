@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RequesterUser, Ticket } from "./api";
-import { RequesterSelector } from "./components/RequesterSelector";
 import { CreateTicket } from "./components/CreateTicket";
 import { MyTickets } from "./components/MyTickets";
 import { TicketDetail } from "./components/TicketDetail";
@@ -8,28 +7,14 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Login } from "./components/Login";
 import { ChangePassword } from "./components/ChangePassword";
 
-export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
+export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail";
 
 function AppContent() {
   const { user, logout, isLoading } = useAuth();
 
-  const [devRequester, setDevRequester] = useState<RequesterUser | null>(() => {
-    const saved = localStorage.getItem("toktickit_dev_requester");
-    return saved ? JSON.parse(saved) : null;
-  });
-
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<CurrentView>("my-tickets");
-  const [showDevSelector, setShowDevSelector] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (devRequester) {
-      localStorage.setItem("toktickit_dev_requester", JSON.stringify(devRequester));
-    } else {
-      localStorage.removeItem("toktickit_dev_requester");
-    }
-  }, [devRequester]);
 
   // If loading auth state from localStorage token
   if (isLoading) {
@@ -40,53 +25,23 @@ function AppContent() {
     );
   }
 
+  // If no authenticated user, render Login screen
+  if (!user) {
+    return <Login />;
+  }
+
   // If user is authenticated and must change password, enforce change password screen
-  if (user && user.mustChangePassword) {
+  if (user.mustChangePassword) {
     return <ChangePassword />;
   }
 
-  // If no authenticated user and no devRequester and not toggled to dev selector:
-  // Render Login screen (with option to switch to legacy Dev Requester mode if needed for testing)
-  if (!user && !devRequester && !showDevSelector) {
-    return (
-      <div>
-        <Login />
-        <div style={{ textAlign: "center", paddingBottom: "24px", backgroundColor: "#F5F7F6" }}>
-          <button
-            onClick={() => setShowDevSelector(true)}
-            style={{ background: "none", border: "none", color: "#5A6E63", fontSize: "12px", textDecoration: "underline", cursor: "pointer" }}
-          >
-            Select Development Requester
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // Active user representation for ticket components
-  const activeRequester: RequesterUser = user
-    ? {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        department: user.role === "REQUESTER" ? "Requester" : user.role === "IT_STAFF" ? "IT Staff" : "Administrator",
-        isActive: true,
-      }
-    : devRequester!;
-
-  const handleSelectRequester = (requester: RequesterUser) => {
-    setDevRequester(requester);
-    setShowDevSelector(false);
-    setCurrentView("my-tickets");
-  };
-
-  const handleChangeRequester = () => {
-    if (user) {
-      logout();
-    } else {
-      setDevRequester(null);
-      setShowDevSelector(true);
-    }
+  const activeRequester: RequesterUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    department: user.role === "REQUESTER" ? "Requester" : user.role === "IT_STAFF" ? "IT Staff" : "Administrator",
+    isActive: true,
   };
 
   const handleTicketCreated = (ticket: Ticket) => {
@@ -94,7 +49,7 @@ function AppContent() {
     setCurrentView("my-tickets");
   };
 
-  const getRoleBadge = (role?: string) => {
+  const getRoleBadge = (role: string) => {
     if (role === "IT_STAFF" || role === "IT Staff") {
       return { label: "IT Staff", bg: "#E3F2FD", color: "#1565C0", border: "1px solid #BBDEFB" };
     }
@@ -104,7 +59,7 @@ function AppContent() {
     return { label: "Requester", bg: "#E8F5E9", color: "#2E7D32", border: "1px solid #C8E6C9" };
   };
 
-  const roleBadge = getRoleBadge(user?.role || activeRequester?.department);
+  const roleBadge = getRoleBadge(user.role);
 
   return (
     <div className="app-shell" style={styles.appWrapper}>
@@ -121,72 +76,61 @@ function AppContent() {
             <span style={styles.brandTitle}>TokTickIT</span>
           </div>
 
-          {activeRequester && !showDevSelector && (
-            <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
-              <button
-                style={{
-                  ...styles.navItem,
-                  ...(currentView === "my-tickets" ? styles.navItemActive : {}),
-                }}
-                onClick={() => setCurrentView("my-tickets")}
-              >
-                My Tickets
-              </button>
+          <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
+            <button
+              style={{
+                ...styles.navItem,
+                ...(currentView === "my-tickets" ? styles.navItemActive : {}),
+              }}
+              onClick={() => setCurrentView("my-tickets")}
+            >
+              My Tickets
+            </button>
 
-              <button
-                style={{
-                  ...styles.navItem,
-                  ...(currentView === "create-ticket" ? styles.navItemActive : {}),
-                }}
-                onClick={() => setCurrentView("create-ticket")}
-              >
-                + Create Ticket
-              </button>
-            </nav>
-          )}
+            <button
+              style={{
+                ...styles.navItem,
+                ...(currentView === "create-ticket" ? styles.navItemActive : {}),
+              }}
+              onClick={() => setCurrentView("create-ticket")}
+            >
+              + Create Ticket
+            </button>
+          </nav>
 
           <div style={styles.userProfileGroup}>
-            {activeRequester && !showDevSelector ? (
-              <div className="requester-profile" style={styles.profileBox}>
-                <div style={styles.userAvatar}>
-                  {activeRequester.name.charAt(0)}
-                </div>
-                <div style={styles.userInfo}>
-                  <span style={styles.userName}>{activeRequester.name}</span>
-                  <span
-                    style={{
-                      ...styles.roleBadge,
-                      backgroundColor: roleBadge.bg,
-                      color: roleBadge.color,
-                      border: roleBadge.border,
-                    }}
-                  >
-                    {roleBadge.label}
-                  </span>
-                </div>
-                <button
-                  style={styles.changeUserBtn}
-                  onClick={handleChangeRequester}
-                  title={user ? "Sign Out" : "Change simulated user"}
-                >
-                  {user ? "Sign Out" : "Change"}
-                </button>
+            <div className="requester-profile" style={styles.profileBox}>
+              <div style={styles.userAvatar}>
+                {user.name.charAt(0)}
               </div>
-            ) : (
-              <span style={styles.testTag}>Testing Mode (Lab 2)</span>
-            )}
+              <div style={styles.userInfo}>
+                <span style={styles.userName}>{user.name}</span>
+                <span
+                  style={{
+                    ...styles.roleBadge,
+                    backgroundColor: roleBadge.bg,
+                    color: roleBadge.color,
+                    border: roleBadge.border,
+                  }}
+                >
+                  {roleBadge.label}
+                </span>
+              </div>
+              <button
+                style={styles.signOutBtn}
+                onClick={logout}
+                title="Sign Out"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
       <main className="app-main" style={styles.mainContent}>
-        {showDevSelector || (!activeRequester && currentView === "selector") ? (
-          <RequesterSelector
-            onSelectRequester={handleSelectRequester}
-            currentRequesterId={activeRequester?.id}
-          />
-        ) : currentView === "create-ticket" ? (
+        {currentView === "create-ticket" ? (
           <CreateTicket
             activeRequester={activeRequester}
             onSuccess={handleTicketCreated}
@@ -324,7 +268,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: "2px",
     alignSelf: "flex-start",
   },
-  changeUserBtn: {
+  signOutBtn: {
     backgroundColor: "rgba(255,255,255,0.2)",
     color: "#FFFFFF",
     border: "none",
@@ -334,12 +278,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 600,
     cursor: "pointer",
     marginLeft: "0.25rem",
-  },
-  testTag: {
-    fontSize: "0.75rem",
-    backgroundColor: "rgba(255,255,255,0.15)",
-    padding: "0.25rem 0.5rem",
-    borderRadius: "4px",
   },
   mainContent: {
     padding: "2rem 1.5rem",

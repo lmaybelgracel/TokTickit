@@ -262,7 +262,29 @@ describe("Authentication & Session API Suite (Sprint 3 - Issue 19)", () => {
       expect(res.body.error).toBe("Current password does not match");
     });
 
-    it("rejects password change if new password does not meet complexity rules", async () => {
+    it("rejects password change if new password is identical to current password (422)", async () => {
+      mockPrisma.user.findUnique.mockResolvedValue(mustChangeUser);
+
+      const token = generateToken({
+        userId: mustChangeUser.id,
+        email: mustChangeUser.email,
+        role: mustChangeUser.role,
+        mustChangePassword: mustChangeUser.mustChangePassword,
+      });
+
+      const res = await request(app)
+        .post("/api/auth/change-password")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          currentPassword: defaultPassword,
+          newPassword: defaultPassword,
+        });
+
+      expect(res.status).toBe(422);
+      expect(res.body.error).toBe("New password cannot be the same as current password");
+    });
+
+    it("rejects password change if new password does not meet complexity rules (422)", async () => {
       mockPrisma.user.findUnique.mockResolvedValue(mustChangeUser);
 
       const token = generateToken({
@@ -280,7 +302,7 @@ describe("Authentication & Session API Suite (Sprint 3 - Issue 19)", () => {
           newPassword: "weak",
         });
 
-      expect(res.status).toBe(400);
+      expect(res.status).toBe(422);
       expect(res.body.error).toBe("Password does not meet complexity requirements");
       expect(res.body.details).toBeDefined();
     });

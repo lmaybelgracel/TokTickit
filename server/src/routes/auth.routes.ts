@@ -125,9 +125,14 @@ authRouter.post(
         return;
       }
 
+      if (currentPassword === newPassword) {
+        res.status(422).json({ error: "New password cannot be the same as current password" });
+        return;
+      }
+
       const complexityResult = validatePasswordComplexity(newPassword);
       if (!complexityResult.isValid) {
-        res.status(400).json({
+        res.status(422).json({
           error: "Password does not meet complexity requirements",
           details: complexityResult.errors,
         });
