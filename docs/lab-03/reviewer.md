@@ -16,6 +16,7 @@
 | [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
+| [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Pending Review by @titayaaa | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
@@ -125,6 +126,46 @@
   3. **Priority Sorting & Automated Tests:** Verified Postgres enum-aware `itPriority` sort and 100% pass rate across all 16 backend and 7 frontend test cases.
   4. **Constructive Suggestions Noted for Future Refinement:** In `staff.routes.ts`, consider returning `400 Bad Request` if invalid enum strings are provided; and consider adding ellipsis (`...`) dividers in pagination for large page counts.
 - **Final Result:** Approved by @titayaaa and merged into `lab3-staging` (Merge commit `f7838f7`).
+
+---
+
+### Issue 21 - IT Staff Ticket Operations & Detail
+
+- **Summary:** Implemented comprehensive IT Staff Ticket Operations and Detail views, dual-stream communications (public comments and confidential internal notes), resolution workflow with mandatory summary, state transitions, ownership management, and Requester problem resolution indication.
+- **Key Deliverables:**
+  - Backend Operations Endpoints in `server/src/routes/staff.routes.ts`:
+    - `GET /api/staff/users`: Active staff roster query for assignment dropdowns.
+    - `GET /api/staff/tickets/:id`: Rich staff ticket view including requester, category, related system, owner, attachments, public comments, and confidential internal notes.
+    - `PATCH /api/staff/tickets/:id/claim`: Allows staff/admin to claim unassigned ticket ownership.
+    - `PATCH /api/staff/tickets/:id/assign`: Allows reassigning ticket to any active staff user.
+    - `PATCH /api/staff/tickets/:id/priority`: Updates operational `itPriority` (LOW, MEDIUM, HIGH, URGENT).
+    - `PATCH /api/staff/tickets/:id/status`: Enforces BR-19 status transition matrix, strictly rejecting direct transition to `RESOLVED` (422 Unprocessable Entity).
+    - `PATCH /api/staff/tickets/:id/resolve`: Enforces BR-20 mandatory resolution summary (3-500 chars), setting status to `RESOLVED` and timestamping `resolvedAt`.
+  - Dual Communication & Resolution Indication Endpoints in `server/src/routes/comments.routes.ts`:
+    - `GET /api/tickets/:id/comments`: Fetch public comments (Requester owner, IT Staff, Admin).
+    - `POST /api/tickets/:id/comments`: Post public comment with author attribution.
+    - `GET /api/tickets/:id/notes`: Strictly restricted to IT Staff and Admin. Requesters blocked with 403 Forbidden (BR-13 privacy guard).
+    - `POST /api/tickets/:id/notes`: Post internal technical note (Staff/Admin only).
+    - `PATCH /api/tickets/:id/resolve-indication`: Allows ticket owner Requester to toggle `requesterResolvedIndication` (BR-21).
+  - Frontend Component Suite:
+    - `StaffTicketDetail.tsx` & `StaffTicketDetail.css`:
+      - Zen Green operations toolbar with Claim Ticket, Reassign Owner, IT Priority select, Next Status select, and Resolve Ticket modal.
+      - Dual-stream tabbed conversation interface with clear visual distinction:
+        - Public Comments: `#EAF6EF` light green bubble styling.
+        - Internal Notes: `#FFF8E1` amber bubble styling with lock icon banner explicitly stating visibility restriction to staff only.
+      - Resolution modal with character counter (min 3, max 500) and form validation.
+      - Requester indication banner displayed when requester marks problem as resolved.
+    - `TicketDetail.tsx` (Requester view):
+      - Integrated public comments thread and comment composer.
+      - Problem Appears Resolved toggle button allowing requesters to indicate resolution status.
+      - Resolution summary card displayed when ticket is resolved or closed.
+    - `App.tsx`: Dynamic routing to `StaffTicketDetail` for IT Staff/Admin, and `TicketDetail` for Requesters.
+  - Test Suites:
+    - 16 automated tests in `server/tests/lab-03/staff-ticket-detail.api.test.ts`.
+    - 12 automated tests in `server/tests/lab-03/comments-notes.api.test.ts`.
+    - 8 automated tests in `client/src/__tests__/lab-03/StaffTicketDetail.test.tsx`.
+- **Reviewer Verdict & Summary:** Pending Review by @titayaaa.
+- **Reviewer Feedback Items & Notes:** [To be recorded upon peer reviewer feedback]
 
 ---
 

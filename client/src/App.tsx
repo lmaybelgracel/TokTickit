@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Login } from "./components/Login";
 import { ChangePassword } from "./components/ChangePassword";
 import { StaffTicketQueue } from "./components/StaffTicketQueue";
+import { StaffTicketDetail } from "./components/StaffTicketDetail";
 
 export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue";
 
@@ -173,11 +174,18 @@ function AppContent() {
             />
           </div>
         ) : currentView === "ticket-detail" && selectedTicketId ? (
-          <TicketDetail
-            activeRequester={activeRequester}
-            ticketId={selectedTicketId}
-            onBack={() => setCurrentView(isStaffOrAdmin ? "staff-queue" : "my-tickets")}
-          />
+          isStaffOrAdmin ? (
+            <StaffTicketDetail
+              ticketId={selectedTicketId}
+              onBack={() => setCurrentView("staff-queue")}
+            />
+          ) : (
+            <TicketDetail
+              activeRequester={activeRequester}
+              ticketId={selectedTicketId}
+              onBack={() => setCurrentView("my-tickets")}
+            />
+          )
         ) : null}
       </main>
     </div>

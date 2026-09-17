@@ -7,6 +7,7 @@ import { randomUUID } from "node:crypto";
 import { getPrisma } from "./prisma.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { staffRouter } from "./routes/staff.routes.js";
+import { commentsRouter } from "./routes/comments.routes.js";
 import { authenticateToken } from "./middleware/auth.middleware.js";
 
 // The Express app is exported separately from app.listen() (see index.ts) so
@@ -19,6 +20,7 @@ app.use(authenticateToken);
 
 app.use("/api/auth", authRouter);
 app.use("/api/staff", staffRouter);
+app.use("/api/tickets", commentsRouter);
 
 const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024;
 const ALLOWED_ATTACHMENT_TYPES = new Set([

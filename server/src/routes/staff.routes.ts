@@ -153,3 +153,343 @@ staffRouter.get("/tickets", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to retrieve IT staff ticket queue" });
   }
 });
+
+// GET /api/staff/users - Active IT Staff and Administrators for assignment
+staffRouter.get("/users", async (_req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const users = await prisma.user.findMany({
+      where: {
+        isActive: true,
+        role: { in: [Role.IT_STAFF, Role.ADMINISTRATOR] },
+      },
+      select: { id: true, name: true, email: true, role: true },
+      orderBy: { name: "asc" },
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve staff roster" });
+  }
+});
+
+// GET /api/staff/tickets/:id - Detailed Ticket View for Staff
+staffRouter.get("/tickets/:id", async (req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const ticketId = parseInt(req.params.id, 10);
+    if (isNaN(ticketId) || ticketId <= 0) {
+      res.status(400).json({ error: "Invalid ticket ID" });
+      return;
+    }
+
+    const ticket = await prisma.ticket.findUnique({
+      where: { id: ticketId },
+      include: {
+        category: { select: { id: true, name: true, description: true } },
+        relatedSystem: { select: { id: true, name: true, category: true } },
+        requester: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true, role: true } },
+        attachments: {
+          where: { isRemoved: false },
+          select: { id: true, filename: true, fileSize: true, mimeType: true, isRemoved: true, uploadedAt: true },
+        },
+        comments: {
+          include: {
+            author: { select: { id: true, name: true, email: true, role: true } },
+          },
+          orderBy: { createdAt: "asc" },
+        },
+        notes: {
+          include: {
+            author: { select: { id: true, name: true, email: true, role: true } },
+          },
+          orderBy: { createdAt: "asc" },
+        },
+      },
+    });
+
+    if (!ticket) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve ticket details" });
+  }
+});
+
+// PATCH /api/staff/tickets/:id/claim - Claim ownership
+staffRouter.patch("/tickets/:id/claim", async (req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const ticketId = parseInt(req.params.id, 10);
+    if (isNaN(ticketId) || ticketId <= 0) {
+      res.status(400).json({ error: "Invalid ticket ID" });
+      return;
+    }
+
+    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    if (!ticket) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    const nextStatus = ticket.currentStatus === TicketStatus.NEW ? TicketStatus.OPEN : ticket.currentStatus;
+
+    const updated = await prisma.ticket.update({
+      where: { id: ticketId },
+      data: {
+        ownerId: req.user!.id,
+        currentStatus: nextStatus,
+      },
+      include: {
+        category: { select: { id: true, name: true } },
+        relatedSystem: { select: { id: true, name: true } },
+        requester: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to claim ticket" });
+  }
+});
+
+// PATCH /api/staff/tickets/:id/assign - Reassign ticket owner
+staffRouter.patch("/tickets/:id/assign", async (req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const ticketId = parseInt(req.params.id, 10);
+    if (isNaN(ticketId) || ticketId <= 0) {
+      res.status(400).json({ error: "Invalid ticket ID" });
+      return;
+    }
+
+    const { ownerId } = req.body;
+    const parsedOwnerId = parseInt(String(ownerId), 10);
+    if (isNaN(parsedOwnerId) || parsedOwnerId <= 0) {
+      res.status(400).json({ error: "Valid ownerId is required" });
+      return;
+    }
+
+    // Verify target user is active IT Staff or Administrator
+    const targetUser = await prisma.user.findUnique({
+      where: { id: parsedOwnerId },
+      select: { id: true, isActive: true, role: true },
+    });
+
+    if (!targetUser || !targetUser.isActive || (targetUser.role !== Role.IT_STAFF && targetUser.role !== Role.ADMINISTRATOR)) {
+      res.status(400).json({ error: "Target owner must be an active IT Staff or Administrator" });
+      return;
+    }
+
+    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    if (!ticket) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    const nextStatus = ticket.currentStatus === TicketStatus.NEW ? TicketStatus.OPEN : ticket.currentStatus;
+
+    const updated = await prisma.ticket.update({
+      where: { id: ticketId },
+      data: {
+        ownerId: parsedOwnerId,
+        currentStatus: nextStatus,
+      },
+      include: {
+        category: { select: { id: true, name: true } },
+        relatedSystem: { select: { id: true, name: true } },
+        requester: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to assign ticket" });
+  }
+});
+
+// PATCH /api/staff/tickets/:id/priority - Update IT Priority
+staffRouter.patch("/tickets/:id/priority", async (req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const ticketId = parseInt(req.params.id, 10);
+    if (isNaN(ticketId) || ticketId <= 0) {
+      res.status(400).json({ error: "Invalid ticket ID" });
+      return;
+    }
+
+    const { itPriority } = req.body;
+    if (!itPriority || typeof itPriority !== "string") {
+      res.status(400).json({ error: "itPriority is required" });
+      return;
+    }
+
+    const upperPri = itPriority.trim().toUpperCase();
+    if (!Object.values(Priority).includes(upperPri as Priority)) {
+      res.status(400).json({ error: "Invalid IT Priority value" });
+      return;
+    }
+
+    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    if (!ticket) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    const updated = await prisma.ticket.update({
+      where: { id: ticketId },
+      data: { itPriority: upperPri as Priority },
+      include: {
+        category: { select: { id: true, name: true } },
+        relatedSystem: { select: { id: true, name: true } },
+        requester: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update IT Priority" });
+  }
+});
+
+// BR-19 State Transition Matrix
+const ALLOWED_STATUS_TRANSITIONS: Record<TicketStatus, TicketStatus[]> = {
+  NEW: [TicketStatus.OPEN, TicketStatus.CANCELLED],
+  OPEN: [TicketStatus.IN_PROGRESS, TicketStatus.WAITING_FOR_REQUESTER, TicketStatus.CANCELLED],
+  IN_PROGRESS: [TicketStatus.WAITING_FOR_REQUESTER, TicketStatus.CANCELLED], // RESOLVED requires resolutionSummary via /resolve
+  WAITING_FOR_REQUESTER: [TicketStatus.IN_PROGRESS, TicketStatus.CANCELLED], // RESOLVED requires resolutionSummary via /resolve
+  RESOLVED: [TicketStatus.CLOSED, TicketStatus.REOPENED],
+  CLOSED: [TicketStatus.REOPENED],
+  REOPENED: [TicketStatus.IN_PROGRESS, TicketStatus.WAITING_FOR_REQUESTER, TicketStatus.CANCELLED],
+  CANCELLED: [],
+};
+
+// PATCH /api/staff/tickets/:id/status - Transition Status per BR-19
+staffRouter.patch("/tickets/:id/status", async (req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const ticketId = parseInt(req.params.id, 10);
+    if (isNaN(ticketId) || ticketId <= 0) {
+      res.status(400).json({ error: "Invalid ticket ID" });
+      return;
+    }
+
+    const { status } = req.body;
+    if (!status || typeof status !== "string") {
+      res.status(400).json({ error: "status is required" });
+      return;
+    }
+
+    const upperStatus = status.trim().toUpperCase();
+
+    // Guard: Direct transition to RESOLVED via general status endpoint is strictly rejected per BR-20
+    if (upperStatus === TicketStatus.RESOLVED) {
+      res.status(422).json({
+        error: "Direct transition to RESOLVED via general status endpoint is not permitted. Please use PATCH /api/staff/tickets/:id/resolve with resolution summary.",
+      });
+      return;
+    }
+
+    if (!Object.values(TicketStatus).includes(upperStatus as TicketStatus)) {
+      res.status(400).json({ error: "Invalid status value" });
+      return;
+    }
+
+    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    if (!ticket) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    const allowed = ALLOWED_STATUS_TRANSITIONS[ticket.currentStatus] || [];
+    if (!allowed.includes(upperStatus as TicketStatus)) {
+      res.status(400).json({
+        error: `Invalid status transition from ${ticket.currentStatus} to ${upperStatus}`,
+      });
+      return;
+    }
+
+    const updated = await prisma.ticket.update({
+      where: { id: ticketId },
+      data: { currentStatus: upperStatus as TicketStatus },
+      include: {
+        category: { select: { id: true, name: true } },
+        relatedSystem: { select: { id: true, name: true } },
+        requester: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update ticket status" });
+  }
+});
+
+// PATCH /api/staff/tickets/:id/resolve - Resolve with Mandatory Resolution Summary (BR-19, BR-20)
+staffRouter.patch("/tickets/:id/resolve", async (req: Request, res: Response) => {
+  try {
+    const prisma = getPrisma();
+    const ticketId = parseInt(req.params.id, 10);
+    if (isNaN(ticketId) || ticketId <= 0) {
+      res.status(400).json({ error: "Invalid ticket ID" });
+      return;
+    }
+
+    const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+    if (!ticket) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    // Permitted to resolve only from IN_PROGRESS, WAITING_FOR_REQUESTER, or REOPENED
+    const permittable: TicketStatus[] = [
+      TicketStatus.IN_PROGRESS,
+      TicketStatus.WAITING_FOR_REQUESTER,
+      TicketStatus.REOPENED,
+    ];
+    if (!permittable.includes(ticket.currentStatus)) {
+      res.status(400).json({
+        error: `Cannot resolve ticket from current status: ${ticket.currentStatus}`,
+      });
+      return;
+    }
+
+    const { resolutionSummary } = req.body;
+    if (
+      !resolutionSummary ||
+      typeof resolutionSummary !== "string" ||
+      resolutionSummary.trim().length < 3 ||
+      resolutionSummary.trim().length > 500
+    ) {
+      res.status(422).json({
+        error: "Resolution summary is required and must be between 3 and 500 characters",
+      });
+      return;
+    }
+
+    const updated = await prisma.ticket.update({
+      where: { id: ticketId },
+      data: {
+        currentStatus: TicketStatus.RESOLVED,
+        resolutionSummary: resolutionSummary.trim(),
+      },
+      include: {
+        category: { select: { id: true, name: true } },
+        relatedSystem: { select: { id: true, name: true } },
+        requester: { select: { id: true, name: true, email: true } },
+        owner: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    res.status(200).json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to resolve ticket" });
+  }
+});
