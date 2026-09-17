@@ -244,7 +244,10 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  isActive?: boolean;
   mustChangePassword: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface LoginResponse {
@@ -574,4 +577,109 @@ export async function indicateTicketResolved(ticketId: number, appearsResolved =
   }
   return res.json();
 }
+
+export interface CreateAdminUserPayload {
+  name: string;
+  email: string;
+  role: "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR" | string;
+  initialPassword: string;
+  isActive?: boolean;
+}
+
+export interface UpdateAdminUserPayload {
+  name?: string;
+  email?: string;
+  role?: "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR" | string;
+  isActive?: boolean;
+}
+
+export async function fetchAdminUsers(
+  params?: { search?: string; role?: string; isActive?: boolean | string },
+  token?: string | null
+): Promise<User[]> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const query = new URLSearchParams();
+  if (params?.search) query.set("search", params.search);
+  if (params?.role) query.set("role", params.role);
+  if (params?.isActive !== undefined && params.isActive !== "") query.set("isActive", String(params.isActive));
+
+  const url = `${BASE_URL}/api/admin/users${query.toString() ? `?${query.toString()}` : ""}`;
+  const res = await fetch(url, {
+    headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to fetch user roster");
+  }
+  return res.json();
+}
+
+export async function createAdminUser(
+  data: CreateAdminUserPayload,
+  token?: string | null
+): Promise<User> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/admin/users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const resData = await res.json().catch(() => ({}));
+    const errorMsg = resData.details ? `${resData.error}: ${resData.details.join(", ")}` : resData.error || "Failed to create user";
+    throw new Error(errorMsg);
+  }
+  return res.json();
+}
+
+export async function updateAdminUser(
+  userId: number,
+  data: UpdateAdminUserPayload,
+  token?: string | null
+): Promise<User> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/admin/users/${userId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const resData = await res.json().catch(() => ({}));
+    throw new Error(resData.error || "Failed to update user");
+  }
+  return res.json();
+}
+
+export async function resetAdminUserPassword(
+  userId: number,
+  newInitialPassword: string,
+  token?: string | null
+): Promise<{ message: string }> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/admin/users/${userId}/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ newInitialPassword }),
+  });
+
+  if (!res.ok) {
+    const resData = await res.json().catch(() => ({}));
+    const errorMsg = resData.details ? `${resData.error}: ${resData.details.join(", ")}` : resData.error || "Failed to reset password";
+    throw new Error(errorMsg);
+  }
+  return res.json();
+}
+
 
