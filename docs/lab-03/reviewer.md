@@ -16,7 +16,7 @@
 | [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
-| [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Pending Review by @titayaaa | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
+| [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Approved and Merged into `lab3-staging` | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
@@ -164,8 +164,15 @@
     - 16 automated tests in `server/tests/lab-03/staff-ticket-detail.api.test.ts`.
     - 12 automated tests in `server/tests/lab-03/comments-notes.api.test.ts`.
     - 8 automated tests in `client/src/__tests__/lab-03/StaffTicketDetail.test.tsx`.
-- **Reviewer Verdict & Summary:** Pending Review by @titayaaa.
-- **Reviewer Feedback Items & Notes:** [To be recorded upon peer reviewer feedback]
+- **Reviewer Verdict & Summary:** Approved and Merged by @titayaaa (Merge commit `f63cc9c`):
+  > "ตรวจทานโค้ดและชุดทดสอบของ PR #50 (Issue 21: IT Staff Ticket Operations & Detail) เรียบร้อยแล้วน้า ละเอียด ครบถ้วน และครอบคลุมตามโจทย์ Lab 3 ดีมาก ๆ เลย! โครงสร้างโค้ดสะอาด เป็นระเบียบ แยกสิทธิ์ถูกต้องตามเกณฑ์ และเทสผ่านครบถ้วนทั้งหมด ไม่มีจุดติดขัดเลย เรา Approve ให้เรียบร้อย"
+- **Reviewer Feedback Items & Notes:**
+  1. **Dual-stream Communication & Data Privacy (BR-13 & AC-05):** Verified strict route separation between public comments and internal notes. Requesters are strictly forbidden (403) from accessing internal notes. Verified requester ticket ownership guard to prevent cross-ticket commenting.
+  2. **Operations & Transition Matrix (BR-19, BR-20):** Confirmed automatic status transition from NEW to OPEN on Claim, validation that assigned user is active staff, strict rejection of status change to RESOLVED via standard status endpoint (422), and mandatory 3-500 character resolution summary.
+  3. **Zen Green Design System & Visuals:** Commended clear dual styling (light green for public comments vs amber with lock icon for confidential staff notes), real-time modal character counter, and Requester "Problem Appears Resolved" toggle banner.
+  4. **Test Quality & Coverage:** Confirmed 100% pass across all 16 ticket detail API tests, 12 comments/notes API tests, and 8 frontend component tests.
+  5. **Minor Recommendation Noted:** Consider adding explicit max length validation (`content.trim().length <= 2000`) on comments per BR-15.
+- **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `f63cc9c`).
 
 ---
 
