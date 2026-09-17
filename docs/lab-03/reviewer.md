@@ -17,7 +17,7 @@
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
 | [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Approved and Merged into `lab3-staging` | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
-| [#51](https://github.com/lmaybelgracel/TokTickit/pull/51) | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Pending Peer Review | [PR #51](https://github.com/lmaybelgracel/TokTickit/pull/51) |
+| [#51](https://github.com/lmaybelgracel/TokTickit/pull/51) | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Approved and Merged into `lab3-staging` | [PR #51](https://github.com/lmaybelgracel/TokTickit/pull/51) |
 
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
@@ -201,7 +201,17 @@
   - Test Suites:
     - 26 automated tests in `server/tests/lab-03/admin-users.api.test.ts`.
     - 8 automated tests in `client/src/__tests__/lab-03/AdminUserManagement.test.tsx`.
-- **Reviewer Verdict & Summary:** [Pending Review from @titayaaa]
+- **Reviewer Verdict & Summary:** Approved and Merged by @titayaaa (Merge commit `a3c72a4`):
+  > "เราลองไล่เช็กโค้ดให้แบบละเอียดทั้งหน้าบ้าน หลังบ้าน แล้วก็ลองรันเทสต์ดูให้หมดแล้วนะ ทำออกมาดีมากก เก็บเงื่อนไขของแล็บนี้ครบเลย! ... ทุกอย่างเรียบร้อยและปลอดภัยดีมากก กด Approve ให้แล้วนะ"
+- **Reviewer Feedback Items & Notes:**
+  1. **Security & Role-based Access Guards (BR-07, BR-08, BR-09):** Checked authentication, password change enforcement, and admin guards. Verified self-deactivation and self-demotion prevention (400), last active admin demotion/deactivation prevention (400), and case-insensitive unique email handling (409).
+  2. **Frontend UI & Password Complexity Checklist:** Real-time 4-point password complexity checklist preventing form submission when incomplete, responsive desktop table and mobile cards (<768px) with `(You)` indicator badge and auto-disabled controls for own account.
+  3. **Reviewer Observations & Constructive Notes:**
+     - In PR description draft, mention of `department` and `symbol` was noted from initial notes; confirmed actual implementation code cleanly matches specification without unnecessary fields.
+     - Reset Password button on own account row currently functional (forces password change on next login); noted recommendation for future UX polish to disable for `(You)` row.
+  4. **Test Quality & Verification:** Confirmed 100% pass across all 26 server tests in `admin-users.api.test.ts`, 8 client tests in `AdminUserManagement.test.tsx`, and clean zero-error production build.
+- **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `a3c72a4`).
+
 
 ---
 
