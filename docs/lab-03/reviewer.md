@@ -15,7 +15,7 @@
 | [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Approved and Merged into `lab3-staging` | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
 | [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
-| [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Ready for Peer Review | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
+| [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
@@ -117,7 +117,14 @@
   - Comprehensive test coverage:
     - 16 server API tests in `server/tests/lab-03/staff-queue.api.test.ts`.
     - 7 client component tests in `client/src/__tests__/lab-03/StaffTicketQueue.test.tsx`.
-- **Current Status:** Ready for Peer Review by @titayaaa.
+- **Reviewer Verdict & Summary:** Approved and Merged by @titayaaa (Merge commit `f7838f7`):
+  > "เราไล่ตรวจโค้ดใน PR #49 ให้ครบทุกจุดแล้วนะ ทำออกมาได้ดีและละเอียดมาก ทั้งฝั่ง Backend API และหน้าบ้าน UI คุมธีม Zen Green สวยงาม สบายตา ตรงตามสเปกเลยจ้า... เรากด Approve ให้เรียบร้อยแล้วน้า เดี๋ยวเรากด Merge เข้า `lab3-staging` ให้เลย"
+- **Reviewer Feedback Items & Notes:**
+  1. **RBAC & Security Middleware:** Confirmed thorough coverage across Token check, Role guard (`IT_STAFF`, `ADMINISTRATOR`), and `mustChangePassword` blocking with proper status codes (401, 403).
+  2. **UX & Responsive Layout:** Commended 250ms debounced search, ownership segmented buttons (`All`, `Unassigned`, `Assigned to Me`), and responsive transformation to mobile card stack.
+  3. **Priority Sorting & Automated Tests:** Verified Postgres enum-aware `itPriority` sort and 100% pass rate across all 16 backend and 7 frontend test cases.
+  4. **Constructive Suggestions Noted for Future Refinement:** In `staff.routes.ts`, consider returning `400 Bad Request` if invalid enum strings are provided; and consider adding ellipsis (`...`) dividers in pagination for large page counts.
+- **Final Result:** Approved by @titayaaa and merged into `lab3-staging` (Merge commit `f7838f7`).
 
 ---
 
