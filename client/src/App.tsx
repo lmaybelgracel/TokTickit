@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RequesterUser, Ticket } from "./api";
 import { CreateTicket } from "./components/CreateTicket";
 import { MyTickets } from "./components/MyTickets";
@@ -22,6 +22,18 @@ function AppContent() {
   const [currentView, setCurrentView] = useState<CurrentView>(
     isAdmin ? "admin-users" : isStaffOrAdmin ? "staff-queue" : "my-tickets"
   );
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "ADMINISTRATOR") {
+        setCurrentView("admin-users");
+      } else if (user.role === "IT_STAFF") {
+        setCurrentView("staff-queue");
+      } else {
+        setCurrentView("my-tickets");
+      }
+    }
+  }, [user?.id, user?.role]);
 
   // If loading auth state from localStorage token
   if (isLoading) {
