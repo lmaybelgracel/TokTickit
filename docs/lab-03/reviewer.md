@@ -16,7 +16,7 @@
 | [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
-| [Pending] | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Pending Review by @titayaaa | [Pending PR] |
+| [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Pending Review by @titayaaa | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
 
