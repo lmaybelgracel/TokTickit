@@ -51,8 +51,11 @@ export interface Ticket {
   ticketNumber: string;
   summary: string;
   description: string;
-  requestedPriority: "LOW" | "MEDIUM" | "HIGH";
+  requestedPriority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  itPriority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   currentStatus: string;
+  resolutionSummary?: string | null;
+  requesterResolvedIndication?: boolean;
   requesterId: number;
   categoryId: number;
   relatedSystemId: number;
@@ -61,6 +64,8 @@ export interface Ticket {
   category?: Category;
   relatedSystem?: RelatedSystem;
   requester?: Pick<RequesterUser, "id" | "name" | "email">;
+  ownerId?: number | null;
+  owner?: { id: number; name: string; email: string } | null;
   attachments?: Attachment[];
 }
 
@@ -303,5 +308,59 @@ export async function changePassword(
   return data;
 }
 
+export interface FetchStaffTicketsParams {
+  search?: string;
+  category?: string | number;
+  status?: string;
+  priority?: string;
+  itPriority?: string;
+  ownerId?: string | number;
+  sort?: string;
+  order?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+}
 
+export interface StaffQueueResponse {
+  tickets: Ticket[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
 
+export async function fetchStaffTickets(
+  params: FetchStaffTicketsParams = {},
+  token?: string | null
+): Promise<StaffQueueResponse> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const query = new URLSearchParams();
+  if (params.search) query.set("search", params.search);
+  if (params.category) query.set("category", String(params.category));
+  if (params.status) query.set("status", params.status);
+  if (params.priority) query.set("priority", params.priority);
+  if (params.itPriority) query.set("itPriority", params.itPriority);
+  if (params.ownerId !== undefined && params.ownerId !== null && String(params.ownerId) !== "") {
+    query.set("ownerId", String(params.ownerId));
+  }
+  if (params.sort) query.set("sort", params.sort);
+  if (params.order) query.set("order", params.order);
+  if (params.page) query.set("page", params.page.toString());
+  if (params.limit) query.set("limit", params.limit.toString());
+
+  const queryString = query.toString() ? `?${query.toString()}` : "";
+  const res = await fetch(`${BASE_URL}/api/staff/tickets${queryString}`, {
+    headers: {
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load staff ticket queue");
+  }
+
+  return res.json();
+}

@@ -6,15 +6,19 @@ import { TicketDetail } from "./components/TicketDetail";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Login } from "./components/Login";
 import { ChangePassword } from "./components/ChangePassword";
+import { StaffTicketQueue } from "./components/StaffTicketQueue";
 
-export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail";
+export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue";
 
 function AppContent() {
   const { user, logout, isLoading } = useAuth();
 
+  const isStaffOrAdmin = user?.role === "IT_STAFF" || user?.role === "ADMINISTRATOR";
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
-  const [currentView, setCurrentView] = useState<CurrentView>("my-tickets");
+  const [currentView, setCurrentView] = useState<CurrentView>(
+    isStaffOrAdmin ? "staff-queue" : "my-tickets"
+  );
 
   // If loading auth state from localStorage token
   if (isLoading) {
@@ -77,6 +81,18 @@ function AppContent() {
           </div>
 
           <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
+            {isStaffOrAdmin && (
+              <button
+                style={{
+                  ...styles.navItem,
+                  ...(currentView === "staff-queue" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("staff-queue")}
+              >
+                Staff Queue
+              </button>
+            )}
+
             <button
               style={{
                 ...styles.navItem,
@@ -130,11 +146,18 @@ function AppContent() {
 
       {/* Main Content Area */}
       <main className="app-main" style={styles.mainContent}>
-        {currentView === "create-ticket" ? (
+        {currentView === "staff-queue" ? (
+          <StaffTicketQueue
+            onSelectTicket={(ticket) => {
+              setSelectedTicketId(ticket.id);
+              setCurrentView("ticket-detail");
+            }}
+          />
+        ) : currentView === "create-ticket" ? (
           <CreateTicket
             activeRequester={activeRequester}
             onSuccess={handleTicketCreated}
-            onCancel={() => setCurrentView("my-tickets")}
+            onCancel={() => setCurrentView(isStaffOrAdmin ? "staff-queue" : "my-tickets")}
           />
         ) : currentView === "my-tickets" ? (
           <div>
@@ -150,7 +173,11 @@ function AppContent() {
             />
           </div>
         ) : currentView === "ticket-detail" && selectedTicketId ? (
-          <TicketDetail activeRequester={activeRequester} ticketId={selectedTicketId} onBack={() => setCurrentView("my-tickets")} />
+          <TicketDetail
+            activeRequester={activeRequester}
+            ticketId={selectedTicketId}
+            onBack={() => setCurrentView(isStaffOrAdmin ? "staff-queue" : "my-tickets")}
+          />
         ) : null}
       </main>
     </div>

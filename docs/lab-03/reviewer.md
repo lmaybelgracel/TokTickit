@@ -14,9 +14,11 @@
 |:---|:---------------|:-----------------|:-----|
 | [#36](https://github.com/lmaybelgracel/TokTickit/pull/36) | Issue 17: Sprint 3 Engineering Contract & Specification / `feature/17-spec-and-tests` | Approved and Merged into `lab3-staging` | [PR #36](https://github.com/lmaybelgracel/TokTickit/pull/36) |
 | [#47](https://github.com/lmaybelgracel/TokTickit/pull/47) | Issue 18: Database Schema Evolution, User Migration & Idempotent Seed Data / `feature/18-database-and-seed` | Approved and Merged into `lab3-staging` | [PR #47](https://github.com/lmaybelgracel/TokTickit/pull/47) |
-| [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Ready for Peer Review | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
+| [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
+| [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Ready for Peer Review | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
+
 
 - **Summary:** Delivers the initial Sprint 3 specification suite under `docs/lab-03/` covering `specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, and `ai-use.md`.
 - **Reviewer Verdict & Summary:** Commented and Approved by @titayaaa:
@@ -93,7 +95,29 @@
   4. **Token Storage Clarification:**
      - *Reviewer Feedback:* Clarify token storage convention between cookie and `localStorage`.
      - *My Action:* Documented in both `specification.md` and `api-spec.md` that the React Single Page Application (SPA) stores the Bearer JWT in `localStorage` (`toktickit_auth_token`) and transmits it via `Authorization: Bearer <token>` for all API requests.
-- **Current Status:** All 4 review items addressed, verified, and committed. Ready for final review and merge by @titayaaa.
+- **Final Result:** Approved by @titayaaa ("good !!") and merged into `lab3-staging` (Merge commit `94e2f3c`).
+
+---
+
+### Issue 20 - IT Staff Ticket Queue
+
+- **Summary:** Implemented the shared IT Staff Ticket Queue API and UI enabling IT Staff and Administrators to monitor, search, filter, sort, and paginate tickets across all Requesters within TokTickIT.
+- **Key Deliverables:**
+  - Backend queue query API: `GET /api/staff/tickets` in `server/src/routes/staff.routes.ts` with multi-criteria filtering (`category`, `status`, `priority`, `itPriority`, `ownerId`), search across ticket number and summary, sorting, and pagination.
+  - Security & Role Guards: Strict enforcement via `requireAuth`, `enforcePasswordChange`, and `requireRole(Role.IT_STAFF, Role.ADMINISTRATOR)`. Requesters blocked with 403 Forbidden.
+  - Frontend `StaffTicketQueue.tsx` component & `StaffTicketQueue.css` adhering to Zen Green design system:
+    - 250ms debounced search bar.
+    - Category, Status, Requested Priority, and IT Priority filter dropdowns.
+    - Ownership segmented toggle (`All`, `Unassigned`, `Assigned to Me`).
+    - Sortable table headers (Ticket No, Created Date, IT Priority, Status).
+    - Status, Priority, and Owner badges.
+    - Desktop high-density table and Mobile responsive card stack.
+    - Clear Filters reset action and empty/no-results state.
+    - Pagination bar with configurable items per page (10, 25, 50).
+  - Comprehensive test coverage:
+    - 16 server API tests in `server/tests/lab-03/staff-queue.api.test.ts`.
+    - 7 client component tests in `client/src/__tests__/lab-03/StaffTicketQueue.test.tsx`.
+- **Current Status:** Ready for Peer Review by @titayaaa.
 
 ---
 
