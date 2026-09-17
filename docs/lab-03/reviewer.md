@@ -212,6 +212,43 @@
   4. **Test Quality & Verification:** Confirmed 100% pass across all 26 server tests in `admin-users.api.test.ts`, 8 client tests in `AdminUserManagement.test.tsx`, and clean zero-error production build.
 - **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `a3c72a4`).
 
+---
+
+### Issue 23 - Automated Testing Suite (Unit, API, Component, and E2E)
+
+- **Pull Request:** [#52](https://github.com/lmaybelgracel/TokTickit/pull/52)
+- **Branch:** `feature/23-automated-testing-suite`
+- **Target:** `lab3-staging`
+- **Summary:** Implements the complete automated verification test suite for Sprint 3 covering all layers (Backend API integration & security, Frontend React components, and Playwright End-to-End journeys) with 100% traceability to Course Rubric Part 7 and AC-01 to AC-12.
+  - End-to-End Test Suite (`e2e/lab-03/`):
+    - `authentication.spec.ts` (E2E-AUTH-01): Valid login, `mustChangePassword` enforcement redirect, real-time password complexity checklist validation, password update, and dashboard access.
+    - `staff-ticket-flow.spec.ts` (E2E-STAFF-01): Requester submits ticket -> IT Staff claims unassigned ticket, updates IT Priority, switches between Public Comments and Internal Notes tabs, executes permitted status transitions, enters mandatory resolution summary to resolve -> Requester verifies resolution.
+    - `user-administration.spec.ts` (E2E-ADMIN-01): Administrator views roster, creates new user, triggers administrative password reset, verifies safety rules (BR-07 self-deactivation guard and BR-08 self-demotion guard), and tests logout.
+  - Backend Security & Authorization Test Suite (`server/tests/lab-03/`):
+    - `authorization.api.test.ts`: SEC-01 (cross-ticket isolation), SEC-02 & SEC-04 (internal notes isolation and 403 enforcement), SEC-03 (admin role guards), and unauthenticated / mustChangePassword token challenge enforcement.
+    - `admin-users.api.test.ts`: ADM-01 (duplicate email 409), ADM-02 (BR-07 self-deactivation 400), ADM-03 (BR-09 last active admin 400), and ADM-04 (password reset).
+  - Frontend Component Traceability Suite (`client/src/__tests__/lab-03/`):
+    - `AdminUserManagement.test.tsx`: UI-ADMIN-01 (roster rendering), UI-ADMIN-02 (create user modal & submission), and UI-ADMIN-03 (BR-07/08 safety disabled states in edit modal).
+- **First Review Verdict (CHANGES_REQUESTED by @titayaaa):**
+  > "เราลองไล่ตรวจโค้ดแบบเจาะลึกระดับ Line-by-line และลองเทียบ Route กับ Test Logic ให้ใหม่อีกรอบนะ เจอจุดที่ควรปรับปรุงเพื่อความสมบูรณ์แบบของโปรเจกต์ ... 1. Endpoint ใน authorization.api.test.ts ยิงผิดเส้น (/api/staff/queue -> /api/staff/tickets) ... 2. มีไฟล์เทสต์ซ้ำซ้อนกัน 2 คู่ ... 3. Assertion ตกหล่นใน UserManagement.test.tsx ... 4. ขาดกฎ BR-08 ใน users-admin.api.test.ts ... 5. Behavior ของ useEffect ใน App.tsx"
+- **Changes Made & Follow-up Actions:**
+  1. Corrected endpoint in `authorization.api.test.ts` from `/api/staff/queue` to `/api/staff/tickets`.
+  2. Removed duplicate test files (`users-admin.api.test.ts`, `UserManagement.test.tsx`) and consolidated all test coverage and traceability in `admin-users.api.test.ts` (26 tests) and `AdminUserManagement.test.tsx` (8 tests). Updated `docs/lab-03/tests.md`.
+  3. Verified comprehensive coverage for BR-08 (preventing self-demotion), BR-07, BR-09, BR-10, Reset Password modal, and submit assertions.
+  4. Implemented `sessionStorage` view state persistence in `App.tsx` and `AuthContext.tsx` so page refreshes retain the active view (ticket detail or create ticket) without unexpected redirects, while fresh logins route cleanly to role defaults.
+- **Second Review Verdict (APPROVED by @titayaaa):**
+  > "ตรวจทานโค้ดใน commit `7347855` ให้เรียบร้อยแล้วน้า แก้ไขได้ตรงจุดและเก็บรายละเอียดครบถ้วนดีมากเลย
+  > - แก้ Endpoint ใน `authorization.api.test.ts` ได้ถูกต้องตรงกับ Route จริง
+  > - เคลียร์ไฟล์เทสต์ที่ซ้ำซ้อนออกแล้ว ชุดเทสต์สะอาดขึ้นเยอะและ Traceability ครบถ้วน
+  > - การเก็บ View state ลง `sessionStorage` ใน `App.tsx` ช่วยแก้ปัญหาหน้าหลุดตอน Refresh ได้ดีมาก
+  > ผลเทสต์ผ่านครบทุกตัว งานเรียบร้อยสมบูรณ์ กด Approve ให้เรียบร้อยแล้วน้า"
+- **Test Quality & Verification:**
+  - Server test suite: 119/119 passing across 7 test files (100%).
+  - Client test suite: 31/31 passing across 5 test files (100%).
+  - End-to-End test suite: 3/3 passing across 3 spec files (100%).
+  - Total: 153/153 tests passing.
+- **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `15194b5`).
+
 
 ---
 
