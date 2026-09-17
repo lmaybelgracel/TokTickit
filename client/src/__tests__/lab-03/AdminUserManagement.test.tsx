@@ -17,7 +17,7 @@ vi.mock("../../api", async () => {
   };
 });
 
-describe("AdminUserManagement Component Tests (Sprint 3 - Issue 22)", () => {
+describe("AdminUserManagement Component Tests - UI-ADMIN Traceability Suite (Sprint 3 - Issue 22 & 23)", () => {
   const currentAdminUser: api.User = {
     id: 1,
     name: "Suda Admin",
@@ -78,7 +78,7 @@ describe("AdminUserManagement Component Tests (Sprint 3 - Issue 22)", () => {
     );
   };
 
-  it("renders user roster table with names, roles, statuses, and credential flags", async () => {
+  it("UI-ADMIN-01: renders user roster table with names, roles, statuses, and credential flags", async () => {
     renderComponent();
 
     const names = await screen.findAllByText("Suda Admin");
@@ -140,7 +140,7 @@ describe("AdminUserManagement Component Tests (Sprint 3 - Issue 22)", () => {
     );
   });
 
-  it("opens Create User modal and submits new user when valid", async () => {
+  it("UI-ADMIN-02: opens Create User modal and submits new user when valid", async () => {
     vi.mocked(api.createAdminUser).mockResolvedValue({
       id: 55,
       name: "New Engineer",
@@ -187,7 +187,7 @@ describe("AdminUserManagement Component Tests (Sprint 3 - Issue 22)", () => {
     });
   });
 
-  it("enforces BR-07 & BR-08 in Edit Modal: disables deactivation and role change when editing self", async () => {
+  it("UI-ADMIN-03: enforces BR-07 & BR-08 in Edit Modal: disables deactivation and role change when editing self", async () => {
     renderComponent();
 
     // User 1 is Suda Admin (current logged-in user)

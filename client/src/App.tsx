@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RequesterUser, Ticket } from "./api";
 import { CreateTicket } from "./components/CreateTicket";
 import { MyTickets } from "./components/MyTickets";
@@ -12,16 +12,97 @@ import { AdminUserManagement } from "./components/AdminUserManagement";
 
 export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users";
 
+const getDefaultViewForRole = (role?: string): CurrentView => {
+  if (role === "ADMINISTRATOR") return "admin-users";
+  if (role === "IT_STAFF") return "staff-queue";
+  return "my-tickets";
+};
+
+const isViewAllowedForRole = (view: CurrentView, role?: string): boolean => {
+  if (!role) return false;
+  if (view === "admin-users") return role === "ADMINISTRATOR";
+  if (view === "staff-queue") return role === "IT_STAFF" || role === "ADMINISTRATOR";
+  return true;
+};
+
 function AppContent() {
   const { user, logout, isLoading } = useAuth();
 
   const isAdmin = user?.role === "ADMINISTRATOR";
   const isStaffOrAdmin = user?.role === "IT_STAFF" || isAdmin;
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
-  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
-  const [currentView, setCurrentView] = useState<CurrentView>(
-    isAdmin ? "admin-users" : isStaffOrAdmin ? "staff-queue" : "my-tickets"
-  );
+
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(() => {
+    try {
+      const saved = sessionStorage.getItem("toktickit_selected_ticket_id");
+      return saved ? parseInt(saved, 10) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [currentView, setCurrentView] = useState<CurrentView>(() => {
+    try {
+      const saved = sessionStorage.getItem("toktickit_current_view") as CurrentView | null;
+      if (saved && user && isViewAllowedForRole(saved, user.role)) {
+        return saved;
+      }
+    } catch {}
+    return getDefaultViewForRole(user?.role);
+  });
+
+  const prevUserRef = React.useRef<User | null>(user);
+
+  useEffect(() => {
+    if (user && (!prevUserRef.current || prevUserRef.current.id !== user.id)) {
+      prevUserRef.current = user;
+      const saved = sessionStorage.getItem("toktickit_current_view") as CurrentView | null;
+      if (saved && (saved === "ticket-detail" || saved === "create-ticket") && isViewAllowedForRole(saved, user.role)) {
+        setCurrentView(saved);
+      } else {
+        const defaultView = getDefaultViewForRole(user.role);
+        setCurrentView(defaultView);
+        try {
+          sessionStorage.setItem("toktickit_current_view", defaultView);
+        } catch {}
+      }
+    } else if (!user) {
+      prevUserRef.current = null;
+    } else if (user) {
+      if (!isViewAllowedForRole(currentView, user.role)) {
+        const defaultView = getDefaultViewForRole(user.role);
+        setCurrentView(defaultView);
+      }
+    }
+  }, [user, currentView]);
+
+  useEffect(() => {
+    if (user) {
+      try {
+        sessionStorage.setItem("toktickit_current_view", currentView);
+      } catch {}
+    }
+  }, [user, currentView]);
+
+  useEffect(() => {
+    if (user) {
+      try {
+        if (selectedTicketId !== null) {
+          sessionStorage.setItem("toktickit_selected_ticket_id", String(selectedTicketId));
+        } else {
+          sessionStorage.removeItem("toktickit_selected_ticket_id");
+        }
+      } catch {}
+    }
+  }, [user, selectedTicketId]);
+
+  const handleLogout = () => {
+    try {
+      sessionStorage.removeItem("toktickit_current_view");
+      sessionStorage.removeItem("toktickit_selected_ticket_id");
+    } catch {}
+    logout();
+  };
 
   // If loading auth state from localStorage token
   if (isLoading) {
@@ -149,7 +230,7 @@ function AppContent() {
               </div>
               <button
                 style={styles.signOutBtn}
-                onClick={logout}
+                onClick={handleLogout}
                 title="Sign Out"
               >
                 Sign Out

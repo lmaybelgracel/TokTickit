@@ -33,15 +33,15 @@ Sprint 3 implements a rigorous **Test-Driven Development (TDD)** and **Test-Driv
 | **STAFF-05**| API | AC-07, BR-20 | Resolve ticket without resolution summary | 422 Unprocessable Entity (resolution blocked) | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | Planned |
 | **COMM-01** | API | AC-11, FR-17 | Create and retrieve Public Comments | 201 Created with author & timestamp | `server/tests/lab-03/comments-notes.api.test.ts` | Planned |
 | **COMM-02** | API | FR-16, BR-13 | Create and retrieve Internal Notes (IT/Admin) | 201 Created with private flag | `server/tests/lab-03/comments-notes.api.test.ts` | Planned |
-| **ADM-01** | API | FR-19, BR-10 | Admin creates user with duplicate email | 409 Conflict | `server/tests/lab-03/users-admin.api.test.ts` | Planned |
-| **ADM-02** | API | BR-07 | Admin attempts to deactivate own account | 400 Bad Request (Blocked by safety rule) | `server/tests/lab-03/users-admin.api.test.ts` | Planned |
-| **ADM-03** | API | AC-10, BR-09 | Admin deactivates last active Admin | 400 Bad Request (Blocked by safety rule) | `server/tests/lab-03/users-admin.api.test.ts` | Planned |
-| **ADM-04** | API | BR-11 | Admin resets user initial password | 200 OK, sets `mustChangePassword = true` | `server/tests/lab-03/users-admin.api.test.ts` | Planned |
+| **ADM-01** | API | FR-19, BR-10 | Admin creates user with duplicate email | 409 Conflict | `server/tests/lab-03/admin-users.api.test.ts` | Planned |
+| **ADM-02** | API | BR-07 | Admin attempts to deactivate own account | 400 Bad Request (Blocked by safety rule) | `server/tests/lab-03/admin-users.api.test.ts` | Planned |
+| **ADM-03** | API | AC-10, BR-09 | Admin deactivates last active Admin | 400 Bad Request (Blocked by safety rule) | `server/tests/lab-03/admin-users.api.test.ts` | Planned |
+| **ADM-04** | API | BR-11 | Admin resets user initial password | 200 OK, sets `mustChangePassword = true` | `server/tests/lab-03/admin-users.api.test.ts` | Planned |
 | **UI-LOGIN**| UI | AC-01, AC-02 | Login form validation & first-password redirect | Renders form, catches error, redirects | `client/src/__tests__/lab-03/Login.test.tsx` | Planned |
 | **UI-PWD** | UI | FR-03, BR-04 | Password complexity checklist and validation | Real-time checks and submission | `client/src/__tests__/lab-03/ChangePassword.test.tsx` | Planned |
 | **UI-QUEUE**| UI | AC-05, FR-11 | Staff Queue table rendering, filter, pagination | Displays tickets, badges, pagination | `client/src/__tests__/lab-03/StaffTicketQueue.test.tsx` | Planned |
 | **UI-DETAIL**| UI | AC-06, BR-13 | Staff Detail claim, priority, comments & notes | Visual distinction between note/comment | `client/src/__tests__/lab-03/StaffTicketDetail.test.tsx` | Planned |
-| **UI-ADMIN**| UI | AC-09, BR-07 | Admin user list, create modal, safety guards | Buttons disabled for self/last admin | `client/src/__tests__/lab-03/UserManagement.test.tsx` | Planned |
+| **UI-ADMIN**| UI | AC-09, BR-07 | Admin user list, create modal, safety guards | Buttons disabled for self/last admin | `client/src/__tests__/lab-03/AdminUserManagement.test.tsx` | Planned |
 | **E2E-AUTH** | E2E | AC-01, AC-02 | Full login, initial password change, logout | End-to-end browser authentication flow | `e2e/lab-03/authentication.spec.ts` | Planned |
 | **E2E-STAFF**| E2E | AC-05..07 | Requester submits -> IT Staff claims & resolves | End-to-end multi-role collaboration | `e2e/lab-03/staff-ticket-flow.spec.ts` | Planned |
 | **E2E-ADMIN**| E2E | AC-09, AC-10 | Admin creates user, resets password, edits role | End-to-end user management workflow | `e2e/lab-03/user-administration.spec.ts` | Planned |
