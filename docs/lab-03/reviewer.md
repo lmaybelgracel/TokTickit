@@ -17,7 +17,7 @@
 | [#48](https://github.com/lmaybelgracel/TokTickit/pull/48) | Issue 19: Authentication, Session & Mandatory Password Change / `feature/19-auth-and-passwords` | Approved and Merged into `lab3-staging` | [PR #48](https://github.com/lmaybelgracel/TokTickit/pull/48) |
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
 | [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Approved and Merged into `lab3-staging` | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
-| [Pending] | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Pending Peer Review | [Link] |
+| [#51](https://github.com/lmaybelgracel/TokTickit/pull/51) | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Pending Peer Review | [PR #51](https://github.com/lmaybelgracel/TokTickit/pull/51) |
 
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
@@ -180,7 +180,7 @@
 
 ### Issue 22 - Administrator User Management
 
-- **Pull Request:** [Pending PR opening]
+- **Pull Request:** [#51](https://github.com/lmaybelgracel/TokTickit/pull/51)
 - **Branch:** `feature/22-admin-user-management`
 - **Target:** `lab3-staging`
 - **Summary:** Implements complete Administrator User Management API and UI according to Sprint 3 specifications and Course Rubric Part 6 (10 pts).
