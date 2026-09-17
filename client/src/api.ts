@@ -229,4 +229,79 @@ export async function downloadAttachment(requesterId: number, attachment: Attach
   URL.revokeObjectURL(url);
 }
 
+// Sprint 3 — Issue 19: Authentication & Session APIs
+export type UserRole = "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR";
+
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: UserRole;
+  mustChangePassword: boolean;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export async function loginUser(credentials: { email: string; password: string }): Promise<LoginResponse> {
+  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Login failed");
+  }
+  return data;
+}
+
+export async function logoutUser(token?: string): Promise<void> {
+  await fetch(`${BASE_URL}/api/auth/logout`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+}
+
+export async function fetchCurrentUser(token: string): Promise<User> {
+  const res = await fetch(`${BASE_URL}/api/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to fetch user profile");
+  }
+  return data;
+}
+
+export async function changePassword(
+  payload: ChangePasswordPayload,
+  token: string
+): Promise<{ message: string; mustChangePassword: boolean }> {
+  const res = await fetch(`${BASE_URL}/api/auth/change-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const errorMsg = data.details
+      ? `${data.error}: ${data.details.join(", ")}`
+      : data.error || "Failed to change password";
+    throw new Error(errorMsg);
+  }
+  return data;
+}
+
+
 

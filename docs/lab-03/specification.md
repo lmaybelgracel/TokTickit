@@ -185,7 +185,7 @@ The stakeholder requires transitioning TokTickIT from a prototype testing setup 
 - [ ] Single PDF submission report compiled following Answer Part 1 to Answer Part 9.
 
 ## 11. Assumptions and Decisions
-1. **Authentication Mechanism:** Session tokens will be managed via cryptographically signed JWT tokens or secure session cookies with HTTP-only flags.
+1. **Authentication Mechanism:** Session tokens are managed via cryptographically signed 24h JWT tokens passed via the standard `Authorization: Bearer <token>` header. In the React Single Page Application (SPA), the client stores the token in `localStorage` (`toktickit_auth_token`) for clean stateless session persistence across page refreshes and test suites.
 2. **Password Security:** Passwords hashed with `bcrypt` (salt rounds = 10) to prevent brute-force attacks.
 3. **Migration Strategy:** Existing Lab 2 `RequesterUser` records are migrated directly to `User` rows with role `REQUESTER` and default temporary passwords (`Pass1234!`) with `mustChangePassword = true`.
 4. **Queue Default Sorting:** Ticket Queue defaults to descending order of creation date (`createdAt DESC`).
