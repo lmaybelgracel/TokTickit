@@ -264,13 +264,17 @@ test.describe("Sprint 3 Visual Evidence & Responsive Style Audit (Issue 24)", ()
       }
 
       if (url.pathname === "/api/staff/tickets") {
+        const searchQuery = url.searchParams.get("search");
+        const filteredTickets = (searchQuery === "NonExistentQueryXYZ" || currentTickets.length === 0)
+          ? []
+          : currentTickets;
         return json({
-          tickets: currentTickets,
+          tickets: filteredTickets,
           pagination: {
-            total: currentTickets.length,
+            total: filteredTickets.length,
             page: 1,
             limit: 10,
-            totalPages: Math.max(1, Math.ceil(currentTickets.length / 10)),
+            totalPages: Math.max(1, Math.ceil(filteredTickets.length / 10)),
           },
         });
       }
@@ -315,7 +319,7 @@ test.describe("Sprint 3 Visual Evidence & Responsive Style Audit (Issue 24)", ()
     // 2.6 Empty State View
     currentTickets = [];
     await page.getByLabel(/Search tickets/i).fill("NonExistentQueryXYZ");
-    await page.waitForTimeout(400); // Debounce
+    await expect(page.getByText(/No tickets found/i)).toBeVisible();
     await page.screenshot({ path: "artifacts/lab-03/screenshots/staff-queue/queue-empty-state.png", fullPage: true });
   });
 
