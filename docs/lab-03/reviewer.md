@@ -18,6 +18,8 @@
 | [#49](https://github.com/lmaybelgracel/TokTickit/pull/49) | Issue 20: IT Staff Ticket Queue / `feature/20-it-staff-ticket-queue` | Approved and Merged into `lab3-staging` | [PR #49](https://github.com/lmaybelgracel/TokTickit/pull/49) |
 | [#50](https://github.com/lmaybelgracel/TokTickit/pull/50) | Issue 21: IT Staff Ticket Operations & Detail / `feature/21-it-staff-operations` | Approved and Merged into `lab3-staging` | [PR #50](https://github.com/lmaybelgracel/TokTickit/pull/50) |
 | [#51](https://github.com/lmaybelgracel/TokTickit/pull/51) | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Approved and Merged into `lab3-staging` | [PR #51](https://github.com/lmaybelgracel/TokTickit/pull/51) |
+| [#52](https://github.com/lmaybelgracel/TokTickit/pull/52) | Issue 23: Automated Testing Suite / `feature/23-automated-testing-suite` | Approved and Merged into `lab3-staging` | [PR #52](https://github.com/lmaybelgracel/TokTickit/pull/52) |
+| [#53](https://github.com/lmaybelgracel/TokTickit/pull/53) | Issue 24: Responsive Visual Evidence & UI Style Audit / `feature/24-ui-style-checking` | Changes Addressed & Approved | [PR #53](https://github.com/lmaybelgracel/TokTickit/pull/53) |
 
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
@@ -249,8 +251,26 @@
   - Total: 153/153 tests passing.
 - **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `15194b5`).
 
+---
+
+### Issue 24 - Responsive Visual Evidence & UI Style Audit
+
+- **Pull Request:** [#53](https://github.com/lmaybelgracel/TokTickit/pull/53)
+- **Branch:** `feature/24-ui-style-checking`
+- **Target:** `lab3-staging`
+- **Summary:** Implements automated Playwright visual screenshot capture spec (`e2e/lab-03/visual-evidence.spec.ts`) and audit of Zen Green design language compliance across desktop (1280px), tablet (768px), mobile (375px), and small mobile (320px) viewports.
+- **First Review Verdict (CHANGES_REQUESTED by @titayaaa):**
+  > "เราไล่เช็กโค้ด Diff ของ PR #53 แบบละเอียดเจาะลึกทุกบรรทัด ทั้งตัวสเปกเทสต์และหลักฐานรูปภาพให้แล้วน้า ... พบจุดบกพร่องและจุดที่ตัวเลขไม่ตรงกัน 4 จุด อยากให้ปรับแก้ให้เป๊ะก่อน Merge ... 1. เทสต์ Empty State ใน visual-evidence.spec.ts ไม่ได้เช็ก query param ... 2. ยอดจำนวนรูปภาพใน PR Description ไม่ตรงกับโค้ดจริง (24 vs 28) ... 3. ยังไม่ได้บันทึก Issue 24 ลงใน docs/lab-03/reviewer.md ... 4. หลีกเลี่ยงการใช้ waitForTimeout"
+- **Changes Made & Follow-up Actions:**
+  1. Updated `e2e/lab-03/visual-evidence.spec.ts` under `/api/staff/tickets` route handler to inspect `url.searchParams.get("search")` and verify `searchQuery === "NonExistentQueryXYZ"`, returning empty results array.
+  2. Corrected summary counts in PR description and documentation to explicitly specify **28 visual screenshot artifacts** across all 4 categories (Authentication: 8, Staff Queue: 6, Staff Ticket Detail: 7, User Management: 7).
+  3. Added full Issue 24 section and review log tracking in `docs/lab-03/reviewer.md`.
+  4. Replaced `page.waitForTimeout(400)` with Web-first auto-retrying Playwright assertion `await expect(page.getByText(/No tickets found/i)).toBeVisible();` to ensure non-flaky test execution.
+- **Final Result:** All feedback items resolved and committed to `feature/24-ui-style-checking`.
+
 
 ---
+
 
 ## 2. Pull Requests I Reviewed for Partner (@titayaaa)
 
