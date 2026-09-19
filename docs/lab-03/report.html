@@ -3,33 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <title>TokTickIT Lab 3 Comprehensive Engineering Submission Report — Patitaya Kaewwichain</title>
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
+  :root {
+    color-scheme: light !important;
+    supported-color-schemes: light !important;
+  }
 
   @page {
     size: A4 portrait;
     margin: 12mm 14mm 12mm 14mm;
     @bottom-right {
       content: counter(page);
-      font-family: 'Inter', 'Sarabun', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Leelawadee UI', Tahoma, sans-serif;
       font-size: 8.5pt;
       color: #6B7280;
     }
     @bottom-left {
       content: "TokTickIT Lab 3 • Patitaya Kaewwichain (67070505220)";
-      font-family: 'Inter', 'Sarabun', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Leelawadee UI', Tahoma, sans-serif;
       font-size: 8.5pt;
       color: #6B7280;
     }
   }
 
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   body {
-    font-family: 'Inter', 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Leelawadee UI', 'Sarabun', Tahoma, sans-serif !important;
     font-size: 9pt;
     line-height: 1.45;
-    color: #1A2E23;
-    background: #FFFFFF;
+    color: #0F172A !important;
+    background-color: #FFFFFF !important;
     margin: 0;
     padding: 0;
   }
@@ -44,41 +53,41 @@
   }
 
   h1, h2, h3, h4, h5 {
-    color: #006B3C;
+    color: #006B3C !important;
     font-weight: 700;
     margin-top: 0;
   }
   h1 { font-size: 16pt; line-height: 1.25; margin-bottom: 6px; }
   h2 { font-size: 12.5pt; border-bottom: 2px solid #006B3C; padding-bottom: 5px; margin-top: 20px; margin-bottom: 12px; }
-  h3 { font-size: 10.5pt; color: #0B7A46; margin-top: 14px; margin-bottom: 6px; }
-  h4 { font-size: 9.5pt; color: #1A2E23; margin-top: 10px; margin-bottom: 5px; }
+  h3 { font-size: 10.5pt; color: #0B7A46 !important; margin-top: 14px; margin-bottom: 6px; }
+  h4 { font-size: 9.5pt; color: #0F172A !important; margin-top: 10px; margin-bottom: 5px; }
 
-  p { margin: 0 0 6px 0; }
+  p { margin: 0 0 6px 0; color: #1E293B; }
   ul, ol { margin: 0 0 8px 0; padding-left: 20px; }
-  li { margin-bottom: 3px; }
+  li { margin-bottom: 3px; color: #1E293B; }
 
   .header-card {
     border: 2px solid #006B3C;
     border-radius: 10px;
-    background: linear-gradient(135deg, #FFFFFF 0%, #F4FAF6 100%);
+    background: #FFFFFF !important;
     padding: 16px 20px;
     margin-bottom: 16px;
     box-shadow: 0 2px 8px rgba(0, 107, 60, 0.08);
   }
   .header-card h1 {
-    color: #006B3C;
+    color: #006B3C !important;
     font-size: 17pt;
     font-weight: 800;
     margin: 0 0 4px 0;
   }
   .header-card .subtitle {
-    color: #2D4A3A;
+    color: #2D4A3A !important;
     font-size: 9.8pt;
     font-weight: 600;
     margin: 0 0 6px 0;
   }
   .header-card .course-info {
-    color: #5A6E63;
+    color: #5A6E63 !important;
     font-size: 8.5pt;
     margin: 0 0 10px 0;
     border-bottom: 1px solid #D6DFD9;
@@ -88,14 +97,14 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    background: #FFFFFF;
+    background: #FFFFFF !important;
     border: 1px solid #D6DFD9;
     border-radius: 8px;
     padding: 8px 10px;
   }
-  .meta-item { font-size: 8.5pt; }
-  .meta-item strong { color: #006B3C; display: block; margin-bottom: 2px; }
-  .meta-item a { color: #006B3C; text-decoration: none; word-break: break-all; }
+  .meta-item { font-size: 8.5pt; color: #1E293B !important; }
+  .meta-item strong { color: #006B3C !important; display: block; margin-bottom: 2px; }
+  .meta-item a { color: #006B3C !important; text-decoration: none; word-break: break-all; }
   .meta-item a:hover { text-decoration: underline; }
 
   table {
@@ -109,27 +118,28 @@
     border: 1px solid #D6DFD9;
     vertical-align: top;
     text-align: left;
+    color: #1E293B !important;
   }
   th {
-    background-color: #EAF6EF;
-    color: #006B3C;
+    background-color: #EAF6EF !important;
+    color: #006B3C !important;
     font-weight: 700;
   }
   tr:nth-child(even) td {
-    background-color: #F8FAF9;
+    background-color: #F8FAF9 !important;
   }
 
   code {
-    font-family: 'Fira Code', monospace;
-    background-color: #F0F4F2;
+    font-family: 'Consolas', 'Courier New', monospace;
+    background-color: #F0F4F2 !important;
     padding: 1px 4px;
     border-radius: 3px;
     font-size: 8.2pt;
-    color: #006B3C;
+    color: #006B3C !important;
   }
   pre {
-    background-color: #2D3748;
-    color: #E2E8F0;
+    background-color: #2D3748 !important;
+    color: #E2E8F0 !important;
     padding: 10px 12px;
     border-radius: 6px;
     overflow-x: auto;
@@ -138,8 +148,8 @@
     margin: 8px 0;
   }
   pre code {
-    background: transparent;
-    color: inherit;
+    background: transparent !important;
+    color: #E2E8F0 !important;
     padding: 0;
   }
 
@@ -147,8 +157,8 @@
     display: inline-block;
     padding: 2px 7px;
     border-radius: 9999px;
-    background-color: #DEF7EC;
-    color: #03543F;
+    background-color: #DEF7EC !important;
+    color: #03543F !important;
     font-size: 7.8pt;
     font-weight: 700;
   }
@@ -156,8 +166,8 @@
     display: inline-block;
     padding: 2px 7px;
     border-radius: 9999px;
-    background-color: #FDE8E8;
-    color: #9B1C1C;
+    background-color: #FDE8E8 !important;
+    color: #9B1C1C !important;
     font-size: 7.8pt;
     font-weight: 700;
   }
@@ -165,19 +175,68 @@
     display: inline-block;
     padding: 2px 7px;
     border-radius: 9999px;
-    background-color: #E1EFFE;
-    color: #1E429F;
+    background-color: #E1EFFE !important;
+    color: #1E429F !important;
     font-size: 7.8pt;
     font-weight: 700;
   }
 
   .callout-box {
-    background-color: #F4FAF6;
-    border-left: 4px solid #006B3C;
+    background-color: #F4FAF6 !important;
+    border-left: 4px solid #006B3C !important;
     padding: 8px 12px;
     margin: 8px 0;
     border-radius: 0 6px 6px 0;
     font-size: 8.5pt;
+    color: #1E293B !important;
+  }
+
+  /* Specific robust styling for PR review callout boxes */
+  .review-verdict-banner {
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 8.8pt;
+    font-weight: 700;
+  }
+  .review-quote-box {
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 8.5pt;
+    color: #1E293B !important;
+  }
+  .review-quote-box p, .review-quote-box div {
+    color: #1E293B !important;
+  }
+  .feedback-header {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    padding: 5px 10px;
+    background: #F1F5F9 !important;
+    border-left: 4px solid #475569 !important;
+    border-radius: 4px;
+    font-size: 8.8pt;
+    font-weight: 700;
+    color: #0F172A !important;
+  }
+  .feedback-box {
+    background: #FFFBEB !important;
+    border-left: 3px solid #D97706 !important;
+    padding: 6px 10px;
+    margin: 4px 0 4px 12px;
+    font-size: 8.5pt;
+    border-radius: 0 4px 4px 0;
+    color: #1E293B !important;
+  }
+  .action-box {
+    background: #F0FDF4 !important;
+    border-left: 3px solid #16A34A !important;
+    padding: 6px 10px;
+    margin: 4px 0 6px 12px;
+    font-size: 8.5pt;
+    border-radius: 0 4px 4px 0;
+    color: #1E293B !important;
   }
 
   .image-card {
@@ -185,7 +244,7 @@
     border-radius: 8px;
     padding: 6px;
     margin-bottom: 10px;
-    background-color: #FAFCFB;
+    background-color: #FAFCFB !important;
     text-align: center;
     page-break-inside: avoid;
   }
@@ -200,7 +259,7 @@
   }
   .image-card .caption {
     font-size: 7.8pt;
-    color: #5A6E63;
+    color: #5A6E63 !important;
     font-style: italic;
   }
 
@@ -209,12 +268,12 @@
     border-radius: 8px;
     padding: 10px;
     margin: 14px 0 24px 0;
-    background-color: #F8FAF9;
+    background-color: #F8FAF9 !important;
   }
   .fullpage-evidence-block .caption {
     font-size: 8.8pt;
     font-weight: 700;
-    color: #006B3C;
+    color: #006B3C !important;
     margin-bottom: 8px;
     padding-bottom: 4px;
     border-bottom: 1px solid #E0E6E2;
@@ -238,6 +297,7 @@
     gap: 6px;
   }
 </style>
+
 </head>
 <body>
 
@@ -780,92 +840,92 @@ scratch/
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• <strong>Reviewer Feedback Items & My Responses:</strong></p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 1. <strong>Comment on Data Leak in Ticket Detail Response (<code>docs/lab-03/api-spec.md</code>):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> In <code>GET /api/tickets/:id</code>, returning <code>internalNotes</code> to Requesters causes a confidential data leak. Requesters must only receive <code>publicComments</code>, while <code>internalNotes</code> must be restricted to IT Staff and Admin.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Updated <code>docs/lab-03/api-spec.md</code> under <code>GET /api/tickets/:id</code> with explicit data privacy rules: <code>internalNotes</code> is strictly stripped and omitted from the response when accessed by <code>REQUESTER</code>. IT Staff and Admins access notes via <code>GET /api/tickets/:id/notes</code>.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 2. <strong>Comment on Status vs Resolve Endpoint Collision (<code>docs/lab-03/api-spec.md</code>):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Using <code>PATCH /api/staff/tickets/:id/status</code> to set <code>status: "RESOLVED"</code> risks bypassing the mandatory <code>resolutionSummary</code> rule (BR-20).
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Response & Action:</em> Clarified and reinforced the server-side guard. Direct transition to <code>RESOLVED</code> via <code>PATCH /api/staff/tickets/:id/status</code> is strictly rejected (<code>422 Unprocessable Entity</code>). Resolving a ticket requires using <code>PATCH /api/staff/tickets/:id/resolve</code> with mandatory <code>resolutionSummary</code> (3-500 characters), ensuring BR-20 cannot be bypassed under any circumstances.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 3. <strong>Comment on Ticket Number Format (<code>docs/lab-03/api-spec.md</code>):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Suggestion to change Ticket Number to <code>TKT-YYYYMMDD-XXXX</code> (e.g. <code>TKT-20260913-0001</code>).
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Response & Verification (Constructive Clarification):</em> Verified against our active repository codebase and tests. In our repository (<code>lmaybelgracel/TokTickit</code>), the Lab 2 generator in <code>server/src/app.ts:105</code> and the automated regression test in <code>create-ticket.api.test.ts:64</code> explicitly enforce <code>^TKT-\d{4}-\d{6}$</code> (<code>TKT-YYYY-XXXXXX</code>). Furthermore, the instructor's Lab 3 handout (Section 8.3 & 8.4 mockups on pages 9 and 10) explicitly displays <code>TKT-2025-001234</code>. Changing to <code>TKT-YYYYMMDD-XXXX</code> would cause our repository's existing regression tests to fail. Therefore, we verified and preserved <code>TKT-YYYY-XXXXXX</code> (e.g. <code>TKT-2026-000142</code>) for 100% backward compatibility and alignment with the instructor's specification.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 4. <strong>Comment on Priority Enum missing URGENT (<code>docs/lab-03/specification.md</code>):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> <code>enum Priority</code> had only 3 levels (LOW, MEDIUM, HIGH), missing <code>URGENT</code> from Lab 3 specifications.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Updated Prisma Schema evolution and BR-17 in <code>docs/lab-03/specification.md</code> and <code>docs/lab-03/api-spec.md</code> to include all 4 levels: <code>LOW</code>, <code>MEDIUM</code>, <code>HIGH</code>, <code>URGENT</code>.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 5. <strong>Comment on Role Badge Enum Mapping (<code>docs/lab-03/ui-spec.md</code>):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> UI shows <code>Requester</code>, <code>IT Staff</code>, <code>Administrator</code> while Prisma uses <code>REQUESTER</code>, <code>IT_STAFF</code>, <code>ADMINISTRATOR</code>. Suggested clarifying note for frontend component authoring.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Added an Enum Mapping Note in <code>docs/lab-03/ui-spec.md</code> Section 1.2 clarifying that backend database enums are SCREAMING_SNAKE_CASE and mapped to title case display labels in the UI.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 6. <strong>Comment on Additional Security & Resolution Test Cases (<code>docs/lab-03/tests.md</code>):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Add explicit test cases for Requester hitting <code>GET /api/tickets/:id/notes</code> getting 403 Forbidden, and resolving a ticket without <code>resolutionSummary</code> getting 422.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Added <code>SEC-04</code> (Requester hitting internal notes blocked with 403) and <code>STAFF-05</code> (Resolving ticket without resolution summary blocked with 422) in <code>docs/lab-03/tests.md</code>.
         </div>
       
@@ -893,62 +953,62 @@ scratch/
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• <strong>Reviewer Feedback Items & My Responses:</strong></p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 1. <strong>Prisma Migration Files in PR:</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> In PR #47, <code>schema.prisma</code> was modified but there was no migration folder in <code>server/prisma/migrations/</code>.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Created and committed <code>server/prisma/migrations/20260917000000_lab3_users_and_ticket_evolution/migration.sql</code> containing full DDL commands for enums, <code>users</code> table, altered <code>tickets</code> columns/indexes/foreign keys, <code>public_comments</code>, and <code>internal_notes</code>.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 2. <strong>Foreign Key of <code>Ticket.requesterId</code> & Lab 2 Data Preservation:</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Changing <code>Ticket.requesterId</code> to reference <code>User.id</code> directly risks breaking existing Lab 2 tickets if requester IDs do not match user IDs.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Added automated backfill in both the migration SQL and <code>server/prisma/seed.ts</code>. It copies existing <code>requester_users</code> into <code>users</code> table preserving the exact primary key <code>id</code>s (<code>INSERT INTO "users" ... SELECT "id", ... FROM "requester_users"</code>), ensuring complete data integrity, matching foreign keys, and zero data loss.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 3. <strong>Department Field in <code>model User</code> (Exclusion Rule):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> In <code>model User</code>, <code>department String?</code> was added, but Lab 3 handout Section 4.2 & 5.1 explicitly states departments are excluded from Lab 3 User model.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Removed <code>department</code> attribute from <code>model User</code> in <code>server/prisma/schema.prisma</code> and updated <code>server/prisma/seed.ts</code> and tests to ensure strict compliance with course exclusions without scope creep.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 4. <strong>Path Import in <code>database-schema-seed.test.ts</code>:</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Check module import conventions in tests.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Verified ESM bundler path resolution across environments and added explicit test cases validating migration file existence, ID preservation during backfill, and department exclusion.
         </div>
       
@@ -977,62 +1037,62 @@ scratch/
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• <strong>Reviewer Feedback Items & My Responses:</strong></p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 1. <strong>Removal of "Select Development Requester" in Login Screen:</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Under the Login form in <code>client/src/App.tsx</code>, there was a button to toggle back to the old Lab 2 Development Requester Selector, violating Handout Sections 1, 2, and 8.2 ("The Development Requester selector and Change Requester action must be removed").
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Completely removed the Dev Selector button and legacy selector toggle from <code>App.tsx</code>, ensuring 100% of unauthenticated access goes strictly through the production Login form. Updated <code>client/tests/lab-01/App.test.tsx</code> to assert the Login entrypoint and authenticated shell.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 2. <strong>Password Rotation Policy (Preventing Identical New Password):</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Under Mandatory First-Login Password Rotation, setting <code>newPassword</code> identical to <code>currentPassword</code> must be prevented.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Added server-side validation in <code>server/src/routes/auth.routes.ts</code> returning <code>422 Unprocessable Entity</code> (<code>{ error: "New password cannot be the same as current password" }</code>), and added frontend client check and warning in <code>ChangePassword.tsx</code> that keeps the submit button disabled if both passwords match. Added test coverage in both <code>auth.api.test.ts</code> and <code>ChangePassword.test.tsx</code>.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 3. <strong>HTTP Status Code for Password Complexity Failure:</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> In <code>POST /api/auth/change-password</code>, complexity failure returned 400 Bad Request, whereas API Spec Section 1.4 defines 422 Unprocessable Entity for semantic validation errors.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Updated status code to <code>422 Unprocessable Entity</code> in <code>auth.routes.ts</code>, updated <code>auth.api.test.ts</code> assertions, and aligned <code>docs/lab-03/api-spec.md</code>.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 4. <strong>Token Storage Clarification:</strong>
         </div>
       
 
-        <div style="background: #FFFBEB; border-left: 3px solid #D97706; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="feedback-box" style="background: #FFFBEB !important; border-left: 3px solid #D97706 !important; padding: 6px 10px; margin: 4px 0 4px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>Reviewer Feedback:</em> Clarify token storage convention between cookie and <code>localStorage</code>.
         </div>
       
 
-        <div style="background: #F0FDF4; border-left: 3px solid #16A34A; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0;">
+        <div class="action-box" style="background: #F0FDF4 !important; border-left: 3px solid #16A34A !important; padding: 6px 10px; margin: 4px 0 6px 12px; font-size: 8.5pt; border-radius: 0 4px 4px 0; color: #1E293B !important;">
           <em>My Action:</em> Documented in both <code>specification.md</code> and <code>api-spec.md</code> that the React Single Page Application (SPA) stores the Bearer JWT in <code>localStorage</code> (<code>toktickit_auth_token</code>) and transmits it via <code>Authorization: Bearer <token></code> for all API requests.
         </div>
       
@@ -1071,22 +1131,22 @@ scratch/
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• <strong>Reviewer Feedback Items & Notes:</strong></p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 1. <strong>RBAC & Security Middleware:</strong> Confirmed thorough coverage across Token check, Role guard (<code>IT_STAFF</code>, <code>ADMINISTRATOR</code>), and <code>mustChangePassword</code> blocking with proper status codes (401, 403).
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 2. <strong>UX & Responsive Layout:</strong> Commended 250ms debounced search, ownership segmented buttons (<code>All</code>, <code>Unassigned</code>, <code>Assigned to Me</code>), and responsive transformation to mobile card stack.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 3. <strong>Priority Sorting & Automated Tests:</strong> Verified Postgres enum-aware <code>itPriority</code> sort and 100% pass rate across all 16 backend and 7 frontend test cases.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 4. <strong>Constructive Suggestions Noted for Future Refinement:</strong> In <code>staff.routes.ts</code>, consider returning <code>400 Bad Request</code> if invalid enum strings are provided; and consider adding ellipsis (<code>...</code>) dividers in pagination for large page counts.
         </div>
       
@@ -1142,27 +1202,27 @@ scratch/
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• <strong>Reviewer Feedback Items & Notes:</strong></p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 1. <strong>Dual-stream Communication & Data Privacy (BR-13 & AC-05):</strong> Verified strict route separation between public comments and internal notes. Requesters are strictly forbidden (403) from accessing internal notes. Verified requester ticket ownership guard to prevent cross-ticket commenting.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 2. <strong>Operations & Transition Matrix (BR-19, BR-20):</strong> Confirmed automatic status transition from NEW to OPEN on Claim, validation that assigned user is active staff, strict rejection of status change to RESOLVED via standard status endpoint (422), and mandatory 3-500 character resolution summary.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 3. <strong>Zen Green Design System & Visuals:</strong> Commended clear dual styling (light green for public comments vs amber with lock icon for confidential staff notes), real-time modal character counter, and Requester "Problem Appears Resolved" toggle banner.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 4. <strong>Test Quality & Coverage:</strong> Confirmed 100% pass across all 16 ticket detail API tests, 12 comments/notes API tests, and 8 frontend component tests.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 5. <strong>Minor Recommendation Noted:</strong> Consider adding explicit max length validation (<code>content.trim().length <= 2000</code>) on comments per BR-15.
         </div>
       
@@ -1206,24 +1266,24 @@ scratch/
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• <strong>Reviewer Feedback Items & Notes:</strong></p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 1. <strong>Security & Role-based Access Guards (BR-07, BR-08, BR-09):</strong> Checked authentication, password change enforcement, and admin guards. Verified self-deactivation and self-demotion prevention (400), last active admin demotion/deactivation prevention (400), and case-insensitive unique email handling (409).
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 2. <strong>Frontend UI & Password Complexity Checklist:</strong> Real-time 4-point password complexity checklist preventing form submission when incomplete, responsive desktop table and mobile cards (<768px) with <code>(You)</code> indicator badge and auto-disabled controls for own account.
         </div>
       
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 3. <strong>Reviewer Observations & Constructive Notes:</strong>
         </div>
       
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• In PR description draft, mention of <code>department</code> and <code>symbol</code> was noted from initial notes; confirmed actual implementation code cleanly matches specification without unnecessary fields.</p>
 <p style="margin: 2px 0 2px 12px; text-indent: -12px; font-size: 8.8pt;">• Reset Password button on own account row currently functional (forces password change on next login); noted recommendation for future UX polish to disable for <code>(You)</code> row.</p>
 
-        <div style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9; border-left: 4px solid #475569; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #1E293B;">
+        <div class="feedback-header" style="margin-top: 10px; margin-bottom: 4px; padding: 5px 10px; background: #F1F5F9 !important; border-left: 4px solid #475569 !important; border-radius: 4px; font-size: 8.8pt; font-weight: 700; color: #0F172A !important;">
           📌 4. <strong>Test Quality & Verification:</strong> Confirmed 100% pass across all 26 server tests in <code>admin-users.api.test.ts</code>, 8 client tests in <code>AdminUserManagement.test.tsx</code>, and clean zero-error production build.
         </div>
       
