@@ -2,7 +2,7 @@
 
 **Author:** Patitaya Kaewwichain 67070505220 - GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
 
-**Peer reviewer (reviewed my PRs):** Titaya - GitHub: [@titayaaa](https://github.com/titayaaa)
+**Peer reviewer (reviewed my PRs):** Titaya Phongsakul 67070505201 - GitHub: [@titayaaa](https://github.com/titayaaa)
 
 **Partner I reviewed (circle review):** Chanya Poolketkij 67070501058 - GitHub: [@chanya06](https://github.com/chanya06)
 
