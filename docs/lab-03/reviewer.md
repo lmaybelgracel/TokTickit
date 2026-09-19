@@ -294,7 +294,7 @@
 | #52 (Issue 24) | [#63](https://github.com/chanya06/toktickit/pull/63) | feat(staff): IT Staff ticket operations and status matrix (#52) / `feature/24-staff-operations` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #63](https://github.com/chanya06/toktickit/pull/63) |
 | #53 (Issue 25) | [#64](https://github.com/chanya06/toktickit/pull/64) | feat(comments): public comments and private internal notes (#53) / `feature/25-comments-and-notes` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #64](https://github.com/chanya06/toktickit/pull/64) |
 | #54 (Issue 26) | [#65](https://github.com/chanya06/toktickit/pull/65) | feat(admin): administrator user management & safety validations (#54) / `feature/26-admin-user-management` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #65](https://github.com/chanya06/toktickit/pull/65) |
-| #55 (Issue 27) | Pending | Issue 27: Administrator User Management Interface & Modals | Awaiting Author PR Submission | In Progress by @chanya06 | [Issue #55](https://github.com/chanya06/toktickit/issues/55) |
+| #55 (Issue 27) | [#66](https://github.com/chanya06/toktickit/pull/66) | feat(admin): administrator user management interface & modals / `feature/27-admin-ui` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #66](https://github.com/chanya06/toktickit/pull/66) |
 | #56 (Issue 28) | Pending | Issue 28: QA, Automated Tests, Screenshots, Reviewer Sync & Release Integration | Awaiting Author PR Submission | In Progress by @chanya06 | [Issue #56](https://github.com/chanya06/toktickit/issues/56) |
 
 ---
@@ -319,7 +319,7 @@
     > - ในโมเดลใหม่ `PublicComment` และ `InternalNote` มีการกำหนด `ticketId String` 
     > - แต่ในโค้ดเดิมของ **Lab 2 โมเดล `Ticket.id` ใช้ประเภท `Int` (Autoincrement)**
     > - โจทย์ Section 5 กำหนดว่าต้องรักษาข้อมูลเดิมของ Lab 2 ไว้ (*"evolve without discarding existing Ticket or Attachment data"*) ดังนั้น Foreign Key `ticketId` ของ Comments และ Notes ควรใช้ประเภท `Int` ให้ตรงกับ `Ticket.id`
-    > - ส่วน `User.id` หากจะเปลี��ยนจาก `Int` (ของ `DevelopmentRequester` เดิม) มาเป็น `String (UUID)` อยากให้ระบุแผนการทำ Data Migration ลงใน Section 7 ให้ชัดเจนว่าจะแปลง `Ticket.requesterId` จาก `Int` เดิมไปเป็น `UUID` อย่างไร
+    > - ส่วน `User.id` หากจะเปลี่ยนจาก `Int` (ของ `DevelopmentRequester` เดิม) มาเป็น `String (UUID)` อยากให้ระบุแผนการทำ Data Migration ลงใน Section 7 ให้ชัดเจนว่าจะแปลง `Ticket.requesterId` จาก `Int` เดิมไปเป็น `UUID` อย่างไร
     > 
     > ---
     > 
@@ -330,7 +330,7 @@
     > 
     > ---
     > 
-    > #### 3. ���ะบุ Permitted Roles ใน Status Transition Matrix (`specification.md` BR-14)
+    > #### 3. ระบุ Permitted Roles ใน Status Transition Matrix (`specification.md` BR-14)
     > - ใน BR-14 มีระบุ Matrix การเปลี่ยนสถานะ 8 สถานะเรียบร้อย แต่ยังไม่ได้ระบุ Role กำกับในแต่ละ Transition เช่น:
     >   - `NEW -> OPEN`: ทำได้โดย IT Staff (ตอนเคลมตั๋ว)
     >   - `OPEN / IN_PROGRESS -> CANCELLED`: ใครทำได้บ้าง (Requester ยกเลิกตั๋วตัวเองได้ไหม หรือเฉพาะ IT Staff)
@@ -356,11 +356,11 @@
   - **Round 2 (COMMENTED - 2026-09-16):**
     > ### Peer Review: Sprint 3 Engineering Contract & Specifications (PR #44) - Round 2
     > 
-    > ตรวจรอบแก้ไขเรียบร้อย ข้อเ���นอแนะทั้ง 5 ข้อได้รับการปรับปรุงครบถ้วน:
+    > ตรวจรอบแก้ไขเรียบร้อย ข้อเสนอแนะทั้ง 5 ข้อได้รับการปรับปรุงครบถ้วน:
     > 
     > * **Schema Continuity**: ปรับ Foreign Key `ticketId` และ `User.id` เป็น `Int` ตรงกับโมเดลเดิมของ Lab 2 และระบุแผน Data Migration ชัดเจน ข้อมูลเดิมไม่สูญหาย
     > * **Requester Resolution**: เพิ่ม Endpoint `POST /api/tickets/:id/resolve-indication` และระบุ BR-19 รองรับการกดแจ้งว่าปัญหาได้รับการแก้ไขแล้ว
-    > * **Authorization Matrix**: ระบุ Permitted Roles ใน Status Transition Matrix (BR-14) ค��บทุกสถานะ ป้องกันปัญหาเรื่องสิทธิ์ในชั้น API
+    > * **Authorization Matrix**: ระบุ Permitted Roles ใน Status Transition Matrix (BR-14) ครบทุกสถานะ ป้องกันปัญหาเรื่องสิทธิ์ในชั้น API
     > * **Test DD Traceability**: จัดโครงสร้างตาราง 7 คอลัมน์ตาม Section 10 พร้อมระบุ Test ID ครบทั้ง API, UI และ E2E รวม 22 ข้อทดสอบ
     > * **Documentation Cleanliness**: แก้ไขข้อความใน `ai-use.md` และอัปเดตบันทึกการรีวิวใน `reviewer.md` เรียบร้อย
   - **Round 3 (APPROVED - 2026-09-16):**
@@ -414,7 +414,7 @@
   - **Round 2 (APPROVED - 2026-09-16):**
     > ### Peer Review: Database Schema & Seed Data (PR #57) - Round 2
     > 
-    > ตรวจเช็ครอบแก้ไขเรียบร้อย โค้ดส่วน Database แ���ะ Seed ครบถ้วนตามสเปก Section 5 ของ Lab 3 ทั้งหมดแล้ว:
+    > ตรวจเช็ครอบแก้ไขเรียบร้อย โค้ดส่วน Database และ Seed ครบถ้วนตามสเปก Section 5 ของ Lab 3 ทั้งหมดแล้ว:
     > 
     > * **Migration Integrity**: ไฟล์ `20260917000000_lab3_db_init/migration.sql` เขียนคำสั่งโอนย้ายข้อมูลจาก `DevelopmentRequester` ไปยังตาราง `User` ได้อย่างถูกต้อง รักษา Foreign Key ของตั๋วเดิมใน Lab 2 และสร้างดัชนี (Indexes) รวมถึงสิทธิ์ความสัมพันธ์ครบถ้วน
     > * **Seed Reliability**: สคริปต์ `seed.ts` มีการคืนบล็อก `.finally()` สำหรับตัดการเชื่อมต่อ Prisma Connection หลังทำงานเสร็จเรียบร้อย ข้อมูล Seed มีความหลากหลาย เป็น Idempotent และแฮชรหัสผ่านด้วย `bcrypt` อย่างปลอดภัย
@@ -429,7 +429,7 @@
     > > 
     > > มีจุดที่ต้องปรับเพิ่ม 2 ข้อก่อน Approve & Merge :
     > > 
-    > > 1. **Commit ไฟ���์ Migration**: ยังขาดไฟล์ Migration ของ Lab 3 ใน `server/prisma/migrations/` รบกวนรัน `npx prisma migrate dev --name lab3_db_init` แล้ว commit โฟลเดอร์ migration เข้ามาด้วย
+    > > 1. **Commit ไฟล์ Migration**: ยังขาดไฟล์ Migration ของ Lab 3 ใน `server/prisma/migrations/` รบกวนรัน `npx prisma migrate dev --name lab3_db_init` แล้ว commit โฟลเดอร์ migration เข้ามาด้วย
     > > 2. **Connection Cleanup ใน seed.ts**: เพิ่ม `.finally(async () => { await getPrisma().$disconnect(); })` กลับเข้ามาตรงท้ายไฟล์ `server/prisma/seed.ts` เพื่อปิด Database Connection หลังรัน seed เสร็จ
     > > 
     > > ปรับ 2 จุดนี้แล้ว push ขึ้นมาได้เลย
@@ -452,7 +452,7 @@
   - **Round 1 (COMMENTED - 2026-09-16):**
     > ### Peer Review: Authentication Foundation & Password Change (PR #58)
     > 
-    > ตรวจโค้ดส่วน Authentication และ Password Management เรียบร้อยแล้ว ฟังก์ชันและเทสต���งตามข้อกำหนดของ Lab 3 Section 4.1, 4.4 และ 6:
+    > ตรวจโค้ดส่วน Authentication และ Password Management เรียบร้อยแล้ว ฟังก์ชันและเทสตรงตามข้อกำหนดของ Lab 3 Section 4.1, 4.4 และ 6:
     > 
     > * **Authentication & Session**: Endpoint `/api/auth/login`, `/logout`, `/me` และ `/change-password` ทำงานได้สมบูรณ์ รองรับทั้ง Bearer Token และ HTTP-Only Cookie
     > * **Security & Business Rules**: ปฏิบัติตาม BR-01 (สกัดบัญชี Inactive), BR-02 (มี requirePasswordChanged middleware), BR-04 (รหัสผ่านแฮชด้วย bcrypt และไม่ expose hash ออกไปภายนอก) และมีการตรวจสอบ Password Strength ครบทุกเงื่อนไข
@@ -479,7 +479,7 @@
     > > 
     > > **ข้อเสนอแนะเพิ่มเติม (Optional)**:
     > > 
-    > > * ใน `auth.api.test.ts` อาจเ��ิ่มการคืนค่ารหัสผ่านเดิมของ user ใน `afterAll` เพื่อให้ชุดเทสรันซ้ำได้โดยไม่ต้อง re-seed
+    > > * ใน `auth.api.test.ts` อาจเพิ่มการคืนค่ารหัสผ่านเดิมของ user ใน `afterAll` เพื่อให้ชุดเทสรันซ้ำได้โดยไม่ต้อง re-seed
     > > * เพิ่ม `JWT_SECRET` ใน `server/.env.example`
     > 
     > ขอบคุณสำหรับการรีวิว ได้ปรับปรุงตามข้อเสนอแนะเพิ่มเติมเรียบร้อยแล้ว:
@@ -504,7 +504,7 @@
     > 
     > #### 1. แก้ไข Login Bypass จาก `toktickit_dev_requester_id` ใน LocalStorage (`client/src/App.tsx`)
     > - ใน `App.tsx` เงื่อนไข `isDevRequesterFlow` ไปเช็ค `localStorage.getItem("toktickit_dev_requester_id")` โดยตรง
-    > - ถ้าเครื่องใครเคยรัน Lab 2 มาก่อ�� ค่านี้จะค้างอยู่ในเบราว์เซอร์ ทำให้พอเปิดหน้าเว็บขึ้นมาจะหลุดข้ามหน้า Login ไปเข้า UI ของ Lab 2 ทันที
+    > - ถ้าเครื่องใครเคยรัน Lab 2 มาก่อน ค่านี้จะค้างอยู่ในเบราว์เซอร์ ทำให้พอเปิดหน้าเว็บขึ้นมาจะหลุดข้ามหน้า Login ไปเข้า UI ของ Lab 2 ทันที
     > - **สิ่งที่ต้องปรับ:** ให้ผูกเงื่อนไขนี้เฉพาะตอนรันโหมดเทสเท่านั้น เช่น:
     >   ```typescript
     >   const isDevRequesterFlow =
@@ -528,7 +528,7 @@
     > 
     > 2. **บันทึก Token ใหม่ใน `changePassword` (`client/src/api.ts` & `AuthContext.tsx`)**:
     >    - ใน `client/src/api.ts` ฟังก์ชัน `changePassword` ยังขาด `if (data.token) setStoredToken(data.token);`
-    >    - ทำให้ Client ยังถือ Token เก่าหลังเปลี่ยนรหัสผ่าน ให้เติมการบันทึก Token แ���ะ sync state ใน `AuthContext.tsx` ด้วย
+    >    - ทำให้ Client ยังถือ Token เก่าหลังเปลี่ยนรหัสผ่าน ให้เติมการบันทึก Token และ sync state ใน `AuthContext.tsx` ด้วย
     > 
     > 3. **นำ Debug Component ของ Lab 1 ออก (`client/src/App.tsx`)**:
     >    - นำ `<HomeOverview />` ออกจากหน้า Login และหน้าจอหลัก เพื่อให้ UI ตรงตามสเปกหน้า 8 ของอาจารย์
@@ -541,7 +541,7 @@
     > ตรวจเช็คการแก้ไขใน commit `8116192` เทียบกับข้อเสนอแนะในรอบที่แล้วเรียบร้อยแล้ว:
     > 
     > 1. **Role-Based Tab Routing**: ระบบตั้งค่าแท็บเริ่มต้น (`user-management`, `ticket-queue`, `my-tickets`) ตาม Role ของผู้ใช้ที่ล็อกอินถูกต้อง และไฮไลต์แท็บใน Navbar ตรงตามสเปก
-    > 2. **Token Persistence**: ฟังก์ชัน `changePassword` บันทึก Token ���หม่ลง LocalStorage และซิงก์เข้า AuthContext เรียบร้อย
+    > 2. **Token Persistence**: ฟังก์ชัน `changePassword` บันทึก Token ใหม่ลง LocalStorage และซิงก์เข้า AuthContext เรียบร้อย
     > 3. **UI Spec Adherence**: นำ Debug Component (`<HomeOverview />`) ออกจากหน้า Login และหน้าจอหลัก ทำให้ UI สะอาดตรงตามแบบร่างหน้า 8 ของเอกสาร Lab 3
     > 4. **Automated Test Coverage**: มีการเพิ่มชุดทดสอบใน `AppRoleNav.test.tsx` และ `ChangePassword.test.tsx` ครอบคลุมพฤติกรรมที่ปรับแก้ทั้งหมด
     > 
@@ -554,7 +554,7 @@
     > > #### 1. แก้ไข Login Bypass จาก `toktickit_dev_requester_id` ใน LocalStorage (`client/src/App.tsx`)
     > > * ใน `App.tsx` เงื่อนไข `isDevRequesterFlow` ไปเช็ค `localStorage.getItem("toktickit_dev_requester_id")` โดยตรง
     > > * ถ้าเครื่องใครเคยรัน Lab 2 มาก่อน ค่านี้จะค้างอยู่ในเบราว์เซอร์ ทำให้พอเปิดหน้าเว็บขึ้นมาจะหลุดข้ามหน้า Login ไปเข้า UI ของ Lab 2 ทันที
-    > > * **สิ่งที่ต้องปรับ:** ให้ผูกเงื��อนไขนี้เฉพาะตอนรันโหมดเทสเท่านั้น เช่น:
+    > > * **สิ่งที่ต้องปรับ:** ให้ผูกเงื่อนไขนี้เฉพาะตอนรันโหมดเทสเท่านั้น เช่น:
     > >   ```ts
     > >   const isDevRequesterFlow =
     > >     import.meta.env.MODE === "test" &&
@@ -583,7 +583,7 @@
     > > 2. **บันทึก Token ใหม่ใน `changePassword` (`client/src/api.ts` & `AuthContext.tsx`)**:
     > >    
     > >    * ใน `client/src/api.ts` ฟังก์ชัน `changePassword` ยังขาด `if (data.token) setStoredToken(data.token);`
-    > >    * ทำให้ Client ยังถือ Token เก่าหลังเปลี่ยนรหัสผ่าน ให้เติมการบันทึ�� Token และ sync state ใน `AuthContext.tsx` ด้วย
+    > >    * ทำให้ Client ยังถือ Token เก่าหลังเปลี่ยนรหัสผ่าน ให้เติมการบันทึก Token และ sync state ใน `AuthContext.tsx` ด้วย
     > > 3. **นำ Debug Component ของ Lab 1 ออก (`client/src/App.tsx`)**:
 - **Evidence:** [PR #59 Review Conversation](https://github.com/chanya06/toktickit/pull/59)
 
@@ -597,7 +597,7 @@
   - **Round 1 (CHANGES_REQUESTED - 2026-09-17):**
     > ### Peer Review: Requester Session Regression & Resolution Indication Action (PR #60)
     > 
-    > ตรวจโค้ดใน PR #60 เทียบกับสเปก Lab 3, Handout (Section 1, 4.3, 8.2) และ Issue #49 เรียบร��อยแล้ว
+    > ตรวจโค้ดใน PR #60 เทียบกับสเปก Lab 3, Handout (Section 1, 4.3, 8.2) และ Issue #49 เรียบร้อยแล้ว
     > 
     > จุดเด่นที่ทำได้ดี:
     > - ฝั่ง Backend ทำ Data Isolation รัดกุม ป้องกันไม่ให้ Requester เข้าถึงหรือระบุ requesterId ของผู้ใช้อื่น (403 Forbidden)
@@ -607,7 +607,7 @@
     > จุดบกพร่องที่ต้องแก้ไขก่อน Merge (Request Changes):
     > 
     > 1. แก้ไข State Wipeout ใน TicketDetailView.tsx หลังกดส่งสัญญาณ Resolution (บรรทัดที่ 43):
-    >    - ปัจจุบันมีการเรียก setTicket(res.ticket); โดยตรง แต่ API ส่งกลับมาเฉพาะ partial fields (id, ticketNumber, status, isResolutionIndicated) ทำให้ฟิลด์อื่นๆ ทั้งหมด (Summary, Description, Category, Priority, CreatedAt) กลายเป็น undefined ส่ง���ลให้หน้าจอข้อมูลตั๋วหายเกลี้ยงทันทีที่กดยืนยัน
+    >    - ปัจจุบันมีการเรียก setTicket(res.ticket); โดยตรง แต่ API ส่งกลับมาเฉพาะ partial fields (id, ticketNumber, status, isResolutionIndicated) ทำให้ฟิลด์อื่นๆ ทั้งหมด (Summary, Description, Category, Priority, CreatedAt) กลายเป็น undefined ส่งผลให้หน้าจอข้อมูลตั๋วหายเกลี้ยงทันทีที่กดยืนยัน
     >    - วิธีแก้: ให้ทำ State Merge กับข้อมูลเดิม:
     >      setTicket((prev) => (prev ? { ...prev, ...res.ticket } : res.ticket));
     > 
@@ -645,7 +645,7 @@
     > > จุดเด่นที่ทำได้ดี:
     > > 
     > > * ฝั่ง Backend ทำ Data Isolation รัดกุม ป้องกันไม่ให้ Requester เข้าถึงหรือระบุ requesterId ของผู้ใช้อื่น (403 Forbidden)
-    > > * ฟังก์ชัน POST /api/tickets/:id/resolve-indication ใช้ Prisma $transaction อัปเดตแฟล็ก isResolutionIndicated: true พร้อม��ร้าง PublicComment แบบ Atomic ได้ถูกต้องตาม BR-19
+    > > * ฟังก์ชัน POST /api/tickets/:id/resolve-indication ใช้ Prisma $transaction อัปเดตแฟล็ก isResolutionIndicated: true พร้อมสร้าง PublicComment แบบ Atomic ได้ถูกต้องตาม BR-19
     > > * มีชุดทดสอบครอบคลุมทั้ง API Authorization และ Resolution Indication ครบถ้วน
     > > 
     > > จุดบกพร่องที่ต้องแก้ไขก่อน Merge (Request Changes):
@@ -724,7 +724,7 @@
   - **Round 1 (COMMENTED - 2026-09-17):**
     > ### ข้อเสนอแนะเพิ่มเติมสำหรับ PR #62 (Staff Ticket Queue UI)
     > 
-    > ตรวจเช็คเทียบกับ `ui-spec.md` และการใช้งานจริงอย่าง��ะเอียดอีกครั้ง พบจุดที่อยากให้ช่วยปรับปรุงเพิ่มเติมอีกเล็กน้อยเพื่อความสมบูรณ์ตามสเปกของอาจารย์:
+    > ตรวจเช็คเทียบกับ `ui-spec.md` และการใช้งานจริงอย่างละเอียดอีกครั้ง พบจุดที่อยากให้ช่วยปรับปรุงเพิ่มเติมอีกเล็กน้อยเพื่อความสมบูรณ์ตามสเปกของอาจารย์:
     > 
     > 1. **เพิ่มคอลัมน์ `Requested Priority` ในตาราง Desktop (`StaffTicketQueue.tsx`)**:
     >    - ตามสเปก Screen 3 ของ `ui-spec.md` กำหนดให้ตารางแสดงทั้ง `Requested Priority` (ที่ผู้ใช้ขอมา) ควบคู่กับ `IT Priority` (ที่ IT ประเมิน)
@@ -751,7 +751,7 @@
     > 2. **Pagination Reset on Sort Change:**
     >    - การเปลี่ยนตัวเลือกใน `queue-sort-by` และการคลิกสลับทิศทางใน `queue-sort-dir` มีการเรียก `setPage(1)` ช่วยป้องกันข้อผิดพลาดกรณีค้างอยู่ที่หน้าถัดไปแล้วจัดเรียงใหม่
     > 3. **Zen Green Row Hover Token (`#EAF6EF`):**
-    >    - กำหนดสไตล์ Hover ให้ตารางด้วย Pale Highlight Token `#EAF6EF` ทั���งใน `client/src/index.css` และ scoped class `.staff-queue-table` แสดงผลถูกต้องตาม Zen Design System
+    >    - กำหนดสไตล์ Hover ให้ตารางด้วย Pale Highlight Token `#EAF6EF` ทั้งใน `client/src/index.css` และ scoped class `.staff-queue-table` แสดงผลถูกต้องตาม Zen Design System
     > 4. **Table Column Width Distribution:**
     >    - เกลี่ยความกว้างของคอลัมน์ทั้ง 9 คอลัมน์ (13%, 11%, 22%, 11%, 9%, 9%, 10%, 9%, 6%) รวมกันได้ 100% พอดี ไม่ล้นกรอบตาราง
     > 5. **Test Coverage & Verification:**
@@ -774,7 +774,7 @@
     > >    
     > >    * ตอนนี้ width รวมใน `<th>` เกินไปที่ 110% เมื่อเพิ่มคอลัมน์ Requested Priority แล้ว ให้ช่วยเกลี่ยสัดส่วนเปอร์เซ็นต์ให้ลงตัวพอดี 100%
     > 
-    > ขอบคุณสำหรับกา���ตรวจทานอย่างละเอียด ได้ดำเนินการปรับปรุงแก้ไขครบทั้ง 4 ข้อเรียบร้อยแล้วใน commit `6ecd380`:
+    > ขอบคุณสำหรับการตรวจทานอย่างละเอียด ได้ดำเนินการปรับปรุงแก้ไขครบทั้ง 4 ข้อเรียบร้อยแล้วใน commit `6ecd380`:
     > 
     > 1. **เพิ่มคอลัมน์ Requested Priority ในตาราง Desktop และ Mobile Cards (`client/src/components/StaffTicketQueue.tsx`)**:
 - **Evidence:** [PR #62 Review Conversation](https://github.com/chanya06/toktickit/pull/62)
@@ -789,7 +789,7 @@
   - **Round 1 (CHANGES_REQUESTED - 2026-09-17):**
     > ### Peer Review for PR #63: Changes Requested (IT Staff Ticket Operations & Status Matrix)
     > 
-    > ได้ตรวจสอบการทำงานของ PR #63 (Issue #52 / Task 24) ทั้ง Backend API, Frontend Operations Panel ��ละชุดทดสอบทั้งหมดอย่างละเอียดเทียบกับ Handout Section 4, `specification.md` (BR-10 ถึง BR-14), `api-spec.md` (Section 2) และ `ui-spec.md` (Screen 4)
+    > ได้ตรวจสอบการทำงานของ PR #63 (Issue #52 / Task 24) ทั้ง Backend API, Frontend Operations Panel และชุดทดสอบทั้งหมดอย่างละเอียดเทียบกับ Handout Section 4, `specification.md` (BR-10 ถึง BR-14), `api-spec.md` (Section 2) และ `ui-spec.md` (Screen 4)
     > 
     > การวางโครงสร้างระบบ Claim, Assign, IT Priority และ Status Transition ทำได้ดีมากและมีชุดทดสอบครอบคลุม แต่พบจุดบกพร่องที่ต้องปรับปรุงแก้ไข 4 จุดดังนี้:
     > 
@@ -817,7 +817,7 @@
     >      ```
     > 
     > 4. **เพิ่ม `AbortSignal` ใน `fetchStaffAssignees` (`TicketDetailView.tsx`):**
-    >    - รบกวนส่ง `AbortController.signal` เข้าไปใน `fetchStaffAssignees()` เพื่อป้องกั��ปัญหาตอน Component Unmount
+    >    - รบกวนส่ง `AbortController.signal` เข้าไปใน `fetchStaffAssignees()` เพื่อป้องกันปัญหาตอน Component Unmount
     > 
     > รบกวนช่วยแก้ไขจุดดังกล่าวเพิ่มเติม แล้วแจ้งอีกครั้งเพื่อตรวจสอบและ Approve เข้า `lab3-staging`
     > 
@@ -839,7 +839,7 @@
     > > 1. **เพิ่มสถานะ `REOPENED` ใน Status Transition Matrix (สำคัญมาก):**
     > >    
     > >    * ปัจจุบันใน `PERMITTED_STATUS_TRANSITIONS` (`server/src/routes/staff.ts`) และ `PERMITTED_NEXT_STATUSES` (`client/src/components/TicketDetailView.tsx`) ยังไม่มี Key `[TicketStatus.REOPENED]`
-    > >    * ส่งผลให้เมื่อตั๋วถูก Reopen แล้ว ตัวเลือกสถานะถัดไปจะว��างเปล่า Dropdown ถูก Disable และ API ปฏิเสธด้วย 422 กลายเป็น Dead-end status
+    > >    * ส่งผลให้เมื่อตั๋วถูก Reopen แล้ว ตัวเลือกสถานะถัดไปจะว่างเปล่า Dropdown ถูก Disable และ API ปฏิเสธด้วย 422 กลายเป็น Dead-end status
     > >    * รบกวนเพิ่ม Key `REOPENED` ทั้งฝั่ง Backend และ Frontend เช่น:
     > >      ```ts
     > >      [TicketStatus.REOPENED]: [
@@ -863,13 +863,13 @@
   - **Round 1 (CHANGES_REQUESTED - 2026-09-17):**
     > ### ผลการตรวจสอบ PR #64: REQUEST CHANGES / RECOMMEND IMPROVEMENTS
     > 
-    > ภาพรวมของฟังก์ชันหลัก ระบบความปลอดภัย การจำกัดสิทธ���์ตามบทบาท (RBAC) และ Business Rules ทำงานได้ถูกต้องครบถ้วนตามข้อกำหนด Lab-03 แต่พบจุดบกพร่องด้าน UX และ State ในหน้าบ้านที่ควรพิจารณาแก้ไขก่อนทำการ Merge:
+    > ภาพรวมของฟังก์ชันหลัก ระบบความปลอดภัย การจำกัดสิทธิ์ตามบทบาท (RBAC) และ Business Rules ทำงานได้ถูกต้องครบถ้วนตามข้อกำหนด Lab-03 แต่พบจุดบกพร่องด้าน UX และ State ในหน้าบ้านที่ควรพิจารณาแก้ไขก่อนทำการ Merge:
     > 
     > #### ประเด็นที่ควรปรับปรุง (Issues to Address):
     > 1. **ตัวเลข Badge บนแท็บแสดงเป็น (0) เสมอตอนเข้าหน้ารายละเอียดตั๋ว**:
     >    - เนื่องจากแท็บเปิดมาที่ Attachments เป็นค่าเริ่มต้น และใช้ Conditional Rendering ทำให้แท็บ Public Comments และ Internal Notes ยังไม่ถูก Mount ตัวนับ Badge จึงค้างอยู่ที่ `0` ตลอดเวลาจนกว่าผู้ใช้จะคลิกเข้าไป
     >    - ข้อเสีย: ทำให้ผู้ใช้หรือ Staff เข้าใจผิดว่าไม่มีข้อความหรือบันทึกภายในอยู่เลย
-    >    - แนะนำ: ทำ Prefetch ข้อมูลนับจำนว���ตั้งแต่ Mount หน้ารายละเอียด หรือย้ายการเรียก API ไปไว้ใน Hook ระดับบน
+    >    - แนะนำ: ทำ Prefetch ข้อมูลนับจำนวนตั้งแต่ Mount หน้ารายละเอียด หรือย้ายการเรียก API ไปไว้ใน Hook ระดับบน
     > 
     > 2. **ข้อความที่กำลังพิมพ์หลุดหายเมื่อสลับแท็บ (Draft State Loss)**:
     >    - การสลับแท็บไปดูรูปภาพแนบหรือดูข้อมูลอื่นจะทำให้ `CommentsSection` / `InternalNotesSection` ถูก Unmount ส่งผลให้ข้อความที่กำลังพิมพ์อยู่ใน Textarea หายไปทันที
@@ -897,7 +897,7 @@
     >    - ไม่มีการเปิดเผยข้อมูล passwordHash ในผลลัพธ์การ Query ของผู้เขียน
     > 
     > 2. กฎทางธุรกิจและการทำงานของระบบ (Business Rules):
-    >    - BR-14: การเปลี่ยนสถานะตั���วจาก WAITING_FOR_REQUESTER เป็น IN_PROGRESS ทำงานร่วมกับการสร้าง Public Comment ผ่าน Prisma $transaction แบบ Atomic ข้อมูลถูกต้องสอดคล้องกัน
+    >    - BR-14: การเปลี่ยนสถานะตั๋วจาก WAITING_FOR_REQUESTER เป็น IN_PROGRESS ทำงานร่วมกับการสร้าง Public Comment ผ่าน Prisma $transaction แบบ Atomic ข้อมูลถูกต้องสอดคล้องกัน
     >    - BR-17: รักษาความถูกต้องของข้อมูลแบบ Append-only ปฏิเสธคำขอแก้ไขและลบ
     >    - BR-18: มีการตรวจสอบความยาวข้อความ 2 ถึง 2000 ตัวอักษรอย่างรัดกุมทั้งหน้าบ้านและหลังบ้าน
     > 
@@ -965,7 +965,7 @@
     > - Router-level middlewares (`requireAuth`, `requirePasswordChanged`, `requireRole`) ครอบคลุม ปลอดภัยสูง
     > - Safety Rules สำหรับการป้องกัน Self-deactivation (422) และการป้องกัน Deactivation/Demotion แอดมินคนสุดท้าย (422) ทำงานถูกต้องทุกสถานการณ์
     > - มีการจำกัดเพดาน Pagination สูงสุด 100 รายการ ป้องกัน DoS
-    > - อีเมลถูกแปลงเป็นตัวพิมพ์เล็กเพื่อความไม่ซ้ำ���ันแบบ Case-insensitive
+    > - อีเมลถูกแปลงเป็นตัวพิมพ์เล็กเพื่อความไม่ซ้ำกันแบบ Case-insensitive
     > - รหัสผ่านได้รับการตรวจสอบความยากและแฮชด้วย bcrypt (10 rounds) โดยไม่ส่ง `passwordHash` ออกไปใน Response
     > 
   - **Round 2 (APPROVED - 2026-09-18):**
@@ -975,7 +975,7 @@
     > 
     > 1. **การซิงโครไนซ์ฟิลด์ name และ fullName**:
     >    - บันทึกและอัปเดตทั้ง `fullName: trimmedName` และ `name: trimmedName` ในคำสั่งสร้าง (POST) และแก้ไข (PATCH)
-    >    - รวม `name: true` ใน `SAFE_USER_SELECT` และเพิ่มใน `ALLOWED_SORT_FIELDS` เพื่อความเข้ากัน���ด้ย้อนหลังกับโค้ด Lab 2 อย่างสมบูรณ์
+    >    - รวม `name: true` ใน `SAFE_USER_SELECT` และเพิ่มใน `ALLOWED_SORT_FIELDS` เพื่อความเข้ากันได้ย้อนหลังกับโค้ด Lab 2 อย่างสมบูรณ์
     > 
     > 2. **การรองรับฟิลด์แผนก (department)**:
     >    - ตรวจสอบและบันทึกฟิลด์ `department` ลงฐานข้อมูล โดยตัดช่องว่างและบันทึกเป็น `null` หากเป็นค่าว่าง
@@ -986,7 +986,7 @@
     >    - Router-level RBAC (`requireAuth`, `requirePasswordChanged`, `requireRole(Role.ADMINISTRATOR)`) ครอบคลุมทุก Endpoint อย่างรัดกุม
     >    - ป้องกันการปิดใช้งานบัญชีตนเอง (422 Unprocessable Entity)
     >    - ป้องกันการปิดใช้งานหรือลดขั้นบทบาทแอดมินที่ใช้งานอยู่คนสุดท้าย (422 Unprocessable Entity)
-    >    - ป้องกัน Email Conflict เมื่อแอดม��นกดบันทึกโดยไม่เปลี่ยนอีเมลผ่านเงื่อนไข `NOT: { id: targetId }`
+    >    - ป้องกัน Email Conflict เมื่อแอดมินกดบันทึกโดยไม่เปลี่ยนอีเมลผ่านเงื่อนไข `NOT: { id: targetId }`
     > 
     > 4. **ชุดทดสอบและเอกสาร**:
     >    - ชุดทดสอบใน `users-admin.api.test.ts` มีการตรวจสอบค่าจริงในฐานข้อมูลผ่าน `prisma.user.findUniqueOrThrow` สำหรับฟิลด์ `name`, `fullName`, และ `department` ครบทั้ง Flow สร้างและแก้ไข
@@ -1030,15 +1030,88 @@
 
 ---
 
-#### Issue #55 (Issue 27) — Administrator User Management Interface & Modals
+#### PR #66 — feat(admin): administrator user management interface & modals (#55)
 
-- **Issue Reference:** [Issue #55](https://github.com/chanya06/toktickit/issues/55) on `chanya06/toktickit`
-- **Partner Branch:** `feature/27-admin-ui` (Pending submission)
-- **Status:** In progress by author (@chanya06). Reviewer (@lmaybelgracel) is on standby to perform code review as soon as the PR is opened.
-- **Review Criteria Prepared:**
-  - Verify Zen Green UI styling for Admin table and action buttons.
-  - Verify Add User Modal, Edit User Modal, and Reset Password Confirmation Modal.
-  - Verify real-time validation, role selector, active/inactive badge styling, and client-side guards matching BR-07, BR-08, BR-09.
+- **Pull Request:** [#66](https://github.com/chanya06/toktickit/pull/66)
+- **Branch:** `feature/27-admin-ui`
+- **What I Reviewed & Feedback Given:**
+  - **Round 1 (CHANGES_REQUESTED - 2026-09-19):**
+    > ### ผลการรีวิว PR [#66](https://github.com/chanya06/toktickit/pull/66)
+    > จากการตรวจสอบการทำงานและซอร์สโค้ดอย่างละเอียด พบจุดบกพร่องด้านการตรวจสอบข้อมูล ความปลอดภัย และความถูกต้องของโค้ดที่จำเป็นต้องแก้ไขก่อนทำการ Merge ดังนี้:
+    > 
+    > #### ประเด็นที่ต้องแก้ไข (Required Changes):
+    > 
+    > 1. **Regex ตรวจสอบอักขระพิเศษในรหัสผ่านไม่ตรงกับเซิร์ฟเวอร์ (Password Regex Mismatch Bug)**:
+    >    - ใน `UserManagementView.tsx` (บรรทัดที่ 651 และ 1201) ใช้ Regex:
+    >      `/[!@#$%^&*(),.?":{}|<>]/test(...)`
+    >    - ในขณะที่ฝั่งเซิร์ฟเวอร์ `server/src/routes/auth.ts` รองรับอักขระเพิ่มเติม: `_`, `-`, `+`, `=`, `[`, `]`, `\`, `/`
+    >    - **ผลกระทบ**: ถ้ารหัสผ่านมีเครื่องหมาย `_` หรือ `-` (เช่น `Admin_2026` หรือ `Pass-1234`) หน้าเว็บจะบล็อกไม่ให้ Submit และแจ้งเตือนข้อผิดพลาด ทั้งๆ ที่เป็นรหัสผ่านที่ถูกต้อง
+    >    - **แนวทางแก้ไข**: อัปเดต Regex ใน `UserManagementView.tsx` ให้ครอบคลุมอักขระพิเศษตามเซิร์ฟเวอร์:
+    >      `/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/]/test(...)`
+    > 
+    > 2. **ป้องกันการลดบทบาทตนเองโดยไม่ตั้งใจ (Self-Demotion Prevention)**:
+    >    - ใน `EditUserModal` (บรรทัดที่ 1113–1122) เมื่อแก้ไขบัญชีของตนเอง (`isSelf === true`) มีการ disable สวิตช์ `isActive` แล้ว แต่ **ช่องเลือก Role ยังเปิดให้แก้ไขได้**
+    >    - หากมี Admin หลายคนในระบบ แอดมินสามารถเผลอเปลี่ยนบทบาทตนเองเป็น `IT_STAFF` หรือ `REQUESTER` ได้ ซึ่งจะทำให้สูญเสียสิทธิ์แอดมินทันที
+    >    - **แนวทางแก้ไข**: เพิ่มคุณสมบัติ `disabled={isSelf}` ให้กับ `<select data-testid="edit-user-role">` เมื่อแก้ไขบัญชีตนเอง
+    > 
+    > 3. **ไฟล์แก้ไขนอกขอบเขตของ PR (Out-of-Scope File)**:
+    >    - มีการแก้ไขไฟล์ `server/src/utils/ticketNumber.ts` (เพิ่ม Jitter retry) ติดเข้ามาใน PR นี้ ซึ่ง PR #66 มี Scope สำหรับหน้าจอ Admin User Management UI (#55) เท่านั้น ไม่ควรมีไฟล์ระบบคิวตั๋วของ Backend เข้ามาปะปน
+    > 
+    > 4. **แก้ไขการตั้งชื่อ `data-testid` ในแถวตาราง**:
+    >    - ในบรรทัดที่ 378 มีการใช้ `data-testid={'user-table-row user-row-${u.id}'}` ซึ่งมีเว้นวรรค ทำให้การทดสอบ E2E หรือ Testing Library ที่ค้นหาแบบ Exact Match หา Element ไม่พบ
+    >    - **แนวทางแก้ไข**: ปรับเป็น `data-testid={`user-row-${u.id}`}`
+    > 
+    > 5. **ซิงโครไนซ์ชื่อบน Header หลังแก้ไขโปรไฟล์ตนเอง**:
+    >    - ใน `EditUserModal` จังหวะ `onSuccess` หาก `updated.id === currentUser?.id` ควรเรียกฟังก์ชัน `refreshUser()` จาก `AuthContext` เพื่อให้ชื่อบนแถบ Navigation Bar ด้านบนอัปเดตตามทันที
+    > 
+    > 6. **ใส่ Fallback ให้กับชื่อใน Toast Notification**:
+    >    - ในบรรทัดที่ 617 ควรปรับเป็น `resettingUser.fullName || resettingUser.name` เพื่อป้องกันกรณีแสดงผลคำว่า `"undefined"` หากเจอข้อมูลเดิมที่ไม่มีฟิลด์ `fullName`
+  - **Partner Response / Changes Made (commit `138ecdb`):**
+    > ### สรุปการปรับปรุงแก้ไขตามผลการรีวิว (PR #66)
+    > 
+    > ขอบคุณสำหรับข้อเสนอแนะและผลการตรวจสอบที่ละเอียดและรอบคอบ ได้ดำเนินการปรับปรุงแก้ไขครบถ้วนทั้ง 6 ประเด็นใน commit `138ecdb` เรียบร้อยแล้ว:
+    > 
+    > 1. **ปรับปรุง Regex อักขระพิเศษให้ตรงกับเซิร์ฟเวอร์ 100% (`UserManagementView.tsx`, `ChangePasswordView.tsx`)**:
+    >    - อัปเดต Regex เป็น `/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/]/test(...)` ครอบคลุมทั้งเครื่องหมาย `_`, `-`, `+`, `=`, `[`, `]`, `\`, `/` ทำให้สามารถตั้งรหัสผ่านเช่น `Admin_2026` หรือ `Pass-1234!` ได้อย่างถูกต้องตามมาตรฐานเซิร์ฟเวอร์
+    > 
+    > 2. **ป้องกันการลดบทบาทตนเอง (Self-Demotion Prevention) (`UserManagementView.tsx`)**:
+    >    - เพิ่ม `disabled={isSelf}` ให้กับ `<select data-testid="edit-user-role">` ใน `EditUserModal` เมื่อกำลังแก้ไขบัญชีของตนเอง พร้อมข้อความกำกับ `(Role change disabled on your own logged-in account)`
+    >    - เพิ่ม Client-side Safety Check ใน `handleSubmit` เพื่อป้องกันการส่งคำขอ demote ตนเอง
+    > 
+    > 3. **นำไฟล์นอกขอบเขตออกจาก PR (`server/src/utils/ticketNumber.ts`)**:
+    >    - Revert ไฟล์ `server/src/utils/ticketNumber.ts` กลับคืนตาม `origin/lab3-staging` เพื่อคง Scope ของ PR ให้เจาะจงเฉพาะ Frontend Admin User Management UI ตามข้อกำหนด Issue #55
+    > 
+    > 4. **แก้ไขการตั้งชื่อ `data-testid` ในแถวตาราง (`UserManagementView.tsx`)**:
+    >    - ปรับจาก `data-testid={'user-table-row user-row-${u.id}'}` เป็น `data-testid={`user-row-${u.id}`}` ปราศจากเว้นวรรค และย้ายไปใช้ `className="user-table-row"` แทน
+    > 
+    > 5. **ซิงโครไนซ์ชื่อบน Header หลังแก้ไขโปรไฟล์ตนเอง (`UserManagementView.tsx`)**:
+    >    - ใน `onSuccess` ของ `EditUserModal` หาก `updated.id === currentUser?.id` จะเรียก `await refreshUser?.()` จาก `AuthContext` ทันที ทำให้ชื่อบนแถบ Header อัปเดตตามแบบ Real-time โดยไม่ต้องรีเฟรชหน้าเว็บ
+    > 
+    > 6. **เพิ่ม Fallback ให้กับชื่อใน Toast Notifications (`UserManagementView.tsx`)**:
+    >    - กำหนด `fullName || name` ใน Toast Notification ทุกจุด (`created`, `updated`, `resettingUser`) ป้องกันการแสดงผล "undefined" หากเจอข้อมูลเดิมจาก Lab 2
+    > 
+    > 7. **ชุดทดสอบและการตรวจสอบความถูกต้อง**:
+    >    - เพิ่มการทดสอบใน `client/tests/lab-03/UserManagement.test.tsx` ตรวจสอบรหัสผ่านที่มี `_` และ `-`, การ Disable Role Select ของตนเอง และการเรียก `refreshUser()` เมื่อแก้ไขโปรไฟล์
+    >    - ผลการรันเทส:
+    >      - Client Tests: ผ่านครบ 116/116 tests (15 test files)
+    >      - Client Production Build (`tsc && vite build`): ผ่านสะอาดสมบูรณ์ 100%
+  - **Round 2 (APPROVED - 2026-09-19):**
+    > ### ผลการรีวิว PR [#66](https://github.com/chanya06/toktickit/pull/66)
+    > 
+    > ได้ทำการตรวจสอบโค้ดที่ได้รับการปรับปรุงแก้ไขล่าสุดใน Commit `138ecdb` อย่างละเอียดครบถ้วนทุกจุด พบว่าการแก้ไขมีความถูกต้อง สมบูรณ์ และเป็นไปตามข้อกำหนดทั้งหมด:
+    > 
+    > 1. **Password Validation Regex**: อัปเดต Regex ตรวจสอบอักขระพิเศษใน `UserManagementView.tsx` และ `ChangePasswordView.tsx` ให้ตรงกับ `validatePasswordStrength` ฝั่งเซิร์ฟเวอร์แบบ 100% ครอบคลุมเครื่องหมาย `_`, `-`, `+`, `=`, `[`, `]`, `\`, `/` ทำให้การสร้างผู้ใช้และรีเซ็ตรหัสผ่านด้วยรหัสผ่านที่มีขีดล่างหรือขีดกลางทำงานได้อย่างถูกต้อง
+    > 2. **Self-Demotion Prevention**: เพิ่มการล็อกสวิตช์บทบาท (`disabled={isSelf}`) ใน `EditUserModal` พร้อมมี Client-side Guard ป้องกันไม่ให้แอดมินลดบทบาทตนเองโดยไม่ตั้งใจ เสริมความปลอดภัยควบคู่ไปกับกฎ BR-07
+    > 3. **Revert Out-of-Scope File**: ดำเนินการ Revert ไฟล์ `server/src/utils/ticketNumber.ts` กลับคืนตาม `lab3-staging` เพื่อรักษาขอบเขตของ PR ให้เจาะจงเฉพาะหน้าจอ Admin User Management UI (#55) ตามที่กำหนด
+    > 4. **Data-testid Formatting**: แก้ไขรูปแบบ `data-testid={`user-row-${u.id}`}` ให้เป็นค่าเดี่ยวที่ไม่มีการเว้นวรรค และแยกคลาสไปไว้ที่ `className="user-table-row"` รองรับการค้นหาแบบ Exact Match ของชุดทดสอบได้อย่างถูกต้อง
+    > 5. **Real-time Auth Session Sync**: มีการเรียกใช้งาน `refreshUser()` จาก `AuthContext` ทันทีหลังแอดมินแก้ไขข้อมูลบัญชีตนเองสำเร็จ ส่งผลให้ชื่อบนแถบนำทาง Header อัปเดตแบบเรียลไทม์
+    > 6. **Toast Fallback Safety**: ปรับใช้ `fullName || name` ครบทุก Modal ป้องกันกรณีข้อมูลเดิมไม่มีฟิลด์ `fullName` ไม่ให้แสดงผลคำว่า "undefined"
+    > 7. **Ellipsis Pagination**: เพิ่มยูทิลิตี้ `getPaginationItems` สำหรับตัดทอนหน้า Pagination ที่มีจำนวนมากด้วย `...` (Ellipsis) พร้อมชุดทดสอบ `Pagination.test.tsx` ป้องกันปัญหาแถบหน้าล้นจอได้อย่างมีประสิทธิภาพ
+    > 
+    > ภาพรวมโค้ดและชุดทดสอบมีความสมบูรณ์และได้มาตรฐาน อนุมัติให้ทำการ Merge เข้าสู่ `lab3-staging` ได้
+- **Reviewer Verdict:** Approved (All 6 requested changes and ellipsis pagination resolved)
+- **Final Result / Merge Status:** Merged into `lab3-staging` (Merge commit `0494436`)
+- **Evidence:** [PR #66 Review Conversation](https://github.com/chanya06/toktickit/pull/66)
 
 ---
 
