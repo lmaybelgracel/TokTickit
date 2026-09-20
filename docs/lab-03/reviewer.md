@@ -295,7 +295,7 @@
 | #53 (Issue 25) | [#64](https://github.com/chanya06/toktickit/pull/64) | feat(comments): public comments and private internal notes (#53) / `feature/25-comments-and-notes` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #64](https://github.com/chanya06/toktickit/pull/64) |
 | #54 (Issue 26) | [#65](https://github.com/chanya06/toktickit/pull/65) | feat(admin): administrator user management & safety validations (#54) / `feature/26-admin-user-management` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #65](https://github.com/chanya06/toktickit/pull/65) |
 | #55 (Issue 27) | [#66](https://github.com/chanya06/toktickit/pull/66) | feat(admin): administrator user management interface & modals / `feature/27-admin-ui` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #66](https://github.com/chanya06/toktickit/pull/66) |
-| #56 (Issue 28) | Pending | Issue 28: QA, Automated Tests, Screenshots, Reviewer Sync & Release Integration | Awaiting Author PR Submission | In Progress by @chanya06 | [Issue #56](https://github.com/chanya06/toktickit/issues/56) |
+| #56 (Issue 28) | [#67](https://github.com/chanya06/toktickit/pull/67) | feat(qa): E2E test suites, responsive screenshots, and release integration / `feature/28-qa-automated-tests-release-integration` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #67](https://github.com/chanya06/toktickit/pull/67) |
 
 ---
 
@@ -1115,12 +1115,54 @@
 
 ---
 
-#### Issue #56 (Issue 28) — QA, Automated Tests, Screenshots, Reviewer Sync & Release Integration
+#### PR #67 — feat(qa): E2E test suites, responsive screenshots, and release integration (#56)
 
-- **Issue Reference:** [Issue #56](https://github.com/chanya06/toktickit/issues/56) on `chanya06/toktickit`
-- **Partner Branch:** `release/lab3-integration` (Pending submission)
-- **Status:** In progress by author (@chanya06). Reviewer (@lmaybelgracel) is on standby to perform final QA audit and merge verification.
-- **Review Criteria Prepared:**
-  - Verify complete automated test suite execution (Unit, API, Component, E2E) with 100% pass rate.
-  - Verify responsive screenshots across desktop (1280px), tablet (768px), and mobile (375px, 320px).
-  - Verify synchronised `reviewer.md`, documentation integrity, and clean git staging merge into `main`.
+- **Pull Request:** [#67](https://github.com/chanya06/toktickit/pull/67)
+- **Branch:** `feature/28-qa-automated-tests-release-integration`
+- **What I Reviewed & Feedback Given:**
+  - **Round 1 (CHANGES_REQUESTED - 2026-09-21):**
+    > ### ผลการรีวิว PR [#67](https://github.com/chanya06/toktickit/pull/67)
+    > 
+    > จากการตรวจสอบชุดทดสอบ Playwright E2E, ไฟล์คอนฟิก และความเข้ากันได้ของระบบอย่างละเอียด พบประเด็นสำคัญที่ต้องปรับปรุงก่อนทำการ Merge ดังนี้:
+    > 
+    > #### ประเด็นที่ต้องแก้ไข (Required Changes):
+    > 
+    > 1. **ปรับขอบเขต `testDir` ใน `playwright.config.ts` ให้เจาะจงเฉพาะ Lab 3**:
+    >    - ปัจจุบันกำหนด `testDir: "./e2e"` ทำให้เมื่อรันคำสั่ง `npm run test:e2e` ระบบจะไปดึงเทสของ `e2e/lab-02/` มารันด้วย ซึ่งเทสของ Lab 2 จะล้มเหลวทั้งหมดเพราะไม่มีหน้าจอ Requester Selector Modal แบบเดิมแล้ว (เปลี่ยนเป็นระบบ Login)
+    >    - **แนวทางแก้ไข**: ปรับใน `playwright.config.ts` เป็น `testDir: "./e2e/lab-03"` หรือกำหนด `testMatch: "**/lab-03/**/*.spec.ts"` เพื่อให้คำสั่ง `npm run test:e2e` รันเฉพาะเทสของ Lab 3 ได้ถูกต้อง 100%
+    > 
+    > 2. **แก้ไข Browser Channel ใน `playwright.config.ts` ให้ตรงกับเอกสาร**:
+    >    - ใน `playwright.config.ts` กำหนด `channel: "msedge"` แต่ใน `docs/lab-03/tests.md` ระบุว่ารันบน `Playwright (Chromium)`
+    >    - การล็อก `channel: "msedge"` จะทำให้รันเทสไม่ผ่านบนสภาพแวดล้อมที่ไม่มี Microsoft Edge (เช่น Linux หรือ CI Runners)
+    >    - **แนวทางแก้ไข**: ปรับคอนฟิกโปรเจกต์เป็น `chromium` (`...devices["Desktop Chrome"]`) ตามเอกสาร
+    > 
+    > 3. **เพิ่ม Teardown คืนค่ารหัสผ่านของผู้ใช้ทดสอบใน E2E (Data Hygiene)**:
+    >    - ใน `staff-ticket-flow.spec.ts`: ขาด `afterAll` รีเซ็ตรหัสผ่านของ Lisa Martinez กลับเป็น `InitialPass123!`
+    >    - ใน `user-administration.spec.ts`: ขาดการรีเซ็ตรหัสผ่านของ Michael Brown กลับเป็น `InitialPass123!` หลังจบทดสอบ
+    >    - **แนวทางแก้ไข**: ใส่ `afterAll` รีเซ็ตรหัสผ่านกลับเป็น `InitialPass123!` เหมือนที่ทำไว้ใน `authentication.spec.ts` เพื่อรักษาความบริสุทธิ์ของข้อมูลตาม `seed.ts`
+    > 
+    > 4. **ปรับปรุงตัวเลขจำนวน Screenshots ใน `docs/lab-03/tests.md`**:
+    >    - ในตารางสรุปผลระบุ `18 screenshots` แต่ภาพจริงใน `artifacts/lab-03/screenshots/` มีทั้งหมด 21 ภาพ ปรับตัวเลขเป็น `21 screenshots` ให้ตรงกับไฟล์หลักฐานจริง
+  - **Author Response & Code Fixes (Commit `f67657d`):**
+    > ปรับปรุงแก้ไขโค้ดตามข้อเสนอแนะของ Reviewer ครบถ้วนทุกข้อ:
+    > 1. `playwright.config.ts`: ปรับ `testDir` เป็น `./e2e/lab-03` เพื่อให้รันเฉพาะเทสของ Lab 3 และเปลี่ยนโปรเจกต์เป็น `chromium` ตามสเปก
+    > 2. Teardown คืนค่ารหัสผ่าน: เพิ่ม `test.afterAll` ในทั้ง `staff-ticket-flow.spec.ts` และ `user-administration.spec.ts` รีเซ็ตรหัสผ่านของ Lisa Martinez และ Michael Brown กลับเป็น `InitialPass123!`
+    > 3. `docs/lab-03/tests.md`: ปรับยอด Screenshots ในตารางสรุปผลเป็น 21 ภาพตรงตามไฟล์หลักฐานจริง
+  - **Round 2 (APPROVED - 2026-09-21):**
+    > ### ผลการรีวิว PR [#67](https://github.com/chanya06/toktickit/pull/67) (รอบแก้ไข - APPROVED)
+    > 
+    > ได้ตรวจสอบโค้ดที่ได้รับการปรับปรุงใน Commit `f67657d` ครบถ้วนทุกประเด็นแล้ว:
+    > 
+    > 1. **`playwright.config.ts`**:
+    >    - ปรับ `testDir` เป็น `./e2e/lab-03` ชัดเจน ทำให้คำสั่งรันเฉพาะ E2E ของ Lab 3 ปราศจากข้อผิดพลาดจากเทสเดิมของ Lab 2
+    >    - ปรับ Browser Project เป็น `chromium` โดยใช้ `devices["Desktop Chrome"]` ตรงตามข้อกำหนดในเอกสารและสภาพแวดล้อม CI ทั่วไป
+    > 2. **E2E Teardown & Data Hygiene**:
+    >    - เพิ่ม `test.afterAll` ใน `staff-ticket-flow.spec.ts` เพื่อรีเซ็ตรหัสผ่านของ Lisa Martinez กลับเป็น `InitialPass123!` อย่างถูกต้อง
+    >    - เพิ่ม `test.afterAll` ใน `user-administration.spec.ts` เพื่อรีเซ็ตรหัสผ่านของ Michael Brown กลับเป็น `InitialPass123!` ป้องกันผลกระทบต่อการทดสอบรอบถัดไป
+    > 3. **Traceability & Documentation**:
+    >    - อัปเดตตารางสรุปใน `docs/lab-03/tests.md` ระบุจำนวน 21 screenshots ครบถ้วนตามไฟล์ภาพหลักฐานจริงใน `artifacts/lab-03/screenshots/`
+    > 
+    > การแก้ไขสมบูรณ์ ถูกต้องตามเกณฑ์ Lab 3 ทุกประการ อนุมัติ (APPROVE) ให้ Merge เข้าสู่ `lab3-staging` ได้
+- **Second Review Verdict:** Approved (All 4 requested changes resolved cleanly)
+- **Final Result / Merge Status:** Merged into `lab3-staging` (Merge commit `2e92ed3`)
+- **Evidence:** [PR #67 Review Conversation](https://github.com/chanya06/toktickit/pull/67)
