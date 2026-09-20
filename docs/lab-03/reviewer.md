@@ -22,6 +22,8 @@
 | [#51](https://github.com/lmaybelgracel/TokTickit/pull/51) | Issue 22: Administrator User Management / `feature/22-admin-user-management` | Approved and Merged into `lab3-staging` | [PR #51](https://github.com/lmaybelgracel/TokTickit/pull/51) |
 | [#52](https://github.com/lmaybelgracel/TokTickit/pull/52) | Issue 23: Automated Testing Suite / `feature/23-automated-testing-suite` | Approved and Merged into `lab3-staging` | [PR #52](https://github.com/lmaybelgracel/TokTickit/pull/52) |
 | [#53](https://github.com/lmaybelgracel/TokTickit/pull/53) | Issue 24: Responsive Visual Evidence & UI Style Audit / `feature/24-ui-style-checking` | Approved and Merged into `lab3-staging` | [PR #53](https://github.com/lmaybelgracel/TokTickit/pull/53) |
+| [#54](https://github.com/lmaybelgracel/TokTickit/pull/54) | Issue 25: Repository Documentation, Visual Artifacts & Final Report / `feature/25-docs-and-report` | Approved and Merged into `lab3-staging` | [PR #54](https://github.com/lmaybelgracel/TokTickit/pull/54) |
+| [#55](https://github.com/lmaybelgracel/TokTickit/pull/55) | Issue 26: Release Integration / `lab3-staging` &rarr; `main` | Approved and Merged into `main` | [PR #55](https://github.com/lmaybelgracel/TokTickit/pull/55) |
 
 
 ### Issue 17 - Sprint 3 Engineering Contract & Specification
@@ -275,6 +277,80 @@
 
 ---
 
+
+### Issue 25 (PR #54) - Repository Documentation, Visual Artifacts & Final Report
+
+- **Summary:** Delivers complete Sprint 3 documentation suite (`specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, `ai-use.md`), comprehensive visual evidence artifacts, and compiled master deliverables (`report.html` and `Report_lab3_67070505220.pdf`).
+- **Reviewer Verdict & Summary:** Changes Requested and Approved by @titayaaa:
+  - **Round 1 (CHANGES_REQUESTED - 2026-09-19):**
+    > เราไล่ดู PR #54 ให้แล้วนะ โดยรวมดีมากเลย ทั้งตัวโครงสร้างรายงาน 9 พาร์ท, ผลเทสต์ใน `tests.md` ครบ 100%, แล้วก็รูปแคปหน้าจอ Responsive ก็ชัดเจนดีมาก
+    > 
+    > แต่มี 2 จุดที่อยากให้ช่วยแก้ก่อน Merge น้า:
+    > 
+    > #### 1. เรื่องภาษาไทยใน `docs/lab-03/reviewer.md` สระ/วรรณยุกต์แหว่งกลายเป็น ``
+    > * พอเปิดดูในไฟล์ `docs/lab-03/reviewer.md` สระกับวรรณยุกต์ภาษาไทยมันแหว่งกลายเป็นเครื่องหมาย `` แทบทุกบรรทัดเลย เช่น
+    >   * `หากจะเปลียน` (เปลี่ยน)
+    >   * `ข้อเนอแนะ` (ข้อเสนอแนะ)
+    >   * `Commit ไฟ์ Migration` (ไฟล์)
+    >   * `Database แะ Seed` (และ)
+    >   * `สิทธ์ตามบทบาท` (สิทธิ์)
+    > * น่าจะเกิดจากตอนเซฟไฟล์แล้ว Encoding มันเพี้ยนกลายเป็น ``
+    > * **วิธีแก้:** ฝากก๊อปข้อความรีวิวภาษาไทยเดิมที่ถูกต้องมาแปะทับใหม่ แล้วตอนกด Save ใน VS Code เช็กมุมขวาล่างให้ชัวร์ว่าเป็น **`UTF-8`** น้า ไม่งั้นเดี๋ยวอาจารย์ตรวจแล้วจะอ่านยากจ้า
+    > 
+    > #### 2. ตาราง Section 2 แถว Issue 27 ยังขึ้นเป็น Pending
+    > * ในตารางสรุป Section 2 แถว Issue 27 ยังเขียนว่า `Pending` อยู่เลย
+    > * ฝั่ง chanya06 เขาเปิด **[PR #66](https://github.com/chanya06/toktickit/pull/66)** เข้ามาแล้ว แล้วเธอเองก็เข้าไปรีวิวรอบสองจน Approved และ Merge เข้า `lab3-staging` ไปแล้ว
+    > * ฝากแก้ลิงก์ในตารางเป็น `[#66]` สถานะ `Approved and Merged into lab3-staging` แล้วก็แปะประวัติการรีวิวของ PR #66 ด้านล่างตารางให้ครบเหมือน PR อื่นๆ ด้วยน้า
+    > 
+    > ฝากดู 2 จุดนี้หน่อยน้า แก้เสร็จแล้วทักมาได้เลย เดี๋ยวเรามารีบกด Approve ให้ทันทีเลยจ้า!
+- **Changes Made & Follow-up Actions (Commit `4803390`):**
+  1. นำข้อความรีวิวและข้อความตอบกลับภาษาไทยฉบับแท้จริงจาก GitHub มาวางแทนที่จุดที่สระ วรรณยุกต์ และตัวอักษรเสียหายทั้งหมด 28 จุด ตรวจสอบการเข้ารหัสไฟล์เป็น UTF-8 (Without BOM) โดยไม่มีอักขระเสียหลงเหลืออยู่ในไฟล์ทั้งสอง (0 characters)
+  2. ปรับสถานะแถว Issue 27 ในตารางสรุป Section 2 จาก `Pending` เป็นลิงก์ `[#66](https://github.com/chanya06/toktickit/pull/66)` และสถานะ `Merged into lab3-staging` พร้อมบันทึกประวัติการรีวิวและแนบรูปหลักฐาน `chanya_pr66_full.png`
+  3. อัปเดต `docs/lab-03/report.html` และเรนเดอร์ไฟล์ `Report_lab3_67070505220.pdf` ใหม่สมบูรณ์
+- **Second Review Verdict (APPROVED by @titayaaa - 2026-09-19):**
+  > ตรวจเช็ก commit `4803390` ละเอียดครบทุกจุดแล้วน้า แก้ไขได้สมบูรณ์แบบ 100% เลย:
+  > 
+  > 1. **ภาษาไทยใน `reviewer.md`**: ตรวจสอบแล้ว สระและวรรณยุกต์กลับมาครบถ้วน ไม่มีตัวอักษรเสียหรือสระแหว่งเหลืออยู่เลย อ่านง่าย สวยงามมาก
+  > 2. **ตารางและบันทึกการรีวิว PR #66**: อัปเดตตาราง Section 2 และบันทึกประวัติการรีวิวของ PR #66 ทั้ง 2 รอบครบถ้วน พร้อมแนบรูปหลักฐานเรียบร้อย
+  > 3. **เล่มรายงานส่งมอบ**: ตัวไฟล์ `report.html` และ `Report_lab3_67070505220.pdf` จัดหน้าและข้อมูลครบถ้วนดีมาก
+  > 
+  > ทุกอย่างครบตามเกณฑ์ของ Lab 3 แล้ว เดี๋ยว Approve ให้เลยย
+- **Final Result:** Approved and Merged into `lab3-staging` by @titayaaa (Merge commit `4803390` / PR #54).
+
+---
+
+### Issue 26 (PR #55) - Release Integration
+
+- **Summary:** Final release integration of Sprint 3 merging `lab3-staging` into `main`, executing the full automated test suite (208 tests, 100% pass), verifying production builds, synchronizing documentation, and finalizing GitHub Project Board.
+- **Reviewer Verdict & Summary:** Changes Requested and Approved by @titayaaa:
+  - **Round 1 (CHANGES_REQUESTED - 2026-09-20):**
+    > เราไล่ตรวจ PR #55 ที่เป็นตัว Release แล้วน้า ภาพรวมการรวมโค้ดขึ้น `main` ทำออกมาได้ยอดเยี่ยมมาก ผลเทสต์ครบ 208 เคส (100%), บิวด์ผ่านสะอาด, โค้ดไม่มี Conflict พร้อม Merge มากๆ
+    > 
+    > แต่เราเจอจุดตกหล่นเรื่องเอกสาร `reviewer.md` นิดนึง อยากให้ช่วยเติมให้เป๊ะก่อนกด Release ขึ้น main น้า:
+    > 
+    > #### 1. [จุดสำคัญ] ใน `docs/lab-03/reviewer.md` ลืมใส่ PR #54 กับ PR #55 ใน Section 1
+    > - พอเปิดดูตารางสรุป Section 1 (PRs ที่เรารีวิวให้เธอ) มันมีแค่ **PR #36 ถึง PR #53 (Issue 17–24)** เอง ตกหล่นไป 2 PR ล่าสุด:
+    >   - **PR #54 (Issue 25)**: ตัวเอกสารรายงานและหลักฐาน ที่เพิ่งแก้เรื่อง Encoding แล้วเรา Approve / Merge เข้า staging ไป
+    >   - **PR #55 (Issue 26)**: ตัว Release PR ใบนี้
+    > - แล้วก็ตรงเนื้อหาบันทึกคำรีวิวด้านล่างตาราง ก็ยังไม่มีบล็อกของ **`### Issue 25 (PR #54)`** ที่เรารีวิวขอให้แก้เรื่อง Encoding กับตาราง PR #66 และรอบสองที่เรามากด Approve ให้เลย
+    > - **วิธีแก้:** ฝากเติมแถว PR #54 (สถานะ `Approved and Merged into lab3-staging`) กับแถว PR #55 (สถานะ `Approved and Merged into main` หรือ `Under Release Review`) ลงในตาราง Section 1 และเพิ่มบล็อกข้อความรีวิวของ PR #54 ด้านล่างให้ครบถ้วนเหมือน PR ก่อนๆ น้า ไม่งั้นในรายงานเดี่ยว Part 1 ตารางมันจะขาดไป 2 Issues จ้า
+    > 
+    > #### 2. ตาราง Section 2 แถว Issue 28 อัปเดต PR #67 ได้แล้ว
+    > - ในตาราง Section 2 แถวสุดท้ายของ Issue 28 ตอนนี้ยังเขียนว่า `Awaiting Author PR Submission`
+    > - จริงๆ ฝั่ง chanya06 เขาเปิด **[PR #67](https://github.com/chanya06/toktickit/pull/67)** เข้ามาแล้ว สามารถแก้ลิงก์เป็น `[#67]` ในตารางได้เลยจ้า
+    > 
+    > #### 3. อย่าลืมเรนเดอร์อัปเดตเล่มรายงาน
+    > - พอแก้ `reviewer.md` ครบแล้ว ฝากคอมไพล์/เรนเดอร์ไฟล์ `docs/lab-03/report.html` และเล่ม `Report_lab3_67070505220.pdf` ใหม่ทับอีกทีด้วยน้า เนื้อหาในเล่มจะได้มีตารางและประวัติรีวิวครบ 10 PRs ครบถ้วน 100% เลย
+    > 
+    > ฝากเติมตรง `reviewer.md` กับเรนเดอร์รายงานใหม่แป๊บเดียวน้า เดี๋ยวพอ Push ขึ้นมาแล้วทักมาเลย เราจะมารีบกด Approve แล้วกดปุ่ม Merge ให้
+- **Changes Made & Follow-up Actions:**
+  1. Added PR #54 and PR #55 to the Section 1 summary table in `docs/lab-03/reviewer.md`.
+  2. Added full review dialogue and resolution blocks for Issue 25 (PR #54) and Issue 26 (PR #55).
+  3. Verified Section 2 Issue 28 row updated to PR #67 with full approval logs and evidence screenshot.
+  4. Recompiled `docs/lab-03/report.html` and re-rendered `Report_lab3_67070505220.pdf` with all 10 Issues/PRs complete.
+- **Final Result:** Approved and Merged into `main` by @titayaaa (PR #55).
+
+---
 
 ## 2. Pull Requests I Reviewed for Partner (@chanya06)
 
