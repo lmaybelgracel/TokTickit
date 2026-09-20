@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RequesterUser, Ticket } from "./api";
+import { RequesterUser, Ticket, User } from "./api";
 import { CreateTicket } from "./components/CreateTicket";
 import { MyTickets } from "./components/MyTickets";
 import { TicketDetail } from "./components/TicketDetail";
