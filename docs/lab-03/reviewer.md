@@ -371,7 +371,7 @@
 | #53 (Issue 25) | [#64](https://github.com/chanya06/toktickit/pull/64) | feat(comments): public comments and private internal notes (#53) / `feature/25-comments-and-notes` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #64](https://github.com/chanya06/toktickit/pull/64) |
 | #54 (Issue 26) | [#65](https://github.com/chanya06/toktickit/pull/65) | feat(admin): administrator user management & safety validations (#54) / `feature/26-admin-user-management` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #65](https://github.com/chanya06/toktickit/pull/65) |
 | #55 (Issue 27) | [#66](https://github.com/chanya06/toktickit/pull/66) | feat(admin): administrator user management interface & modals / `feature/27-admin-ui` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #66](https://github.com/chanya06/toktickit/pull/66) |
-| #56 (Issue 28) | [#67](https://github.com/chanya06/toktickit/pull/67) | feat(qa): E2E test suites, responsive screenshots, and release integration / `feature/28-qa-automated-tests-release-integration` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #67](https://github.com/chanya06/toktickit/pull/67) |
+| #56 (Issue 28) | [#70](https://github.com/chanya06/toktickit/pull/70) | feat(qa): E2E test suites, responsive screenshots, and release integration (#56) / `feature/28-qa-automated-tests-release-integration` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #70](https://github.com/chanya06/toktickit/pull/70) |
 
 ---
 
@@ -1191,54 +1191,79 @@
 
 ---
 
-#### PR #67 — feat(qa): E2E test suites, responsive screenshots, and release integration (#56)
+#### PR #70 — feat(qa): E2E test suites, responsive screenshots, and release integration (#56)
 
-- **Pull Request:** [#67](https://github.com/chanya06/toktickit/pull/67)
+- **Pull Request:** [#70](https://github.com/chanya06/toktickit/pull/70) (Supersedes [#67](https://github.com/chanya06/toktickit/pull/67))
 - **Branch:** `feature/28-qa-automated-tests-release-integration`
 - **What I Reviewed & Feedback Given:**
-  - **Round 1 (CHANGES_REQUESTED - 2026-09-21):**
-    > ### ผลการรีวิว PR [#67](https://github.com/chanya06/toktickit/pull/67)
+  - **Round 1 (CHANGES_REQUESTED - 2026-09-20T20:36:13Z):**
+    > ### ข้อบกพร่องเพิ่มเติมที่ต้องแก้ไขใน PR #70
     > 
-    > จากการตรวจสอบชุดทดสอบ Playwright E2E, ไฟล์คอนฟิก และความเข้ากันได้ของระบบอย่างละเอียด พบประเด็นสำคัญที่ต้องปรับปรุงก่อนทำการ Merge ดังนี้:
+    > 1. **ทำความสะอาดฐานข้อมูล (Re-seed) ก่อนรันแคปเจอร์ Screenshots**:
+    >    - ในรูปภาพ Screen 5 มีผู้ใช้ขยะ `QA Auto Staff <timestamp>` ค้างอยู่ 4 แถวบนสุด และรูปโมดอลเปิดบน user ขยะ (#88) รวมถึงแผนกของ John Smith ยังแสดงเป็น `IT Management Systems`
+    >    - ในรูป Screen 3 มีตั๋วขยะสะสมจนยอดรวมกลายเป็น 897 ใบ
+    >    - ให้ทำการ Reset / Re-seed ฐานข้อมูล (`npm run prisma:seed` หรือรีเซ็ต db) ให้สะอาดก่อนทำการรันเก็บภาพ Screenshots ใหม่
     > 
-    > #### ประเด็นที่ต้องแก้ไข (Required Changes):
+    > 2. **ปรับสคริปต์ Screen 3 และ Screen 4 ให้ใช้บัญชี IT Staff จริง (`capture-screenshots.spec.ts`)**:
+    >    - ในขั้นตอนแคปเจอร์ Screen 3 (Ticket Queue) และ Screen 4 (Ticket Detail) ให้ล็อกอินด้วยผู้ใช้บทบาท IT Staff (เช่น `lisa.martinez@toktickit.com` หรือ `kevin.patel@toktickit.com`) เพื่อให้ Header แสดง Badge บทบาท `IT Staff` และไม่มีเมนู `User Management` ของ Admin ปรากฏบนหน้าจอ IT Staff
     > 
-    > 1. **ปรับขอบเขต `testDir` ใน `playwright.config.ts` ให้เจาะจงเฉพาะ Lab 3**:
-    >    - ปัจจุบันกำหนด `testDir: "./e2e"` ทำให้เมื่อรันคำสั่ง `npm run test:e2e` ระบบจะไปดึงเทสของ `e2e/lab-02/` มารันด้วย ซึ่งเทสของ Lab 2 จะล้มเหลวทั้งหมดเพราะไม่มีหน้าจอ Requester Selector Modal แบบเดิมแล้ว (เปลี่ยนเป็นระบบ Login)
-    >    - **แนวทางแก้ไข**: ปรับใน `playwright.config.ts` เป็น `testDir: "./e2e/lab-03"` หรือกำหนด `testMatch: "**/lab-03/**/*.spec.ts"` เพื่อให้คำสั่ง `npm run test:e2e` รันเฉพาะเทสของ Lab 3 ได้ถูกต้อง 100%
+    > 3. **แก้ไข Layout ล้นบน Mobile และรัน Screenshots ทั้งหมดใหม่**:
+    >    - ปรับปรุง Header ให้รองรับ Mobile หน้าจอ 375px ไม่ล้นออกไปเป็น 727px-731px
+    >    - รัน `capture-screenshots.spec.ts` ใหม่ทั้งหมดหลังทำความสะอาดฐานข้อมูล เพื่อให้ได้ภาพหลักฐานที่ถูกต้องตรงตามระบบจริง
+  - **Author Response & Code Fixes (Commit `b2d9066` - 2026-09-20T21:12:27Z):**
+    > ### ดำเนินการปรับปรุงแก้ไขข้อบกพร่องตามผลการรีวิวเรียบร้อยแล้ว (Commit `b2d9066`)
     > 
-    > 2. **แก้ไข Browser Channel ใน `playwright.config.ts` ให้ตรงกับเอกสาร**:
-    >    - ใน `playwright.config.ts` กำหนด `channel: "msedge"` แต่ใน `docs/lab-03/tests.md` ระบุว่ารันบน `Playwright (Chromium)`
-    >    - การล็อก `channel: "msedge"` จะทำให้รันเทสไม่ผ่านบนสภาพแวดล้อมที่ไม่มี Microsoft Edge (เช่น Linux หรือ CI Runners)
-    >    - **แนวทางแก้ไข**: ปรับคอนฟิกโปรเจกต์เป็น `chromium` (`...devices["Desktop Chrome"]`) ตามเอกสาร
+    > ได้แก้ไขครบถ้วนทั้ง 3 ประเด็น พร้อมทำความสะอาดฐานข้อมูลและบันทึกภาพหน้าจอหลักฐาน Screenshots ทั้งหมดใหม่ ดังนี้:
     > 
-    > 3. **เพิ่ม Teardown คืนค่ารหัสผ่านของผู้ใช้ทดสอบใน E2E (Data Hygiene)**:
-    >    - ใน `staff-ticket-flow.spec.ts`: ขาด `afterAll` รีเซ็ตรหัสผ่านของ Lisa Martinez กลับเป็น `InitialPass123!`
-    >    - ใน `user-administration.spec.ts`: ขาดการรีเซ็ตรหัสผ่านของ Michael Brown กลับเป็น `InitialPass123!` หลังจบทดสอบ
-    >    - **แนวทางแก้ไข**: ใส่ `afterAll` รีเซ็ตรหัสผ่านกลับเป็น `InitialPass123!` เหมือนที่ทำไว้ใน `authentication.spec.ts` เพื่อรักษาความบริสุทธิ์ของข้อมูลตาม `seed.ts`
+    > ---
     > 
-    > 4. **ปรับปรุงตัวเลขจำนวน Screenshots ใน `docs/lab-03/tests.md`**:
-    >    - ในตารางสรุปผลระบุ `18 screenshots` แต่ภาพจริงใน `artifacts/lab-03/screenshots/` มีทั้งหมด 21 ภาพ ปรับตัวเลขเป็น `21 screenshots` ให้ตรงกับไฟล์หลักฐานจริง
-  - **Author Response & Code Fixes (Commit `f67657d`):**
-    > ปรับปรุงแก้ไขโค้ดตามข้อเสนอแนะของ Reviewer ครบถ้วนทุกข้อ:
-    > 1. `playwright.config.ts`: ปรับ `testDir` เป็น `./e2e/lab-03` เพื่อให้รันเฉพาะเทสของ Lab 3 และเปลี่ยนโปรเจกต์เป็น `chromium` ตามสเปก
-    > 2. Teardown คืนค่ารหัสผ่าน: เพิ่ม `test.afterAll` ในทั้ง `staff-ticket-flow.spec.ts` และ `user-administration.spec.ts` รีเซ็ตรหัสผ่านของ Lisa Martinez และ Michael Brown กลับเป็น `InitialPass123!`
-    > 3. `docs/lab-03/tests.md`: ปรับยอด Screenshots ในตารางสรุปผลเป็น 21 ภาพตรงตามไฟล์หลักฐานจริง
-  - **Round 2 (APPROVED - 2026-09-21):**
-    > ### ผลการรีวิว PR [#67](https://github.com/chanya06/toktickit/pull/67) (รอบแก้ไข - APPROVED)
+    > #### 1. ทำความสะอาดฐานข้อมูล (Clean & Idempotent Re-seed)
+    > - **ล้างข้อมูลขยะจากการทดสอบอัตโนมัติ**: ปรับปรุง `server/prisma/seed.ts` ให้ลบตั๋วที่ไม่ได้อยู่ในชุด Seed 3 ใบ (`ticketNumber NOT IN ('TKT-2026-000001', 'TKT-2026-000002', 'TKT-2026-000003')`) ซึ่งจะ Cascade ลบ Comments, Internal Notes และ Attachments ที่ค้างอยู่ทั้งหมด ทำให้ยอดรวมตั๋วกลับคืนเป็น 3 ใบตามจริง
+    > - **ลบผู้ใช้ขยะ**: เพิ่มขั้นตอนลบผู้ใช้นอกเหนือจาก 10 รายใน Seed Data กำจัดบัญชี `QA Auto Staff <timestamp>` ออกจากระบบทั้งหมด
+    > - **รีเซ็ตสถานะและแผนกของผู้ใช้**: อัปเดตคำสั่ง `upsert` ให้คืนค่า Department ของ John Smith กลับเป็น `"IT Administration"` (ไม่ใช่ IT Management Systems) และคืนค่า Password Hash รวมถึง `mustChangePassword` ของผู้ใช้ทั้งหมดกลับสู่สถานะเริ่มต้น
+    > - **รีเซ็ตสถานะตั๋ว 3 ใบ**: ปรับค่า Status, IT Priority, Requested Priority และ Ticket Owner ของตั๋วเริ่มต้นให้ตรงตาม Specification
     > 
-    > ได้ตรวจสอบโค้ดที่ได้รับการปรับปรุงใน Commit `f67657d` ครบถ้วนทุกประเด็นแล้ว:
+    > ---
     > 
-    > 1. **`playwright.config.ts`**:
-    >    - ปรับ `testDir` เป็น `./e2e/lab-03` ชัดเจน ทำให้คำสั่งรันเฉพาะ E2E ของ Lab 3 ปราศจากข้อผิดพลาดจากเทสเดิมของ Lab 2
-    >    - ปรับ Browser Project เป็น `chromium` โดยใช้ `devices["Desktop Chrome"]` ตรงตามข้อกำหนดในเอกสารและสภาพแวดล้อม CI ทั่วไป
-    > 2. **E2E Teardown & Data Hygiene**:
-    >    - เพิ่ม `test.afterAll` ใน `staff-ticket-flow.spec.ts` เพื่อรีเซ็ตรหัสผ่านของ Lisa Martinez กลับเป็น `InitialPass123!` อย่างถูกต้อง
-    >    - เพิ่ม `test.afterAll` ใน `user-administration.spec.ts` เพื่อรีเซ็ตรหัสผ่านของ Michael Brown กลับเป็น `InitialPass123!` ป้องกันผลกระทบต่อการทดสอบรอบถัดไป
-    > 3. **Traceability & Documentation**:
-    >    - อัปเดตตารางสรุปใน `docs/lab-03/tests.md` ระบุจำนวน 21 screenshots ครบถ้วนตามไฟล์ภาพหลักฐานจริงใน `artifacts/lab-03/screenshots/`
+    > #### 2. ปรับสคริปต์ Screen 3 และ Screen 4 ให้ใช้บัญชี IT Staff จริง
+    > - **เตรียมบัญชี IT Staff (`e2e/lab-03/capture-screenshots.spec.ts`)**: ใน `beforeAll` ได้เพิ่มคำสั่งเตรียมบัญชี Lisa Martinez (`lisa.martinez@toktickit.com`) ให้มีรหัสผ่านถาวรและปลดล็อกสถานะ `mustChangePassword: false`
+    > - **Screen 3 (Ticket Queue) & Screen 4 (Ticket Detail)**: ล็อกอินด้วยบัญชี Lisa Martinez ทำให้ Header แสดง Badge บทบาท `IT Staff` และไม่มีเมนู `User Management` ของ Admin ปรากฏบนหน้าจอของฝ่ายสนับสนุนไอที
+    > - **Screen 5 (User Management)**: สลับไปล็อกอินด้วยบัญชี Administrator (`admin@toktickit.com`) เพื่อแสดงตารางผู้ใช้ที่สะอาด 10 ราย โดยไม่มีผู้ใช้ขยะติดค้าง และโมดอล Edit User / Reset Password เปิดบนผู้ใช้ที่เป็นทางการ (John Smith ID #10) อย่างถูกต้อง
+    > - **Teardown**: ใน `afterAll` รีเซ็ตรหัสผ่านของ Lisa Martinez กลับเป็น `InitialPass123!` และคืนค่า Department ของ John Smith เป็น `"IT Administration"`
     > 
-    > การแก้ไขสมบูรณ์ ถูกต้องตามเกณฑ์ Lab 3 ทุกประการ อนุมัติ (APPROVE) ให้ Merge เข้าสู่ `lab3-staging` ได้
-- **Second Review Verdict:** Approved (All 4 requested changes resolved cleanly)
-- **Final Result / Merge Status:** Merged into `lab3-staging` (Merge commit `2e92ed3`)
-- **Evidence:** [PR #67 Review Conversation](https://github.com/chanya06/toktickit/pull/67)
+    > ---
+    > 
+    > #### 3. แก้ไข Layout ล้นบน Mobile และรันแคปเจอร์ใหม่ครบ 21 ภาพ
+    > - **ปรับปรุง Header Responsive (`client/src/components/Header.tsx`, `client/src/index.css`)**:
+    >   - เพิ่ม `flex-wrap: wrap` และปรับ Gap/Padding สำหรับหน้าจอขนาดเล็ก (< 768px) บน Header ทำให้ Brand Logo, Navigation Tabs, User Profile Badge และปุ่ม Logout สามารถตัดบรรทัดได้ ไม่ดันความกว้างออกด้านข้าง
+    >   - เพิ่ม `max-width: 100%` และ `overflow-x: hidden` บน `index.css` เพื่อป้องกันการเกิด Horizontal Scrollbar บน Mobile Viewport
+    > - **ผลลัพธ์ขนาดภาพ Mobile**: รันสคริปต์ `capture-screenshots.spec.ts` ใหม่ครบทุกหน้าจอ ภาพ `mobile.png` ทุกรูปมีขนาดความกว้าง **375px** พอดี ไม่ล้นเป็น 727px–731px อีกต่อไป
+    >   - `screen-1-login/mobile.png`: 375 x 667
+    >   - `screen-2-change-password/mobile.png`: 375 x 974
+    >   - `screen-3-ticket-queue/mobile.png`: 375 x 1175
+    >   - `screen-4-ticket-detail/mobile.png`: 375 x 2223
+    >   - `screen-5-user-management/mobile.png`: 375 x 1439
+    > 
+    > ---
+    > 
+    > #### 4. สรุปผลการทดสอบ & Build
+    > - **Playwright E2E**: ผ่านครบ 12/12 tests (`npm run test:e2e`)
+    > - **Server Vitest**: ผ่านครบ 149/149 tests (`npm run test --prefix server`)
+    > - **Client Vitest**: ผ่านครบ 116/116 tests (`npm run test --prefix client`)
+    > - **Client Build**: ผ่านสมบูรณ์ (`tsc && vite build`)
+    > - **Review Log**: อัปเดตบันทึกใน [`docs/lab-03/reviewer.md`](https://github.com/chanya06/toktickit/blob/lab3-staging/docs/lab-03/reviewer.md) เรียบร้อยแล้ว
+  - **Round 2 (APPROVED - 2026-09-20T21:26:03Z):**
+    > ### ผลการตรวจสอบ PR #70
+    > 
+    > ตรวจสอบการแก้ไขใน Commit `b2d9066` ครบถ้วนทุกประเด็นเรียบร้อยแล้ว:
+    > 1. **การ Re-seed และล้างข้อมูลทดสอบ**: ปรับปรุง `server/prisma/seed.ts` ให้ล้างตั๋วและผู้ใช้ขยะจากการรัน Automation Test ทั้งหมด ส่งผลให้ภาพตาราง User Directory และ Ticket Queue แสดงข้อมูลทางการที่สะอาด ถูกต้อง และสมบูรณ์
+    > 2. **การแยกบทบาทผู้ใช้ใน Screenshots**:
+    >    - Screen 3 และ Screen 4 ใช้บัญชี Lisa Martinez แสดง Badge `IT Staff` และไม่มีเมนู User Management ปรากฏบนหน้าจอของ Staff
+    >    - Screen 5 ใช้บัญชี John Smith แสดงตารางผู้ใช้และภาพโมดอล Self-Protection Rule (BR-07 / AC-11) ได้ตรงตามเกณฑ์
+    > 3. **การแก้ปัญหา Mobile Header Overflow**: ปรับ Layout Header และ CSS ควบคุมความกว้าง ทำให้ภาพ Mobile Screenshots ทั้ง 5 หน้าจอมีความกว้าง 375px ตรงตามสเปก Viewport ไม่มีพื้นที่ขาวล้นขอบจอ
+    > 4. **เอกสาร Reviewer Log**: บันทึกการแก้ไขรอบล่าสุดใน `docs/lab-03/reviewer.md` ครบถ้วน
+    > 
+    > อนุมัติ (Approved) พร้อมทำการ Merge เข้าสู่ `lab3-staging`
+- **Second Review Verdict:** Approved (All 3 requested changes resolved cleanly)
+- **Final Result / Merge Status:** Merged into `lab3-staging` (Merge commit `22e9603`)
+- **Evidence:** [PR #70 Review Conversation](https://github.com/chanya06/toktickit/pull/70)
