@@ -1,48 +1,153 @@
 import React, { useState, useEffect } from "react";
-import { RequesterUser, Ticket } from "./api";
-import { RequesterSelector } from "./components/RequesterSelector";
+import { RequesterUser, Ticket, User } from "./api";
 import { CreateTicket } from "./components/CreateTicket";
 import { MyTickets } from "./components/MyTickets";
 import { TicketDetail } from "./components/TicketDetail";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { Login } from "./components/Login";
+import { ChangePassword } from "./components/ChangePassword";
+import { StaffTicketQueue } from "./components/StaffTicketQueue";
+import { StaffTicketDetail } from "./components/StaffTicketDetail";
+import { AdminUserManagement } from "./components/AdminUserManagement";
 
-export type CurrentView = "selector" | "my-tickets" | "create-ticket" | "ticket-detail";
+export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users";
 
-export default function App() {
-  const [activeRequester, setActiveRequester] = useState<RequesterUser | null>(() => {
-    const saved = localStorage.getItem("toktickit_dev_requester");
-    return saved ? JSON.parse(saved) : null;
-  });
+const getDefaultViewForRole = (role?: string): CurrentView => {
+  if (role === "ADMINISTRATOR") return "admin-users";
+  if (role === "IT_STAFF") return "staff-queue";
+  return "my-tickets";
+};
 
+const isViewAllowedForRole = (view: CurrentView, role?: string): boolean => {
+  if (!role) return false;
+  if (view === "admin-users") return role === "ADMINISTRATOR";
+  if (view === "staff-queue") return role === "IT_STAFF" || role === "ADMINISTRATOR";
+  return true;
+};
+
+function AppContent() {
+  const { user, logout, isLoading } = useAuth();
+
+  const isAdmin = user?.role === "ADMINISTRATOR";
+  const isStaffOrAdmin = user?.role === "IT_STAFF" || isAdmin;
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
-  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
+
+  const [selectedTicketId, setSelectedTicketId] = useState<number | null>(() => {
+    try {
+      const saved = sessionStorage.getItem("toktickit_selected_ticket_id");
+      return saved ? parseInt(saved, 10) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const [currentView, setCurrentView] = useState<CurrentView>(() => {
-    return activeRequester ? "my-tickets" : "selector";
+    try {
+      const saved = sessionStorage.getItem("toktickit_current_view") as CurrentView | null;
+      if (saved && user && isViewAllowedForRole(saved, user.role)) {
+        return saved;
+      }
+    } catch {}
+    return getDefaultViewForRole(user?.role);
   });
 
-  useEffect(() => {
-    if (activeRequester) {
-      localStorage.setItem("toktickit_dev_requester", JSON.stringify(activeRequester));
-    } else {
-      localStorage.removeItem("toktickit_dev_requester");
-      setCurrentView("selector");
-    }
-  }, [activeRequester]);
+  const prevUserRef = React.useRef<User | null>(user);
 
-  const handleSelectRequester = (requester: RequesterUser) => {
-    setActiveRequester(requester);
-    setCurrentView("my-tickets");
+  useEffect(() => {
+    if (user && (!prevUserRef.current || prevUserRef.current.id !== user.id)) {
+      prevUserRef.current = user;
+      const saved = sessionStorage.getItem("toktickit_current_view") as CurrentView | null;
+      if (saved && (saved === "ticket-detail" || saved === "create-ticket") && isViewAllowedForRole(saved, user.role)) {
+        setCurrentView(saved);
+      } else {
+        const defaultView = getDefaultViewForRole(user.role);
+        setCurrentView(defaultView);
+        try {
+          sessionStorage.setItem("toktickit_current_view", defaultView);
+        } catch {}
+      }
+    } else if (!user) {
+      prevUserRef.current = null;
+    } else if (user) {
+      if (!isViewAllowedForRole(currentView, user.role)) {
+        const defaultView = getDefaultViewForRole(user.role);
+        setCurrentView(defaultView);
+      }
+    }
+  }, [user, currentView]);
+
+  useEffect(() => {
+    if (user) {
+      try {
+        sessionStorage.setItem("toktickit_current_view", currentView);
+      } catch {}
+    }
+  }, [user, currentView]);
+
+  useEffect(() => {
+    if (user) {
+      try {
+        if (selectedTicketId !== null) {
+          sessionStorage.setItem("toktickit_selected_ticket_id", String(selectedTicketId));
+        } else {
+          sessionStorage.removeItem("toktickit_selected_ticket_id");
+        }
+      } catch {}
+    }
+  }, [user, selectedTicketId]);
+
+  const handleLogout = () => {
+    try {
+      sessionStorage.removeItem("toktickit_current_view");
+      sessionStorage.removeItem("toktickit_selected_ticket_id");
+    } catch {}
+    logout();
   };
 
-  const handleChangeRequester = () => {
-    setActiveRequester(null);
-    setCurrentView("selector");
+  // If loading auth state from localStorage token
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#F5F7F6" }}>
+        <span style={{ color: "#006B3C", fontSize: "16px", fontWeight: "600" }}>Loading TokTickIT...</span>
+      </div>
+    );
+  }
+
+  // If no authenticated user, render Login screen
+  if (!user) {
+    return <Login />;
+  }
+
+  // If user is authenticated and must change password, enforce change password screen
+  if (user.mustChangePassword) {
+    return <ChangePassword />;
+  }
+
+  // Active user representation for ticket components
+  const activeRequester: RequesterUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    department: user.role === "REQUESTER" ? "Requester" : user.role === "IT_STAFF" ? "IT Staff" : "Administrator",
+    isActive: true,
   };
 
   const handleTicketCreated = (ticket: Ticket) => {
     setCreatedSuccessTicket(ticket);
     setCurrentView("my-tickets");
   };
+
+  const getRoleBadge = (role: string) => {
+    if (role === "IT_STAFF" || role === "IT Staff") {
+      return { label: "IT Staff", bg: "#E3F2FD", color: "#1565C0", border: "1px solid #BBDEFB" };
+    }
+    if (role === "ADMINISTRATOR" || role === "Administrator") {
+      return { label: "Administrator", bg: "#F3E5F5", color: "#6A1B9A", border: "1px solid #E1BEE7" };
+    }
+    return { label: "Requester", bg: "#E8F5E9", color: "#2E7D32", border: "1px solid #C8E6C9" };
+  };
+
+  const roleBadge = getRoleBadge(user.role);
 
   return (
     <div className="app-shell" style={styles.appWrapper}>
@@ -59,63 +164,107 @@ export default function App() {
             <span style={styles.brandTitle}>TokTickIT</span>
           </div>
 
-          {activeRequester && (
-            <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
+          <nav className="app-nav" aria-label="Primary" style={styles.navGroup}>
+            {isAdmin && (
               <button
                 style={{
                   ...styles.navItem,
-                  ...(currentView === "my-tickets" ? styles.navItemActive : {}),
+                  ...(currentView === "admin-users" ? styles.navItemActive : {}),
                 }}
-                onClick={() => setCurrentView("my-tickets")}
+                onClick={() => setCurrentView("admin-users")}
               >
-                My Tickets
+                User Management
               </button>
+            )}
 
+            {isStaffOrAdmin && (
               <button
                 style={{
                   ...styles.navItem,
-                  ...(currentView === "create-ticket" ? styles.navItemActive : {}),
+                  ...(currentView === "staff-queue" ? styles.navItemActive : {}),
                 }}
-                onClick={() => setCurrentView("create-ticket")}
+                onClick={() => setCurrentView("staff-queue")}
               >
-                + Create Ticket
+                Staff Queue
               </button>
-            </nav>
-          )}
+            )}
+
+            <button
+              style={{
+                ...styles.navItem,
+                ...(currentView === "my-tickets" ? styles.navItemActive : {}),
+              }}
+              onClick={() => setCurrentView("my-tickets")}
+            >
+              My Tickets
+            </button>
+
+            <button
+              style={{
+                ...styles.navItem,
+                ...(currentView === "create-ticket" ? styles.navItemActive : {}),
+              }}
+              onClick={() => setCurrentView("create-ticket")}
+            >
+              + Create Ticket
+            </button>
+          </nav>
 
           <div style={styles.userProfileGroup}>
-            {activeRequester ? (
-              <div className="requester-profile" style={styles.profileBox}>
-                <div style={styles.userAvatar}>
-                  {activeRequester.name.charAt(0)}
-                </div>
-                <div style={styles.userInfo}>
-                  <span style={styles.userName}>{activeRequester.name}</span>
-                  <span style={styles.userRole}>Requester ({activeRequester.department})</span>
-                </div>
-                <button style={styles.changeUserBtn} onClick={handleChangeRequester} title="Change simulated user">
-                  Change
-                </button>
+            <div className="requester-profile" style={styles.profileBox}>
+              <div style={styles.userAvatar}>
+                {user.name.charAt(0)}
               </div>
-            ) : (
-              <span style={styles.testTag}>Testing Mode (Lab 2)</span>
-            )}
+              <div style={styles.userInfo}>
+                <span style={styles.userName}>{user.name}</span>
+                <span
+                  style={{
+                    ...styles.roleBadge,
+                    backgroundColor: roleBadge.bg,
+                    color: roleBadge.color,
+                    border: roleBadge.border,
+                  }}
+                >
+                  {roleBadge.label}
+                </span>
+              </div>
+              <button
+                style={styles.signOutBtn}
+                onClick={handleLogout}
+                title="Sign Out"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
       <main className="app-main" style={styles.mainContent}>
-        {!activeRequester || currentView === "selector" ? (
-          <RequesterSelector
-            onSelectRequester={handleSelectRequester}
-            currentRequesterId={activeRequester?.id}
+        {currentView === "admin-users" ? (
+          isAdmin ? (
+            <AdminUserManagement />
+          ) : (
+            <StaffTicketQueue
+              onSelectTicket={(ticket) => {
+                setSelectedTicketId(ticket.id);
+                setCurrentView("ticket-detail");
+              }}
+            />
+          )
+        ) : currentView === "staff-queue" ? (
+          <StaffTicketQueue
+            onSelectTicket={(ticket) => {
+              setSelectedTicketId(ticket.id);
+              setCurrentView("ticket-detail");
+            }}
           />
         ) : currentView === "create-ticket" ? (
           <CreateTicket
             activeRequester={activeRequester}
             onSuccess={handleTicketCreated}
-            onCancel={() => setCurrentView("my-tickets")}
+            onCancel={() => setCurrentView(isStaffOrAdmin ? "staff-queue" : "my-tickets")}
           />
         ) : currentView === "my-tickets" ? (
           <div>
@@ -131,10 +280,29 @@ export default function App() {
             />
           </div>
         ) : currentView === "ticket-detail" && selectedTicketId ? (
-          <TicketDetail activeRequester={activeRequester} ticketId={selectedTicketId} onBack={() => setCurrentView("my-tickets")} />
+          isStaffOrAdmin ? (
+            <StaffTicketDetail
+              ticketId={selectedTicketId}
+              onBack={() => setCurrentView("staff-queue")}
+            />
+          ) : (
+            <TicketDetail
+              activeRequester={activeRequester}
+              ticketId={selectedTicketId}
+              onBack={() => setCurrentView("my-tickets")}
+            />
+          )
         ) : null}
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 
@@ -179,17 +347,19 @@ const styles: Record<string, React.CSSProperties> = {
   },
   navGroup: {
     display: "flex",
+    alignItems: "center",
     gap: "0.5rem",
   },
   navItem: {
     backgroundColor: "transparent",
-    color: "rgba(255,255,255,0.85)",
+    color: "#EAF6EF",
     border: "none",
-    padding: "0.5rem 1rem",
+    padding: "0.5rem 0.85rem",
     borderRadius: "6px",
-    fontSize: "0.875rem",
+    fontSize: "0.9rem",
     fontWeight: 500,
     cursor: "pointer",
+    transition: "background 0.2s, color 0.2s",
   },
   navItemActive: {
     backgroundColor: "rgba(255,255,255,0.18)",
@@ -203,64 +373,56 @@ const styles: Record<string, React.CSSProperties> = {
   profileBox: {
     display: "flex",
     alignItems: "center",
-    gap: "0.75rem",
-    backgroundColor: "rgba(0,0,0,0.15)",
-    padding: "0.35rem 0.75rem",
-    borderRadius: "20px",
+    gap: "0.6rem",
+    backgroundColor: "rgba(255,255,255,0.12)",
+    padding: "0.35rem 0.65rem",
+    borderRadius: "8px",
+    border: "1px solid rgba(255,255,255,0.2)",
   },
   userAvatar: {
     width: "28px",
     height: "28px",
     borderRadius: "50%",
-    backgroundColor: "#EAF6EF",
+    backgroundColor: "#FFFFFF",
     color: "#006B3C",
+    fontWeight: 700,
+    fontSize: "0.85rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontWeight: 700,
-    fontSize: "0.8125rem",
   },
   userInfo: {
     display: "flex",
     flexDirection: "column",
-    textAlign: "left",
   },
   userName: {
-    fontSize: "0.8125rem",
+    fontSize: "0.85rem",
     fontWeight: 600,
-    color: "#FFFFFF",
     lineHeight: 1.2,
   },
-  userRole: {
-    fontSize: "0.7rem",
-    color: "rgba(255,255,255,0.75)",
+  roleBadge: {
+    display: "inline-block",
+    fontSize: "10px",
+    fontWeight: 600,
+    padding: "1px 6px",
+    borderRadius: "10px",
+    marginTop: "2px",
+    alignSelf: "flex-start",
   },
-  changeUserBtn: {
-    backgroundColor: "#FFFFFF",
-    color: "#006B3C",
+  signOutBtn: {
+    backgroundColor: "rgba(255,255,255,0.2)",
+    color: "#FFFFFF",
     border: "none",
-    borderRadius: "12px",
-    padding: "0.25rem 0.6rem",
+    padding: "0.25rem 0.5rem",
+    borderRadius: "4px",
     fontSize: "0.75rem",
     fontWeight: 600,
     cursor: "pointer",
-  },
-  testTag: {
-    fontSize: "0.75rem",
-    backgroundColor: "rgba(255,255,255,0.2)",
-    padding: "0.3rem 0.75rem",
-    borderRadius: "12px",
+    marginLeft: "0.25rem",
   },
   mainContent: {
     padding: "2rem 1.5rem",
-  },
-  placeholderContainer: {
-    maxWidth: "800px",
-    margin: "3rem auto",
-    padding: "2rem",
-    backgroundColor: "#FFFFFF",
-    borderRadius: "12px",
-    border: "1px solid #E0E6E2",
-    textAlign: "center",
+    maxWidth: "1200px",
+    margin: "0 auto",
   },
 };
