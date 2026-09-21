@@ -323,31 +323,53 @@
 
 - **Summary:** Final release integration of Sprint 3 merging `lab3-staging` into `main`, executing the full automated test suite (208 tests, 100% pass), verifying production builds, synchronizing documentation, and finalizing GitHub Project Board.
 - **Reviewer Verdict & Summary:** Changes Requested and Approved by @titayaaa:
-  - **Round 1 (CHANGES_REQUESTED - 2026-09-20):**
-    > เราไล่ตรวจ PR #55 ที่เป็นตัว Release แล้วน้า ภาพรวมการรวมโค้ดขึ้น `main` ทำออกมาได้ยอดเยี่ยมมาก ผลเทสต์ครบ 208 เคส (100%), บิวด์ผ่านสะอาด, โค้ดไม่มี Conflict พร้อม Merge มากๆ
-    > 
-    > แต่เราเจอจุดตกหล่นเรื่องเอกสาร `reviewer.md` นิดนึง อยากให้ช่วยเติมให้เป๊ะก่อนกด Release ขึ้น main น้า:
-    > 
-    > #### 1. [จุดสำคัญ] ใน `docs/lab-03/reviewer.md` ลืมใส่ PR #54 กับ PR #55 ใน Section 1
-    > - พอเปิดดูตารางสรุป Section 1 (PRs ที่เรารีวิวให้เธอ) มันมีแค่ **PR #36 ถึง PR #53 (Issue 17–24)** เอง ตกหล่นไป 2 PR ล่าสุด:
-    >   - **PR #54 (Issue 25)**: ตัวเอกสารรายงานและหลักฐาน ที่เพิ่งแก้เรื่อง Encoding แล้วเรา Approve / Merge เข้า staging ไป
-    >   - **PR #55 (Issue 26)**: ตัว Release PR ใบนี้
-    > - แล้วก็ตรงเนื้อหาบันทึกคำรีวิวด้านล่างตาราง ก็ยังไม่มีบล็อกของ **`### Issue 25 (PR #54)`** ที่เรารีวิวขอให้แก้เรื่อง Encoding กับตาราง PR #66 และรอบสองที่เรามากด Approve ให้เลย
-    > - **วิธีแก้:** ฝากเติมแถว PR #54 (สถานะ `Approved and Merged into lab3-staging`) กับแถว PR #55 (สถานะ `Approved and Merged into main` หรือ `Under Release Review`) ลงในตาราง Section 1 และเพิ่มบล็อกข้อความรีวิวของ PR #54 ด้านล่างให้ครบถ้วนเหมือน PR ก่อนๆ น้า ไม่งั้นในรายงานเดี่ยว Part 1 ตารางมันจะขาดไป 2 Issues จ้า
-    > 
-    > #### 2. ตาราง Section 2 แถว Issue 28 อัปเดต PR #67 ได้แล้ว
-    > - ในตาราง Section 2 แถวสุดท้ายของ Issue 28 ตอนนี้ยังเขียนว่า `Awaiting Author PR Submission`
-    > - จริงๆ ฝั่ง chanya06 เขาเปิด **[PR #67](https://github.com/chanya06/toktickit/pull/67)** เข้ามาแล้ว สามารถแก้ลิงก์เป็น `[#67]` ในตารางได้เลยจ้า
-    > 
-    > #### 3. อย่าลืมเรนเดอร์อัปเดตเล่มรายงาน
-    > - พอแก้ `reviewer.md` ครบแล้ว ฝากคอมไพล์/เรนเดอร์ไฟล์ `docs/lab-03/report.html` และเล่ม `Report_lab3_67070505220.pdf` ใหม่ทับอีกทีด้วยน้า เนื้อหาในเล่มจะได้มีตารางและประวัติรีวิวครบ 10 PRs ครบถ้วน 100% เลย
-    > 
-    > ฝากเติมตรง `reviewer.md` กับเรนเดอร์รายงานใหม่แป๊บเดียวน้า เดี๋ยวพอ Push ขึ้นมาแล้วทักมาเลย เราจะมารีบกด Approve แล้วกดปุ่ม Merge ให้
-- **Changes Made & Follow-up Actions:**
-  1. Added PR #54 and PR #55 to the Section 1 summary table in `docs/lab-03/reviewer.md`.
-  2. Added full review dialogue and resolution blocks for Issue 25 (PR #54) and Issue 26 (PR #55).
-  3. Verified Section 2 Issue 28 row updated to PR #67 with full approval logs and evidence screenshot.
-  4. Recompiled `docs/lab-03/report.html` and re-rendered `Report_lab3_67070505220.pdf` with all 10 Issues/PRs complete.
+  - **Round 1 (CHANGES_REQUESTED - 2026-09-20T18:16:53Z):**
+> เราไล่ตรวจ PR #55 ที่เป็นตัว Release แล้วน้า ภาพรวมการรวมโค้ดขึ้น `main` ทำออกมาได้ยอดเยี่ยมมาก ผลเทสต์ครบ 208 เคส (100%), บิวด์ผ่านสะอาด, โค้ดไม่มี Conflict พร้อม Merge มากๆ
+> 
+> แต่เราเจอจุดตกหล่นเรื่องเอกสาร `reviewer.md` นิดนึง อยากให้ช่วยเติมให้เป๊ะก่อนกด Release ขึ้น main น้า:
+> 
+> ---
+> 
+> #### 1. [จุดสำคัญ] ใน `docs/lab-03/reviewer.md` ลืมใส่ PR #54 กับ PR #55 ใน Section 1
+> - พอเปิดดูตารางสรุป Section 1 (PRs ที่เรารีวิวให้เธอ) มันมีแค่ **PR #36 ถึง PR #53 (Issue 17–24)** เอง ตกหล่นไป 2 PR ล่าสุด:
+>   - **PR #54 (Issue 25)**: ตัวเอกสารรายงานและหลักฐาน ที่เพิ่งแก้เรื่อง Encoding แล้วเรา Approve / Merge เข้า staging ไป
+>   - **PR #55 (Issue 26)**: ตัว Release PR ใบนี้
+> - แล้วก็ตรงเนื้อหาบันทึกคำรีวิวด้านล่างตาราง ก็ยังไม่มีบล็อกของ **`### Issue 25 (PR #54)`** ที่เรารีวิวขอให้แก้เรื่อง Encoding กับตาราง PR #66 และรอบสองที่เรามากด Approve ให้เลย
+> - **วิธีแก้:** ฝากเติมแถว PR #54 (สถานะ `Approved and Merged into lab3-staging`) กับแถว PR #55 (สถานะ `Approved and Merged into main` หรือ `Under Release Review`) ลงในตาราง Section 1 และเพิ่มบล็อกข้อความรีวิวของ PR #54 ด้านล่างให้ครบถ้วนเหมือน PR ก่อนๆ น้า ไม่งั้นในรายงานเดี่ยว Part 1 ตารางมันจะขาดไป 2 Issues จ้า
+> 
+> ---
+> 
+> #### 2. ตาราง Section 2 แถว Issue 28 อัปเดต PR #67 ได้แล้ว
+> - ในตาราง Section 2 แถวสุดท้ายของ Issue 28 ตอนนี้ยังเขียนว่า `Awaiting Author PR Submission`
+> - จริงๆ ฝั่ง chanya06 เขาเปิด **[PR #67](https://github.com/chanya06/toktickit/pull/67)** เข้ามาแล้ว สามารถแก้ลิงก์เป็น `[#67]` ในตารางได้เลยจ้า
+> 
+> ---
+> 
+> #### 3. อย่าลืมเรนเดอร์อัปเดตเล่มรายงาน
+> - พอแก้ `reviewer.md` ครบแล้ว ฝากคอมไพล์/เรนเดอร์ไฟล์ `docs/lab-03/report.html` และเล่ม `Report_lab3_67070505220.pdf` ใหม่ทับอีกทีด้วยน้า เนื้อหาในเล่มจะได้มีตารางและประวัติรีวิวครบ 10 PRs ครบถ้วน 100% เลย
+> 
+> ---
+> 
+> ฝากเติมตรง `reviewer.md` กับเรนเดอร์รายงานใหม่แป๊บเดียวน้า เดี๋ยวพอ Push ขึ้นมาแล้วทักมาเลย เราจะมารีบกด Approve แล้วกดปุ่ม Merge ให้
+  - **Author Response & Code Fixes (Commit `03d2e0e` - 2026-09-20T19:21:51Z):**
+> @titayaaa ขอบคุณสำหรับการตรวจสอบอย่างละเอียด ได้ดำเนินการปรับปรุงแก้ไขครบถ้วนทั้ง 3 ข้อใน commit `03d2e0e` เรียบร้อยแล้ว:
+> 
+> 1. **Section 1 Table & Review Logs (PR #54 & PR #55)**:
+>    - เพิ่มแถว PR #54 (Issue 25) และ PR #55 (Issue 26) ลงในตารางสรุป Section 1 ของ `docs/lab-03/reviewer.md` และ `report.html` ครบถ้วนทั้ง 10 Issues
+>    - เพิ่มบล็อกเนื้อหาบันทึกการรีวิวและการตอบกลับฉบับแท้จริงของ Issue 25 (PR #54) และ Issue 26 (PR #55) ด้านล่างตารางครบถ้วน พร้อมแนบภาพหลักฐาน `pr54_authored_full.png` และ `pr55_authored_full.png`
+> 
+> 2. **Section 2 Table & Review Logs (Issue 28 / PR #67 & PR #70)**:
+>    - ตรวจทานและอนุมัติ PR ของ @chanya06 เรียบร้อยแล้ว
+>    - อัปเดตตาราง Section 2 แถวสุดท้ายเป็นลิงก์ `[#70]` สถานะ `Merged into lab3-staging` พร้อมบันทึกประวัติรีวิวทั้ง 2 รอบ และภาพหลักฐาน `chanya_pr70_full.png`
+> 
+> 3. **Recompile Report Deliverables**:
+>    - คอมไพล์และอัปเดต `docs/lab-03/report.html` สมบูรณ์ ปราศจากอักขระเสีย (0 `\ufffd`)
+>    - เรนเดอร์ไฟล์เล่มรายงาน `Report_lab3_67070505220.pdf` ใหม่สมบูรณ์ จัดหน้าและข้อมูลครบถ้วน 100%
+> 
+> พร้อมสำหรับการ Approve และ Merge เข้าสู่ branch `main` เรียบร้อยแล้ว
+  - **Round 2 (APPROVED - 2026-09-20):**
+> ตรวจเช็กการแก้ไขใน commit ล่าสุดเรียบร้อยแล้วจ้า เอกสาร `reviewer.md` และตารางสรุปมีข้อมูล PR #54 และ PR #55 ครบถ้วนทั้ง 10 Issues พร้อมประวัติรีวิวและรูปหลักฐาน และฝั่งพาร์ทเนอร์ก็อัปเดตเป็น PR #70 สถานะ Merged เรียบร้อย เล่มรายงานจัดหน้าสมบูรณ์ไม่มีหน้าว่าง ผลการทดสอบผ่านครบ 208/208 tests (100%) บิวด์ผ่านสะอาด อนุมัติ (Approved) ให้ทำการ Merge เข้าสู่ `main` สำหรับ Release Lab 3 ได้เลยจ้า
+- **Second Review Verdict:** Approved (All 3 requested changes resolved cleanly)
 - **Final Result:** Approved and Merged into `main` by @titayaaa (PR #55).
 
 ---

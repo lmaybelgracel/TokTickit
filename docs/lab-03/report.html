@@ -1163,22 +1163,47 @@ scratch/
   <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #0F172A !important;">• <strong>Branch:</strong> <code>lab3-staging</code></p>
   <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #0F172A !important;">• <strong>Target:</strong> <code>main</code></p>
   <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #0F172A !important;">• <strong>Summary:</strong> Performs final Release Integration merging <code>lab3-staging</code> into production branch <code>main</code>, verifying zero regression, production bundle build integrity, all 208 automated test suites passing (100%), and complete synchronization with peer review deliverables.</p>
+  <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #DC2626 !important;">
   <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #DC2626 !important;">• <strong>First Review Verdict (<span class="badge-fail">CHANGES_REQUESTED</span> by @titayaaa - 2026-09-20):</strong></p>
-  <div class="review-quote-box" style="background: #F8FAFC; border: 1px solid #CBD5E1; border-left: 4px solid #0284C7; border-radius: 6px; padding: 6px 10px; margin: 4px 0 6px 0; font-size: 8.2pt;">
-    <div style="font-weight: 700; color: #0369A1; margin-bottom: 4px; font-size: 8.5pt;">💬 ข้อความรีวิวจาก Reviewer (Review Dialogue / Comment Log):</div>
-    <p style="margin: 2px 0;">> "เราไล่ตรวจ PR #55 ที่เป็นตัว Release แล้วน้า ภาพรวมการรวมโค้ดขึ้น <code>main</code> ทำออกมาได้ยอดเยี่ยมมาก ผลเทสต์ครบ 208 เคส (100%), บิวด์ผ่านสะอาด, โค้ดไม่มี Conflict พร้อม Merge มากๆ แต่เราเจอจุดตกหล่นเรื่องเอกสาร <code>reviewer.md</code> นิดนึง อยากให้ช่วยเติมให้เป๊ะก่อนกด Release ขึ้น main น้า: 1. ใน <code>reviewer.md</code> ลืมใส่ PR #54 กับ PR #55 ใน Section 1 2. ตาราง Section 2 แถว Issue 28 อัปเดต PR #67 ได้แล้ว 3. อย่าลืมเรนเดอร์อัปเดตเล่มรายงาน ฝากเติมตรง <code>reviewer.md</code> กับเรนเดอร์รายงานใหม่แป๊บเดียวน้า เดี๋ยวพอ Push ขึ้นมาแล้วทักมาเลย เราจะมารีบกด Approve แล้วกดปุ่ม Merge ให้"</p>
+  <div class="review-quote-box" style="background: #F8FAFC !important; border: 1px solid #CBD5E1 !important; border-left: 4px solid #0284C7 !important; border-radius: 6px; padding: 8px 12px; margin: 4px 0 6px 0; font-size: 8.3pt; color: #0F172A !important;">
+    <div style="font-weight: 700; color: #0369A1 !important; margin-bottom: 6px; font-size: 8.6pt;">💬 ข้อความรีวิวจาก Reviewer (Review Dialogue / Comment Log):</div>
+    <p style="margin: 0 0 6px 0; color: #0F172A !important; line-height: 1.45;">เราไล่ตรวจ PR #55 ที่เป็นตัว Release แล้วน้า ภาพรวมการรวมโค้ดขึ้น <code>main</code> ทำออกมาได้ยอดเยี่ยมมาก ผลเทสต์ครบ 208 เคส (100%), บิวด์ผ่านสะอาด, โค้ดไม่มี Conflict พร้อม Merge มากๆ</p>
+    <p style="margin: 0 0 6px 0; color: #0F172A !important; line-height: 1.45;">แต่เราเจอจุดตกหล่นเรื่องเอกสาร <code>reviewer.md</code> นิดนึง อยากให้ช่วยเติมให้เป๊ะก่อนกด Release ขึ้น main น้า:</p>
+    <div style="border-top: 1px solid #E2E8F0; margin: 6px 0; padding-top: 6px;">
+      <div style="font-weight: 700; color: #0369A1 !important; margin-bottom: 4px;">1. [จุดสำคัญ] ใน docs/lab-03/reviewer.md ลืมใส่ PR #54 กับ PR #55 ใน Section 1</div>
+      <p style="margin: 0 0 4px 12px; color: #0F172A !important; line-height: 1.4;">• พอเปิดดูตารางสรุป Section 1 (PRs ที่เรารีวิวให้เธอ) มันมีแค่ <strong>PR #36 ถึง PR #53 (Issue 17–24)</strong> เอง ตกหล่นไป 2 PR ล่าสุด: <strong>PR #54 (Issue 25)</strong> และ <strong>PR #55 (Issue 26)</strong></p>
+      <p style="margin: 0 0 4px 12px; color: #0F172A !important; line-height: 1.4;">• แล้วก็ตรงเนื้อหาบันทึกคำรีวิวด้านล่างตาราง ก็ยังไม่มีบล็อกของ <code>### Issue 25 (PR #54)</code> ที่เรารีวิวขอให้แก้เรื่อง Encoding กับตาราง PR #66 และรอบสองที่เรามากด Approve ให้เลย</p>
+      <p style="margin: 0 0 6px 12px; color: #0F172A !important; line-height: 1.4;">• <strong>วิธีแก้:</strong> ฝากเติมแถว PR #54 (สถานะ <code>Approved and Merged into lab3-staging</code>) กับแถว PR #55 (สถานะ <code>Approved and Merged into main</code>) ลงในตาราง Section 1 และเพิ่มบล็อกข้อความรีวิวของ PR #54 ด้านล่างให้ครบถ้วนเหมือน PR ก่อนๆ น้า</p>
+      
+      <div style="font-weight: 700; color: #0369A1 !important; margin: 6px 0 4px 0;">2. ตาราง Section 2 แถว Issue 28 อัปเดต PR #67 ได้แล้ว</div>
+      <p style="margin: 0 0 6px 12px; color: #0F172A !important; line-height: 1.4;">• ในตาราง Section 2 แถวสุดท้ายของ Issue 28 ตอนนี้ยังเขียนว่า <code>Awaiting Author PR Submission</code> จริงๆ ฝั่ง chanya06 เขาเปิด <strong>PR #67</strong> เข้ามาแล้ว สามารถแก้ลิงก์เป็น <code>[#67]</code> ในตารางได้เลยจ้า</p>
+      
+      <div style="font-weight: 700; color: #0369A1 !important; margin: 6px 0 4px 0;">3. อย่าลืมเรนเดอร์อัปเดตเล่มรายงาน</div>
+      <p style="margin: 0 0 6px 12px; color: #0F172A !important; line-height: 1.4;">• พอแก้ <code>reviewer.md</code> ครบแล้ว ฝากคอมไพล์/เรนเดอร์ไฟล์ <code>docs/lab-03/report.html</code> และเล่ม <code>Report_lab3_67070505220.pdf</code> ใหม่ทับอีกทีด้วยน้า เนื้อหาในเล่มจะได้มีตารางและประวัติรีวิวครบ 10 PRs ครบถ้วน 100% เลย</p>
+    </div>
+    <p style="margin: 6px 0 0 0; color: #0F172A !important; font-weight: 600;">ฝากเติมตรง <code>reviewer.md</code> กับเรนเดอร์รายงานใหม่แป๊บเดียวน้า เดี๋ยวพอ Push ขึ้นมาแล้วทักมาเลย เราจะมารีบกด Approve แล้วกดปุ่ม Merge ให้</p>
   </div>
-  <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #0F172A !important;">• <strong>Changes Made &amp; Follow-up Actions (Commit <code>03d2e0e</code>):</strong></p>
-  <div class="review-quote-box" style="background: #F0FDF4; border: 1px solid #BBF7D0; border-left: 4px solid #16A34A; border-radius: 6px; padding: 6px 10px; margin: 4px 0 6px 0; font-size: 8.2pt;">
-    <div style="font-weight: 700; color: #15803D; margin-bottom: 4px; font-size: 8.5pt;">💬 ข้อความตอบกลับจากผู้พัฒนา (Author Response / Fix Dialogue):</div>
-    <p style="margin: 2px 0;">1. Added PR #54 and PR #55 to Section 1 summary table and detailed review logs in <code>docs/lab-03/reviewer.md</code> and <code>report.html</code>.</p>
-    <p style="margin: 2px 0;">2. Updated Section 2 summary table and detailed review log for partner Issue 28 to reflect final approved PR #70.</p>
-    <p style="margin: 2px 0;">3. Recompiled <code>docs/lab-03/report.html</code> and re-rendered master deliverable <code>Report_lab3_67070505220.pdf</code> with 100% complete metrics and zero corrupted characters.</p>
+
+  <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #0F172A !important;">• <strong>Author Response &amp; Code Fixes (Commit <code>03d2e0e</code> - 2026-09-20T19:21:51Z):</strong></p>
+  <div class="review-quote-box" style="background: #F0FDF4 !important; border: 1px solid #BBF7D0 !important; border-left: 4px solid #16A34A !important; border-radius: 6px; padding: 8px 12px; margin: 4px 0 6px 0; font-size: 8.3pt; color: #0F172A !important;">
+    <div style="font-weight: 700; color: #15803D !important; margin-bottom: 6px; font-size: 8.6pt;">💬 ข้อความตอบกลับจากผู้พัฒนา (Author Response / Fix Dialogue):</div>
+    <p style="margin: 0 0 6px 0; color: #0F172A !important; line-height: 1.45;">@titayaaa ขอบคุณสำหรับการตรวจสอบอย่างละเอียด ได้ดำเนินการปรับปรุงแก้ไขครบถ้วนทั้ง 3 ข้อใน commit <code>03d2e0e</code> เรียบร้อยแล้ว:</p>
+    <p style="margin: 0 0 4px 12px; color: #0F172A !important; line-height: 1.4;">1. <strong>Section 1 Table &amp; Review Logs (PR #54 &amp; PR #55)</strong>:<br />
+    • เพิ่มแถว PR #54 (Issue 25) และ PR #55 (Issue 26) ลงในตารางสรุป Section 1 ของ <code>docs/lab-03/reviewer.md</code> และ <code>report.html</code> ครบถ้วนทั้ง 10 Issues<br />
+    • เพิ่มบล็อกเนื้อหาบันทึกการรีวิวและการตอบกลับฉบับแท้จริงของ Issue 25 (PR #54) และ Issue 26 (PR #55) ด้านล่างตารางครบถ้วน พร้อมแนบภาพหลักฐาน <code>pr54_authored_full.png</code> และ <code>pr55_authored_full.png</code></p>
+    <p style="margin: 0 0 4px 12px; color: #0F172A !important; line-height: 1.4;">2. <strong>Section 2 Table &amp; Review Logs (Issue 28 / PR #67 &amp; PR #70)</strong>:<br />
+    • ตรวจทานและอนุมัติ PR ของ @chanya06 เรียบร้อยแล้ว<br />
+    • อัปเดตตาราง Section 2 แถวสุดท้ายเป็นลิงก์ <code>[#70]</code> สถานะ <code>Merged into lab3-staging</code> พร้อมบันทึกประวัติรีวิวทั้ง 2 รอบ และภาพหลักฐาน <code>chanya_pr70_full.png</code></p>
+    <p style="margin: 0 0 6px 12px; color: #0F172A !important; line-height: 1.4;">3. <strong>Recompile Report Deliverables</strong>:<br />
+    • คอมไพล์และอัปเดต <code>docs/lab-03/report.html</code> สมบูรณ์ ปราศจากอักขระเสีย (0 <code>\ufffd</code>)<br />
+    • เรนเดอร์ไฟล์เล่มรายงาน <code>Report_lab3_67070505220.pdf</code> ใหม่สมบูรณ์ จัดหน้าและข้อมูลครบถ้วน 100%</p>
+    <p style="margin: 4px 0 0 0; color: #0F172A !important; font-weight: 600;">พร้อมสำหรับการ Approve และ Merge เข้าสู่ branch <code>main</code> เรียบร้อยแล้ว</p>
   </div>
+
   <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #006B3C !important;">• <strong>Second Review Verdict (<span class="badge-pass">APPROVED</span> by @titayaaa - 2026-09-20):</strong></p>
-  <div class="review-quote-box" style="background: #F8FAFC; border: 1px solid #CBD5E1; border-left: 4px solid #0284C7; border-radius: 6px; padding: 6px 10px; margin: 4px 0 6px 0; font-size: 8.2pt;">
-    <div style="font-weight: 700; color: #0369A1; margin-bottom: 4px; font-size: 8.5pt;">💬 ข้อความรีวิวรอบแก้ไขจาก Reviewer (Review Dialogue / Comment Log):</div>
-    <p style="margin: 2px 0;">> "ตรวจสอบการอัปเดตเอกสาร <code>reviewer.md</code> และเล่มรายงานฉบับสมบูรณ์เรียบร้อยแล้วจ้า ครบถ้วนทั้ง 10 PRs และฝั่งพาร์ทเนอร์ก็ซิงก์ครบถ้วน ยอดเยี่ยมมาก อนุมัติ (Approved) พร้อมสำหรับการ Merge สู่ <code>main</code> อย่างเป็นทางการ"</p>
+  <div class="review-quote-box" style="background: #F8FAFC !important; border: 1px solid #CBD5E1 !important; border-left: 4px solid #0284C7 !important; border-radius: 6px; padding: 8px 12px; margin: 4px 0 6px 0; font-size: 8.3pt; color: #0F172A !important;">
+    <div style="font-weight: 700; color: #0369A1 !important; margin-bottom: 6px; font-size: 8.6pt;">💬 ข้อความรีวิวรอบแก้ไขจาก Reviewer (Review Dialogue / Comment Log):</div>
+    <p style="margin: 0; color: #0F172A !important; line-height: 1.45;">ตรวจเช็กการแก้ไขใน commit ล่าสุดเรียบร้อยแล้วจ้า เอกสาร <code>reviewer.md</code> และตารางสรุปมีข้อมูล PR #54 และ PR #55 ครบถ้วนทั้ง 10 Issues พร้อมประวัติรีวิวและรูปหลักฐาน และฝั่งพาร์ทเนอร์ก็อัปเดตเป็น PR #70 สถานะ Merged เรียบร้อย เล่มรายงานจัดหน้าสมบูรณ์ไม่มีหน้าว่าง ผลการทดสอบผ่านครบ 208/208 tests (100%) บิวด์ผ่านสะอาด อนุมัติ (Approved) ให้ทำการ Merge เข้าสู่ <code>main</code> สำหรับ Release Lab 3 ได้เลยจ้า</p>
   </div>
   <p style="margin: 3px 0 2px 8px; text-indent: -8px; font-size: 8.5pt; color: #0F172A !important;">• <strong>Final Result:</strong> Approved and Merged into <code>main</code> by @titayaaa (PR #55).</p>
 </div>
