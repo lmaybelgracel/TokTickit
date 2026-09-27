@@ -51,8 +51,13 @@ export interface Ticket {
   ticketNumber: string;
   summary: string;
   description: string;
-  requestedPriority: "LOW" | "MEDIUM" | "HIGH";
+  requestedPriority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  itPriority?: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   currentStatus: string;
+  resolutionSummary?: string | null;
+  resolvedAt?: string | null;
+  requesterResolvedIndication?: boolean;
+  requesterIndicatedResolved?: boolean;
   requesterId: number;
   categoryId: number;
   relatedSystemId: number;
@@ -61,6 +66,8 @@ export interface Ticket {
   category?: Category;
   relatedSystem?: RelatedSystem;
   requester?: Pick<RequesterUser, "id" | "name" | "email">;
+  ownerId?: number | null;
+  owner?: { id: number; name: string; email: string; role?: string } | null;
   attachments?: Attachment[];
 }
 
@@ -227,6 +234,452 @@ export async function downloadAttachment(requesterId: number, attachment: Attach
   const url = URL.createObjectURL(await res.blob());
   const anchor = document.createElement("a"); anchor.href = url; anchor.download = attachment.filename; anchor.click();
   URL.revokeObjectURL(url);
+}
+
+// Sprint 3 — Issue 19: Authentication & Session APIs
+export type UserRole = "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR";
+
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: UserRole;
+  isActive?: boolean;
+  mustChangePassword: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  user: User;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export async function loginUser(credentials: { email: string; password: string }): Promise<LoginResponse> {
+  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Login failed");
+  }
+  return data;
+}
+
+export async function logoutUser(token?: string): Promise<void> {
+  await fetch(`${BASE_URL}/api/auth/logout`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+}
+
+export async function fetchCurrentUser(token: string): Promise<User> {
+  const res = await fetch(`${BASE_URL}/api/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to fetch user profile");
+  }
+  return data;
+}
+
+export async function changePassword(
+  payload: ChangePasswordPayload,
+  token: string
+): Promise<{ message: string; mustChangePassword: boolean }> {
+  const res = await fetch(`${BASE_URL}/api/auth/change-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const errorMsg = data.details
+      ? `${data.error}: ${data.details.join(", ")}`
+      : data.error || "Failed to change password";
+    throw new Error(errorMsg);
+  }
+  return data;
+}
+
+export interface FetchStaffTicketsParams {
+  search?: string;
+  category?: string | number;
+  status?: string;
+  priority?: string;
+  itPriority?: string;
+  ownerId?: string | number;
+  sort?: string;
+  order?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+}
+
+export interface StaffQueueResponse {
+  tickets: Ticket[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export async function fetchStaffTickets(
+  params: FetchStaffTicketsParams = {},
+  token?: string | null
+): Promise<StaffQueueResponse> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const query = new URLSearchParams();
+  if (params.search) query.set("search", params.search);
+  if (params.category) query.set("category", String(params.category));
+  if (params.status) query.set("status", params.status);
+  if (params.priority) query.set("priority", params.priority);
+  if (params.itPriority) query.set("itPriority", params.itPriority);
+  if (params.ownerId !== undefined && params.ownerId !== null && String(params.ownerId) !== "") {
+    query.set("ownerId", String(params.ownerId));
+  }
+  if (params.sort) query.set("sort", params.sort);
+  if (params.order) query.set("order", params.order);
+  if (params.page) query.set("page", params.page.toString());
+  if (params.limit) query.set("limit", params.limit.toString());
+
+  const queryString = query.toString() ? `?${query.toString()}` : "";
+  const res = await fetch(`${BASE_URL}/api/staff/tickets${queryString}`, {
+    headers: {
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load staff ticket queue");
+  }
+
+  return res.json();
+}
+
+export interface PublicComment {
+  id: number;
+  ticketId: number;
+  authorId: number;
+  content: string;
+  createdAt: string;
+  author: { id: number; name: string; email: string; role: string };
+}
+
+export interface InternalNote {
+  id: number;
+  ticketId: number;
+  authorId: number;
+  content: string;
+  createdAt: string;
+  author: { id: number; name: string; email: string; role: string };
+}
+
+export interface StaffUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export async function fetchStaffTicketDetail(ticketId: number, token?: string | null): Promise<Ticket & { comments?: PublicComment[]; notes?: InternalNote[] }> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}`, {
+    headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load ticket details");
+  }
+  return res.json();
+}
+
+export async function fetchStaffUsers(token?: string | null): Promise<StaffUser[]> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/users`, {
+    headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load staff roster");
+  }
+  return res.json();
+}
+
+export async function claimTicket(ticketId: number, token?: string | null): Promise<Ticket> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/claim`, {
+    method: "PATCH",
+    headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to claim ticket");
+  }
+  return res.json();
+}
+
+export async function assignTicket(ticketId: number, ownerId: number, token?: string | null): Promise<Ticket> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/assign`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ ownerId }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to assign ticket");
+  }
+  return res.json();
+}
+
+export async function updateItPriority(ticketId: number, itPriority: string, token?: string | null): Promise<Ticket> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/priority`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ itPriority }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to update IT Priority");
+  }
+  return res.json();
+}
+
+export async function updateTicketStatus(ticketId: number, status: string, token?: string | null): Promise<Ticket> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to update ticket status");
+  }
+  return res.json();
+}
+
+export async function resolveTicket(ticketId: number, resolutionSummary: string, token?: string | null): Promise<Ticket> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/resolve`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ resolutionSummary }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to resolve ticket");
+  }
+  return res.json();
+}
+
+export async function fetchTicketComments(ticketId: number, token?: string | null, requesterId?: number): Promise<PublicComment[]> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const headers: Record<string, string> = {};
+  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+  if (requesterId) headers["X-Development-Requester-Id"] = String(requesterId);
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/comments`, {
+    headers,
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load comments");
+  }
+  return res.json();
+}
+
+export async function addTicketComment(ticketId: number, content: string, token?: string | null, requesterId?: number): Promise<PublicComment> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+  if (requesterId) headers["X-Development-Requester-Id"] = String(requesterId);
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/comments`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ content }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to post comment");
+  }
+  return res.json();
+}
+
+export async function fetchTicketNotes(ticketId: number, token?: string | null): Promise<InternalNote[]> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/notes`, {
+    headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load internal notes");
+  }
+  return res.json();
+}
+
+export async function addTicketNote(ticketId: number, content: string, token?: string | null): Promise<InternalNote> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/notes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ content }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to add internal note");
+  }
+  return res.json();
+}
+
+export async function indicateTicketResolved(ticketId: number, appearsResolved = true, token?: string | null, requesterId?: number): Promise<Ticket> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+  if (requesterId) headers["X-Development-Requester-Id"] = String(requesterId);
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/resolve-indication`, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ appearsResolved }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to update resolution indication");
+  }
+  return res.json();
+}
+
+export interface CreateAdminUserPayload {
+  name: string;
+  email: string;
+  role: "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR" | string;
+  initialPassword: string;
+  isActive?: boolean;
+}
+
+export interface UpdateAdminUserPayload {
+  name?: string;
+  email?: string;
+  role?: "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR" | string;
+  isActive?: boolean;
+}
+
+export async function fetchAdminUsers(
+  params?: { search?: string; role?: string; isActive?: boolean | string },
+  token?: string | null
+): Promise<User[]> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const query = new URLSearchParams();
+  if (params?.search) query.set("search", params.search);
+  if (params?.role) query.set("role", params.role);
+  if (params?.isActive !== undefined && params.isActive !== "") query.set("isActive", String(params.isActive));
+
+  const url = `${BASE_URL}/api/admin/users${query.toString() ? `?${query.toString()}` : ""}`;
+  const res = await fetch(url, {
+    headers: { ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) },
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to fetch user roster");
+  }
+  return res.json();
+}
+
+export async function createAdminUser(
+  data: CreateAdminUserPayload,
+  token?: string | null
+): Promise<User> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/admin/users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const resData = await res.json().catch(() => ({}));
+    const errorMsg = resData.details ? `${resData.error}: ${resData.details.join(", ")}` : resData.error || "Failed to create user";
+    throw new Error(errorMsg);
+  }
+  return res.json();
+}
+
+export async function updateAdminUser(
+  userId: number,
+  data: UpdateAdminUserPayload,
+  token?: string | null
+): Promise<User> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/admin/users/${userId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const resData = await res.json().catch(() => ({}));
+    throw new Error(resData.error || "Failed to update user");
+  }
+  return res.json();
+}
+
+export async function resetAdminUserPassword(
+  userId: number,
+  newInitialPassword: string,
+  token?: string | null
+): Promise<{ message: string }> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/admin/users/${userId}/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ newInitialPassword }),
+  });
+
+  if (!res.ok) {
+    const resData = await res.json().catch(() => ({}));
+    const errorMsg = resData.details ? `${resData.error}: ${resData.details.join(", ")}` : resData.error || "Failed to reset password";
+    throw new Error(errorMsg);
+  }
+  return res.json();
 }
 
 

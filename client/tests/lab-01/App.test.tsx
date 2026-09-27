@@ -15,39 +15,30 @@ describe("App UI Tests", () => {
     expect(screen.getByText(/TokTickIT/i)).toBeInTheDocument();
   });
 
-  it("renders Development Requester selection when no requester is logged in", async () => {
-    vi.spyOn(api, "fetchRequesters").mockResolvedValueOnce([
-      {
-        id: 1,
-        name: "Jennifer Anderson",
-        email: "jennifer.a@kmutt.ac.th",
-        department: "Faculty of Engineering",
-        isActive: true,
-      },
-    ]);
+  it("renders Login screen when no user is authenticated", async () => {
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Sign in to your account/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
+    });
+  });
+
+  it("renders authenticated shell when user is authenticated in localStorage", async () => {
+    localStorage.setItem("toktickit_auth_token", "valid-test-token");
+    vi.spyOn(api, "fetchCurrentUser").mockResolvedValueOnce({
+      id: 1,
+      name: "Jennifer Anderson",
+      email: "jennifer.a@kmutt.ac.th",
+      role: "REQUESTER",
+      mustChangePassword: false,
+    });
 
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Select Development Requester/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/Jennifer Anderson/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/My Tickets/i).length).toBeGreaterThan(0);
     });
-  });
-
-  it("renders active requester interface when requester is selected in localStorage", () => {
-    localStorage.setItem(
-      "toktickit_dev_requester",
-      JSON.stringify({
-        id: 1,
-        name: "Jennifer Anderson",
-        email: "jennifer.a@kmutt.ac.th",
-        department: "Faculty of Engineering",
-        isActive: true,
-      })
-    );
-
-    render(<App />);
-
-    expect(screen.getAllByText(/Jennifer Anderson/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/My Tickets/i).length).toBeGreaterThan(0);
   });
 });
