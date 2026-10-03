@@ -410,6 +410,7 @@
 | #54 (Issue 26) | [#65](https://github.com/chanya06/toktickit/pull/65) | feat(admin): administrator user management & safety validations (#54) / `feature/26-admin-user-management` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #65](https://github.com/chanya06/toktickit/pull/65) |
 | #55 (Issue 27) | [#66](https://github.com/chanya06/toktickit/pull/66) | feat(admin): administrator user management interface & modals / `feature/27-admin-ui` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #66](https://github.com/chanya06/toktickit/pull/66) |
 | #56 (Issue 28) | [#70](https://github.com/chanya06/toktickit/pull/70) | feat(qa): E2E test suites, responsive screenshots, and release integration (#56) / `feature/28-qa-automated-tests-release-integration` | Changes Requested / Feedback addressed, Approved | Merged into `lab3-staging` | [PR #70](https://github.com/chanya06/toktickit/pull/70) |
+| Release | [#71](https://github.com/chanya06/toktickit/pull/71) | release(lab-03): TokTickIT Enterprise Roles, IT Staff Ticketing, and Admin Screens / `lab3-staging` &rarr; `main` | Changes Requested / Feedback addressed, Approved | Merged into `main` | [PR #71](https://github.com/chanya06/toktickit/pull/71) |
 
 ---
 
@@ -1305,3 +1306,64 @@
 - **Second Review Verdict:** Approved (All 3 requested changes resolved cleanly)
 - **Final Result / Merge Status:** Merged into `lab3-staging` (Merge commit `22e9603`)
 - **Evidence:** [PR #70 Review Conversation](https://github.com/chanya06/toktickit/pull/70)
+
+---
+
+#### PR #71 — release(lab-03): TokTickIT Enterprise Roles, IT Staff Ticketing, and Admin Screens
+
+- **Pull Request:** [#71](https://github.com/chanya06/toktickit/pull/71)
+- **Branch:** `lab3-staging` &rarr; `main`
+- **What I Reviewed & Feedback Given:**
+  - **Round 1 (CHANGES_REQUESTED - 2026-10-03T11:04:57Z):**
+    > ### ข้อเสนอแนะเพิ่มเติมสำหรับ Release PR #71
+    > 
+    > โค้ดระบบ ความปลอดภัย และชุดทดสอบทั้งหมดทำงานได้อย่างสมบูรณ์แบบแล้ว แต่เพื่อความเรียบร้อยและคะแนนความสมบูรณ์ของเอกสารส่งมอบ แนะนำให้เก็บรายละเอียดเอกสารอีก 4 จุดก่อนทำการ Merge:
+    > 
+    > 1. **อัปเดต `docs/lab-03/ai-use.md`**:
+    >    - นำข้อความ `*(To be updated during code implementation)*` ในหัวข้อ 3.2 ออก และเพิ่ม Reflection เกี่ยวกับการนำ AI มาใช้ในช่วงเขียนโค้ดและแก้ปัญหา Teardown / Mobile Responsive
+    >    - เพิ่มตัวอย่าง Prompt จากช่วง Implementation และ Testing ในหัวข้อ 2 ให้ครบถ้วน
+    > 2. **ติ๊กเครื่องหมาย Definition of Done ใน `docs/lab-03/specification.md`**:
+    >    - ปรับช่อง `- [ ]` ในหัวข้อ 10 ทั้ง 8 ข้อให้เป็น `- [x]` ให้ตรงกับงานจริงที่เสร็จสิ้นครบทุกฟังก์ชัน
+    > 3. **เพิ่มสถานะ `PENDING` ใน `docs/lab-03/ui-spec.md`**:
+    >    - เพิ่มโทเคนสีของสถานะ `PENDING` (`#E2E8F0` / `#475569`) ในตาราง Status Badges ให้ตรงกับ `TicketDetailView.tsx`
+    > 4. **อัปเดต `README.md`**:
+    >    - เพิ่มคำสั่ง `npm run test:e2e` และข้อมูล Seed Accounts (Admin, IT Staff, Requester) สำหรับการเข้าทดสอบระบบ
+  - **Author Response & Code Fixes (Commit `33a05c6` - 2026-10-03T11:12:58Z):**
+    > ขอบคุณสำหรับข้อเสนอแนะเพิ่มเติมเพื่อความสมบูรณ์ของเอกสารส่งมอบ ได้ดำเนินการปรับปรุงและผลักดันขึ้น `lab3-staging` (commit `33a05c6`) ครบถ้วนทั้ง 4 จุดเรียบร้อยแล้ว:
+    > 
+    > 1. **อัปเดต `docs/lab-03/ai-use.md`**:
+    >    - นำข้อความ `*(To be updated during code implementation)*` ออก
+    >    - เพิ่ม Reflection ในหัวข้อ 3.2 และ 3.3 ครอบคลุมการใช้ AI ช่วง Technical Implementation, การจัดการปัญหา Data Hygiene / Test Isolation ด้วย Teardown / Seed Re-purge, และการแก้ไข Mobile Layout Overflow บน Viewport 375px
+    >    - เพิ่มตัวอย่าง Prompts ในหัวข้อ 2 ครบทั้ง 8 หมวดหมู่ (Spec DD, Feedback Resolution, Auth TDD, IT Staff Queue Responsive, Operations Matrix, Admin Safety Guards, Playwright E2E Automation, และ Mobile/Data Hygiene Fix)
+    > 
+    > 2. **ติ๊ก Definition of Done ใน `docs/lab-03/specification.md`**:
+    >    - ปรับเครื่องหมายเป็น `- [x]` ครบทั้ง 8 ข้อในหัวข้อ 10 ตรงตามผลการส่งมอบจริงที่ผ่านการทดสอบ 100% (277 tests)
+    > 
+    > 3. **เพิ่มสถานะ `PENDING` ใน `docs/lab-03/ui-spec.md`**:
+    >    - เพิ่มโทเคนสีของสถานะ `PENDING`: Slate Grey (`#E2E8F0` BG, `#475569` Text) ในตาราง Status Badges ให้ตรงกับ `TicketDetailView.tsx`
+    > 
+    > 4. **อัปเดต `README.md`**:
+    >    - เพิ่มคำแนะนำการรันชุดทดสอบ End-to-End ด้วยคำสั่ง `npm run test:e2e` (Playwright)
+    >    - เพิ่มตารางข้อมูลบัญชีทดสอบเริ่มต้น (Seed Accounts Table) ครบทุกบทบาท (Administrator, IT Staff, Requester ทั้ง Active และ Inactive) พร้อมรหัสผ่านเริ่มต้น `InitialPass123!`
+  - **Round 2 (APPROVED - 2026-10-03T11:18:12Z):**
+    > ### ผลการตรวจสอบ Release PR #71 (APPROVED)
+    > 
+    > ตรวจสอบการแก้ไขและเก็บรายละเอียดเอกสารเพิ่มเติมใน Commit `33a05c6` ครบถ้วนทุกมิติเรียบร้อยแล้ว:
+    > 
+    > 1. **ความสมบูรณ์ของเอกสาร AI Reflection (`docs/lab-03/ai-use.md`)**:
+    >    - นำ Placeholder ออก และเขียนสรุป Reflection ทั้ง 3 ด้าน (Specification, Implementation & Data Hygiene, Agentic Synthesis) ได้อย่างลึกซึ้ง
+    >    - บันทึก Prompt History ครบถ้วนตั้งแต่ Prompt 1 ถึง 8 ครอบคลุมทุกระยะของ Sprint 3
+    > 2. **การอัปเดตเกณฑ์ส่งมอบ (`docs/lab-03/specification.md`)**:
+    >    - อัปเดตเช็กลิสต์ Definition of Done ครบทั้ง 8 ข้อเป็น `- [x]` สะท้อนสถานะความพร้อมของระบบจริง
+    > 3. **การซิงก์สเปก UI (`docs/lab-03/ui-spec.md`)**:
+    >    - ระบุโทเคนสีของสถานะ `PENDING` (`#E2E8F0` / `#475569`) ตรงตามการใช้งานจริงบนหน้าจอ Ticket Detail
+    > 4. **คู่มือและข้อมูลตั้งต้น (`README.md`)**:
+    >    - เพิ่มคำแนะนำการรัน Playwright E2E และตาราง Seed Accounts 10 บัญชีแยกตามบทบาทชัดเจน
+    > 5. **ภาพรวมระบบและคุณภาพโค้ด**:
+    >    - ผ่านการทดสอบ 100% ทั้ง Backend (149 tests), Frontend (116 tests), E2E (12 tests) และ Production Build
+    >    - ภาพ Responsive Screenshots ครบ 21 ภาพ ไร้ปัญหา Horizontal Overflow บน Mobile
+    >    - บันทึกการรีวิวสองทิศทางใน `reviewer.md` ครบถ้วนสมบูรณ์
+- **Second Review Verdict:** Approved (All 4 requested documentation improvements resolved cleanly)
+- **Final Result / Merge Status:** Merged into `main` (Merge commit `2c20a4b`)
+- **Evidence:** [PR #71 Review Conversation](https://github.com/chanya06/toktickit/pull/71)
+
