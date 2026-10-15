@@ -14,13 +14,13 @@
 
 | PR | Issue / Branch | Reviewer Verdict | Status | Link |
 |:---|:---------------|:-----------------|:-------|:-----|
-| *Pending* | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Pending Review | In Progress | [PR #27](https://github.com/lmaybelgracel/TokTickit) |
+| [#58](https://github.com/lmaybelgracel/TokTickit/pull/58) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Pending Review | In Progress | [PR #58](https://github.com/lmaybelgracel/TokTickit/pull/58) |
 
 ---
 
 ### Issue 27 - Sprint 4 Engineering Contract & Specification
 
-- **Pull Request:** *Pending*
+- **Pull Request:** [#58](https://github.com/lmaybelgracel/TokTickit/pull/58)
 - **Branch:** `feature/27-sprint4-spec-and-tests`
 - **Summary:** Establishes the complete Sprint 4 specification suite under `docs/lab-04/` covering `specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, and `ai-use.md`. Defines parent-child Actions Taken model, dashboard calculation rules, status transition matrix, resolution gate, and AC traceability.
 - **Reviewer Verdict & Summary:** *Pending Review*
