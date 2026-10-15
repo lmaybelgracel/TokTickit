@@ -58,11 +58,12 @@ Priority Badges:
   - Greeting with authenticated staff member name, role badge, and current operational timestamp.
   - Quick refresh button with loading spinner indicator.
 - **Operational Metric Cards Grid**:
-  - 4 primary metric cards displayed side-by-side on desktop (2x2 on tablet, stacked on mobile):
+  - 5 primary metric cards displayed on desktop (3+2 on desktop, 2x2+1 on tablet, stacked on mobile):
     1. **Unassigned Tickets**: Large numeric value, subtitle "Tickets awaiting owner", Green indicator bar, clickable drill-down linking to `/staff/queue?assignment=unassigned`.
     2. **My Assigned Tickets**: Large numeric value, subtitle "Tickets you are coordinating", Primary Green accent, clickable drill-down linking to `/staff/queue?assignment=mine`.
-    3. **Urgent Tickets**: Large numeric value, Critical Red indicator dot, subtitle "Requiring immediate action", clickable drill-down linking to `/staff/queue?priority=URGENT`.
-    4. **Waiting for Requester**: Large numeric value, Amber warning indicator, subtitle "Pending user response", clickable drill-down linking to `/staff/queue?status=WAITING_FOR_REQUESTER`.
+    3. **My Actions Recorded**: Large numeric value, subtitle "Actions performed by you", Accent Green bar, clickable drill-down linking to `/staff/queue?filter=my-actions` (current-user Actions Taken).
+    4. **Urgent Tickets**: Large numeric value, Critical Red indicator dot, subtitle "Requiring immediate action", clickable drill-down linking to `/staff/queue?priority=URGENT`.
+    5. **Waiting for Requester**: Large numeric value, Amber warning indicator, subtitle "Pending user response", clickable drill-down linking to `/staff/queue?status=WAITING_FOR_REQUESTER`.
 - **Status & Priority Distribution Matrix**:
   - Compact visual breakdown displaying counts across all 8 statuses and 4 priority levels.
 - **Recent Queue Activity Panel**:

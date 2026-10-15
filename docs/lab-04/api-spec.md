@@ -180,6 +180,7 @@
     "metrics": {
       "unassignedTickets": 4,
       "myAssignedTickets": 6,
+      "myActionsTakenCount": 8,
       "urgentTickets": 2,
       "waitingForRequester": 5,
       "totalActiveTickets": 17

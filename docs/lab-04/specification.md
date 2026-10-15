@@ -62,7 +62,7 @@ The stakeholder requires a structured and reliable mechanism to plan, execute, a
 
 ### Role-Appropriate Dashboards
 - **FR-12:** The system shall provide a Requester Dashboard endpoint returning authoritative counts for Total Open Tickets, Tickets Waiting for Requester, and lists of Recently Updated and Recently Resolved tickets owned by the caller.
-- **FR-13:** The system shall provide an IT Staff Dashboard endpoint returning authoritative counts for Unassigned Tickets, Tickets Owned by the Caller, breakdown counts by Status and IT Priority, and Recently Updated operational tickets.
+- **FR-13:** The system shall provide an IT Staff Dashboard endpoint returning authoritative counts for Unassigned Tickets, Tickets Owned by the Caller, Actions Taken recorded by the Caller (current-user Actions Taken), breakdown counts by Status and IT Priority, and Recently Updated operational tickets.
 - **FR-14:** The system shall provide an Administrator Dashboard combining operational IT Staff metrics with user account statistics.
 - **FR-15:** The system shall provide actionable drill-down links on dashboard metric cards that navigate users to appropriately filtered list or detail screens.
 
@@ -108,6 +108,7 @@ The stakeholder requires a structured and reliable mechanism to plan, execute, a
 - **BR-17:** IT Staff Dashboard Calculation Rules:
   - `unassignedTickets`: Count of active tickets where `ownerId IS NULL` and `status NOT IN ('Closed', 'Cancelled')`.
   - `myAssignedTickets`: Count of active tickets where `ownerId = caller.id` and `status NOT IN ('Closed', 'Cancelled')`.
+  - `myActionsTakenCount`: Count of all `ActionTaken` records performed by the authenticated staff member (`performedById = caller.id`).
   - `statusCounts`: Aggregate counts grouped by `status` for all active tickets.
   - `priorityCounts`: Aggregate counts grouped by `itPriority` for all active tickets.
   - `urgentOpenTickets`: Count of tickets with `itPriority = 'URGENT'` and `status NOT IN ('Resolved', 'Closed', 'Cancelled')`.
@@ -122,6 +123,7 @@ The stakeholder requires a structured and reliable mechanism to plan, execute, a
 - **Operational Metric Cards**:
   - `Unassigned Tickets` (Green accent, links to queue filtered by unassigned).
   - `My Active Tickets` (Green accent, links to queue filtered by current user ownership).
+  - `My Actions Recorded` (Count of Actions Taken by current staff member, links to filtered queue/actions history).
   - `Urgent Tickets` (Red/Amber badge, links to queue filtered by URGENT priority).
   - `Waiting for Requester` (Amber badge, links to queue filtered by Waiting for Requester).
 - **Recent Queue Activity Table**: Displays 5 most recently updated tickets with Ticket Number, Summary, Priority Badge, Status Badge, Owner, and Last Updated.
@@ -151,8 +153,21 @@ The stakeholder requires a structured and reliable mechanism to plan, execute, a
 
 ## 7. Data Changes & Justifications
 
-### 7.1. Database Schema Additions
+### 7.1. Database Schema Additions & Inverse Relations
 ```prisma
+// Extension to existing model Ticket
+model Ticket {
+  // ... existing Lab 1-3 fields (id, ticketNumber, summary, requesterId, ownerId, etc.) ...
+  actionsTaken    ActionTaken[]
+}
+
+// Extension to existing model User
+model User {
+  // ... existing Lab 1-3 fields (id, email, name, role, isActive, etc.) ...
+  actionsTaken    ActionTaken[] @relation("PerformedActions")
+}
+
+// New Child Model ActionTaken
 model ActionTaken {
   id                Int      @id @default(autoincrement())
   ticketId          Int      @map("ticket_id")
@@ -167,7 +182,7 @@ model ActionTaken {
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   ticket            Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  performedBy       User     @relation(fields: [performedById], references: [id], onDelete: Restrict)
+  performedBy       User     @relation("PerformedActions", fields: [performedById], references: [id], onDelete: Restrict)
 
   @@index([ticketId])
   @@index([performedById])

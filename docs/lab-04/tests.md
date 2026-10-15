@@ -20,7 +20,7 @@ Testing encompasses:
 | **AC-02** | Requester write attempt on Action Taken is rejected (403) | `API-ACT-02` | API | `server/tests/lab-04/actions-taken.api.test.ts` |
 | **AC-03** | Missing follow-up note when required rejected (422) | `API-ACT-03`, `UI-ACT-01` | API, UI | `server/tests/lab-04/actions-taken.api.test.ts`, `client/src/__tests__/lab-04/ActionsTaken.test.tsx` |
 | **AC-04** | Requester dashboard isolates owned tickets | `API-DASH-01`, `UI-DASH-01` | API, UI | `server/tests/lab-04/requester-dashboard.api.test.ts`, `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` |
-| **AC-05** | IT Staff dashboard aggregates authoritative metrics | `API-DASH-02`, `UI-DASH-02` | API, UI | `server/tests/lab-04/staff-dashboard.api.test.ts`, `client/src/__tests__/lab-04/StaffDashboard.test.tsx` |
+| **AC-05** | IT Staff dashboard aggregates authoritative metrics | `API-DASH-02`, `API-DASH-04`, `UI-DASH-02`, `UI-DASH-04` | API, UI | `server/tests/lab-04/staff-dashboard.api.test.ts`, `client/src/__tests__/lab-04/StaffDashboard.test.tsx` |
 | **AC-06** | Resolution gate transition requires valid summary | `API-WORK-01`, `E2E-RES-01` | API, E2E | `server/tests/lab-04/ticket-workflow.api.test.ts`, `e2e/lab-04/ticket-resolution.spec.ts` |
 | **AC-07** | Direct status transition to Resolved rejected (422) | `API-WORK-02` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
 | **AC-08** | Stale update rejected with 409 Conflict | `API-WORK-03` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
@@ -48,14 +48,17 @@ Testing encompasses:
 | `API-DASH-01` | API | AC-04 | Requester Dashboard returns only caller's metrics | Returns 200 OK with accurate counts and recent tickets | `server/tests/lab-04/requester-dashboard.api.test.ts` | Planned |
 | `API-DASH-02` | API | AC-05 | IT Staff Dashboard calculates queue metrics | Returns 200 OK with unassigned, mine, status & priority counts | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-DASH-03` | API | AC-05 | Admin Dashboard includes user stats | Returns 200 OK with `adminStats` populated | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
+| `API-DASH-04` | API | AC-05 | IT Staff Dashboard returns current-user Actions Taken count | Returns 200 OK with `myActionsTakenCount` | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-WORK-01` | API | AC-06 | Transition ticket to RESOLVED via resolve endpoint | Returns 200 OK, sets status=RESOLVED and summary | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-02` | API | AC-07 | Transition to RESOLVED via general status endpoint | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-03` | API | AC-08 | Mutate ticket with outdated timestamp | Returns 409 Conflict | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-04` | API | AC-09 | Assign ticket to inactive user | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-05` | API | AC-10 | Requester toggles problem resolved indication | Returns 200 OK, ticket status remains OPEN/IN_PROGRESS | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
+| `API-MIG-01` | API | AC-14 | Idempotent database seed execution | Safe repeat execution preserving all records | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
 | `UI-DASH-01` | UI | AC-04 | Requester Dashboard renders cards and recent list | Displays open count, action required, and tickets | `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` | Planned |
-| `UI-DASH-02` | UI | AC-05 | IT Staff Dashboard renders metric cards and queue | Displays 4 operational cards and queue table | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
+| `UI-DASH-02` | UI | AC-05 | IT Staff Dashboard renders metric cards and queue | Displays operational cards and queue table | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
 | `UI-DASH-03` | UI | AC-11 | Clicking metric card navigates with filter | Navigates to queue with expected query param | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
+| `UI-DASH-04` | UI | AC-05 | Render My Actions Recorded metric card | Displays `myActionsTakenCount` and links to my-actions | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
 | `UI-ACT-01` | UI | AC-03 | Form validates required follow-up note | Shows error message, disables submit | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Planned |
 | `UI-ACT-02` | UI | AC-12 | Actions Taken table renders chronological items | Displays date, performer, description, result | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Planned |
 | `UI-ACT-03` | UI | AC-02 | Requester view hides action creation controls | Button "+ Record Action Taken" is not in DOM | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Planned |
@@ -64,3 +67,5 @@ Testing encompasses:
 | `E2E-RES-01` | E2E | AC-06 | Full flow: Resolve ticket with modal summary | Status updates to RESOLVED, summary displayed | `e2e/lab-04/ticket-resolution.spec.ts` | Planned |
 | `E2E-DASH-01`| E2E | AC-11 | Staff Dashboard metric card drill-down flow | Click card, land on filtered queue matching count | `e2e/lab-04/dashboards.spec.ts` | Planned |
 | `E2E-RESP-01`| E2E | AC-13 | Viewport 375px mobile responsiveness test | Zero horizontal scroll, all text visible | `e2e/lab-04/dashboards.spec.ts` | Planned |
+| `E2E-ALL-01` | E2E | AC-16 | Clean build and E2E automation pass on main | All Playwright specs pass on staging and main | `e2e/lab-04/*.spec.ts` | Planned |
+| `REG-ALL-01` | Suite | AC-15 | Labs 1–3 regression suites pass 100% | All 42+ test suites pass without failure | Server & Client Vitest execution | Planned |
