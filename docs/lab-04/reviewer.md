@@ -15,6 +15,7 @@
 | PR | Issue / Branch | Reviewer Verdict | Status | Link |
 |:---|:---------------|:-----------------|:-------|:-----|
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
+| [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Pending Review | In Review | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 
 ---
 
@@ -67,6 +68,16 @@
   > **คำตัดสิน: Approve** — เอกสารข้อกำหนด Sprint 4 ผ่านการตรวจสอบความถูกต้องและรัดกุมครบถ้วน ปราศจากข้อติดค้าง"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 28 - Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data
+
+- **Pull Request:** [#70](https://github.com/lmaybelgracel/TokTickit/pull/70)
+- **Branch:** `feature/28-database-and-seed`
+- **Summary:** Evolves Prisma schema to introduce `ActionTaken` model with 1:N relationship under `Ticket` and foreign key to `User` (`performedById`). Adds SQL migration DDL under `server/prisma/migrations/20261016000000_lab4_actions_taken_model/migration.sql`. Expands seed script (`server/prisma/seed.ts`) with idempotent execution covering 0, 1, and multiple Actions Taken across diverse IT Staff. Verified via automated test suite (`database-schema-seed.test.ts`, API-MIG-01).
+- **Reviewer Verdict & Summary:** Pending Review by @phatthidawadi
+- **Status:** In Review (Awaiting Peer Review comments and verdict)
 
 ---
 
