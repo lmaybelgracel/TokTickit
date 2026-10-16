@@ -18,19 +18,6 @@ function requireAuthenticatedUser(req: Request, res: Response, next: () => void)
     return next();
   }
 
-  // Development requester fallback header for backward compatibility
-  const devId = req.headers["x-development-requester-id"];
-  const parsed = Number(Array.isArray(devId) ? devId[0] : devId);
-  if (Number.isInteger(parsed) && parsed > 0) {
-    req.user = {
-      id: parsed,
-      email: `requester${parsed}@example.com`,
-      role: Role.REQUESTER,
-      mustChangePassword: false,
-    };
-    return next();
-  }
-
   res.status(401).json({ error: "Authentication required" });
 }
 
@@ -116,7 +103,7 @@ ticketActionsRouter.post("/:id/actions", requireAuthenticatedUser, requireStaffO
 
     const ticket = await prisma.ticket.findUnique({
       where: { id: ticketId },
-      select: { id: true },
+      select: { id: true, createdAt: true },
     });
 
     if (!ticket) {
@@ -183,6 +170,14 @@ ticketActionsRouter.post("/:id/actions", requireAuthenticatedUser, requireStaffO
         res.status(422).json({
           error: "Validation failed",
           details: ["actionDateTime: Must be a valid ISO DateTime string."],
+        });
+        return;
+      }
+      // Lower-bound check (BR-05): cannot be earlier than ticket creation date
+      if (parsed.getTime() < ticket.createdAt.getTime()) {
+        res.status(422).json({
+          error: "Validation failed",
+          details: ["actionDateTime: Cannot be earlier than ticket creation date."],
         });
         return;
       }
@@ -278,6 +273,9 @@ actionsRouter.patch("/:id", requireAuthenticatedUser, requireStaffOrAdmin, async
         performedBy: {
           select: { id: true, name: true, email: true, role: true },
         },
+        ticket: {
+          select: { id: true, createdAt: true },
+        },
       },
     });
 
@@ -358,6 +356,14 @@ actionsRouter.patch("/:id", requireAuthenticatedUser, requireStaffOrAdmin, async
         res.status(422).json({
           error: "Validation failed",
           details: ["actionDateTime: Must be a valid ISO DateTime string."],
+        });
+        return;
+      }
+      // Lower-bound check (BR-05): cannot be earlier than ticket creation date
+      if (parsed.getTime() < existingAction.ticket.createdAt.getTime()) {
+        res.status(422).json({
+          error: "Validation failed",
+          details: ["actionDateTime: Cannot be earlier than ticket creation date."],
         });
         return;
       }

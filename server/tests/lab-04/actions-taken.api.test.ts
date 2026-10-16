@@ -44,6 +44,7 @@ describe("Actions Taken API Suite (Sprint 4 - Issue 29)", () => {
     ticketNumber: "TCK-2026-000101",
     requesterId: 20,
     currentStatus: "IN_PROGRESS",
+    createdAt: new Date("2026-10-15T09:00:00.000Z"),
     updatedAt: new Date("2026-10-15T10:00:00.000Z"),
   };
 
@@ -64,6 +65,10 @@ describe("Actions Taken API Suite (Sprint 4 - Issue 29)", () => {
       name: "Somchai Jaidee",
       email: "somchai.it@toktickit.com",
       role: Role.IT_STAFF,
+    },
+    ticket: {
+      id: 101,
+      createdAt: new Date("2026-10-15T09:00:00.000Z"),
     },
   };
 
@@ -345,6 +350,45 @@ describe("Actions Taken API Suite (Sprint 4 - Issue 29)", () => {
 
       expect(response.status).toBe(422);
       expect(response.body.details[0]).toContain("Cannot be in the future");
+    });
+
+    it("should return 422 when actionDateTime is earlier than ticket.createdAt on create (BR-05)", async () => {
+      const response = await request(app)
+        .post("/api/tickets/101/actions")
+        .set("Authorization", `Bearer ${staffToken}`)
+        .send({
+          description: "Past inspection before ticket existed.",
+          result: "Invalid date.",
+          actionDateTime: "1970-01-01T00:00:00.000Z",
+        });
+
+      expect(response.status).toBe(422);
+      expect(response.body.details[0]).toContain("Cannot be earlier than ticket creation date");
+      expect(mockPrisma.actionTaken.create).not.toHaveBeenCalled();
+    });
+
+    it("should return 422 when actionDateTime is earlier than ticket.createdAt on update (BR-05)", async () => {
+      const response = await request(app)
+        .patch("/api/actions/501")
+        .set("Authorization", `Bearer ${staffToken}`)
+        .send({
+          knownUpdatedAt: "2026-10-15T11:05:00.000Z",
+          actionDateTime: "1970-01-01T00:00:00.000Z",
+        });
+
+      expect(response.status).toBe(422);
+      expect(response.body.details[0]).toContain("Cannot be earlier than ticket creation date");
+      expect(mockPrisma.actionTaken.update).not.toHaveBeenCalled();
+    });
+
+    it("should reject x-development-requester-id header without JWT token with 401 Unauthorized", async () => {
+      const response = await request(app)
+        .get("/api/tickets/101/actions")
+        .set("x-development-requester-id", "20");
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toContain("Authentication required");
     });
 
     it("should return 422 when an inactive staff user attempts to record an action", async () => {
