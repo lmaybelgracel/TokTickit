@@ -14,7 +14,7 @@
 
 | PR | Issue / Branch | Reviewer Verdict | Status | Link |
 |:---|:---------------|:-----------------|:-------|:-----|
-| [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Changes Requested / Feedback Addressed | In Review | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
+| [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 
 ---
 
@@ -51,8 +51,22 @@
   3. **Comment on Reviewer Record Status:**
      - *Reviewer Feedback:* Update review records and status in `docs/lab-04/reviewer.md` reflecting PR #69.
      - *My Action:* Updated `docs/lab-04/reviewer.md` with Round 1 Changes Requested verdict, verbatim quotes, and detailed responses.
-- **Current Verdict:** Changes Requested / Feedback Addressed
-- **Status:** Feedback addressed in commit, awaiting Round 2 Approval on PR #69.
+- **Round 1 Verdict:** Changes Requested
+- **Round 2 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-16T14:02:32Z):
+  > "### ผลการตรวจสอบรอบที่ 2 (Round 2 Peer Review Verification)
+  > 
+  > - **Commit ที่ตรวจสอบ:** `712f681`
+  > - **ผลการรันชุดทดสอบ Regression Labs 1–3:** **29/29 ไฟล์ผ่าน (204/204 เทสต์ ผ่านครบ 100%, ข้าม 0)**
+  > - **สถานะข้อค้นพบ:** ได้รับการแก้ไขที่ต้นเหตุครบถ้วนทุกข้อ (Zero remaining findings)
+  > 
+  > #### ผลการตรวจยืนยันในโค้ดและเอกสาร:
+  > 1. **[Resolved] Ticket Status Field Naming (`currentStatus`):** ใน `api-spec.md` และ `specification.md` ปรับเปลี่ยนมาใช้ `currentStatus` ตรงตาม Prisma Schema และโค้ดเดิมของ Client เรียบร้อย พร้อมระบุการรองรับ backward-compatible alias ป้องกันความเสี่ยงเรื่อง Regression ได้ 100%
+  > 2. **[Resolved] Mandatory `knownUpdatedAt` Validation (422):** ระบุข้อกำหนดบังคับส่ง `knownUpdatedAt` ในการทำ Mutation ชัดเจน หากไม่ส่งมาจะถูกปฏิเสธด้วย `422 Unprocessable Entity` พร้อมทั้งเพิ่มรหัสทดสอบ `API-WORK-06` ใน `tests.md` รองรับครบถ้วน
+  > 3. **[Resolved] Reviewer Record Tracking:** บันทึกข้อเสนอแนะรอบแรกและการตอบสนองใน `reviewer.md` อัปเดตครบถ้วน ตรงตามหลักฐานจริง
+  > 
+  > **คำตัดสิน: Approve** — เอกสารข้อกำหนด Sprint 4 ผ่านการตรวจสอบความถูกต้องและรัดกุมครบถ้วน ปราศจากข้อติดค้าง"
+- **Final Verdict:** Approved
+- **Status:** Merged into `lab4-staging` by @phatthidawadi
 
 ---
 
