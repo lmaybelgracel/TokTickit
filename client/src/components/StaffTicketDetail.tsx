@@ -15,6 +15,7 @@ import {
   addTicketNote,
 } from "../api";
 import "./StaffTicketDetail.css";
+import { ActionsTakenSection } from "./ActionsTakenSection";
 
 export interface StaffTicketDetailProps {
   ticketId: number;
@@ -53,34 +54,25 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
   const [isResolving, setIsResolving] = useState<boolean>(false);
 
   // Load ticket details and staff roster
-  useEffect(() => {
-    let cancelled = false;
-    async function loadData() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const [ticketData, usersData] = await Promise.all([
-          fetchStaffTicketDetail(ticketId),
-          fetchStaffUsers().catch(() => []),
-        ]);
-        if (!cancelled) {
-          setTicket(ticketData);
-          setStaffUsers(usersData);
-        }
-      } catch (err: any) {
-        if (!cancelled) {
-          setError(err.message || "Failed to load ticket details");
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      }
+  const loadTicketData = async () => {
+    try {
+      const [ticketData, usersData] = await Promise.all([
+        fetchStaffTicketDetail(ticketId),
+        fetchStaffUsers().catch(() => []),
+      ]);
+      setTicket(ticketData);
+      setStaffUsers(usersData);
+    } catch (err: any) {
+      setError(err.message || "Failed to load ticket details");
+    } finally {
+      setIsLoading(false);
     }
-    loadData();
-    return () => {
-      cancelled = true;
-    };
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    void loadTicketData();
   }, [ticketId]);
 
   const handleClaim = async () => {
@@ -453,6 +445,14 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
               </ul>
             </section>
           )}
+
+          {/* Actions Taken Section */}
+          <ActionsTakenSection
+            ticketId={ticket.id}
+            ticketCreatedAt={ticket.createdAt}
+            isStaffOrAdmin={true}
+            onActionRecorded={loadTicketData}
+          />
 
           {/* Dual Communication Panel (Public Comments vs Internal Notes) */}
           <section className="dual-comm" aria-label="Discussion and Notes">

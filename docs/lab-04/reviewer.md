@@ -17,6 +17,7 @@
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
+| [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 
 ---
 
@@ -175,6 +176,57 @@
   > **คำตัดสิน: Approve** — งาน Actions Taken Backend REST API ของ Issue 29 มีคุณภาพ สมบูรณ์"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 30 - Actions Taken Frontend UI & Ticket Detail Integration
+
+- **Pull Request:** [#72](https://github.com/lmaybelgracel/TokTickit/pull/72)
+- **Branch:** `feature/30-actions-taken-ui`
+- **Summary:** Built the Actions Taken Frontend component (`ActionsTakenSection.tsx` & `ActionsTakenSection.css`) adhering strictly to the Zen Green design system. Implemented chronological action history rendering (`UI-ACT-02`), performer badges, result callout boxes, conditional Amber follow-up banners, and file attachment notes. Built accessible Record & Edit modals with real-time character counters, datetime picker with min/max bounds and inline error messages, and inline validation disabling submit if followUpRequired is checked without followUpNote (`UI-ACT-01`). Added Escape key keyboard navigation (WCAG 2.1 AA). Embedded component into both `StaffTicketDetail.tsx` (interactive permissions with `onActionRecorded` refreshing ticket data) and `TicketDetail.tsx` (Requester view-only mode hiding all creation/edit controls, `UI-ACT-03`). Added client Vitest suite (`client/src/__tests__/lab-04/ActionsTaken.test.tsx`, 9/9 tests passing) and verified zero regressions across 242 total tests (Server 181, Client 61).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-16T17:32:54Z):
+  > "### ผลการตรวจประเมิน Issue 30 - Actions Taken Frontend UI & Ticket Detail Integration
+  > 
+  > จากการตรวจสอบโค้ดและการทำงานอย่างละเอียดใน PR #72 (Branch feature/30-actions-taken-ui) ยังมีจุดบกพร่องที่ต้องขอให้แก้ไขเพิ่มเติมก่อนจึงจะสามารถอนุมัติได้ ดังนี้:
+  > 
+  > 1. [client/src/components/StaffTicketDetail.tsx] ขาดการส่ง Callback onActionRecorded (บรรทัด 459):
+  >    - มีการเรียกใช้ <ActionsTakenSection /> โดยส่งเพียง ticketId, ticketCreatedAt และ isStaffOrAdmin แต่ไม่ได้ส่ง onActionRecorded
+  >    - ในฝั่ง Backend เมื่อมีการบันทึก Action Taken ตัว Ticket แม่จะถูกอัปเดตค่า updatedAt ในฐานข้อมูลด้วยเสมอ
+  >    - การไม่ส่ง Callback ทำให้ StaffTicketDetail ไม่ได้รับแจ้งเตือนให้ดึงข้อมูลตั๋วใหม่ ส่งผลให้ค่า ticket.updatedAt ในเครื่อง Client ล้าสมัย หากเจ้าหน้าที่กดเปลี่ยนสถานะตั๋วหรือกด Resolve ตั๋วต่อทันที จะส่งผลให้คำขอล้มเหลวด้วยข้อผิดพลาด HTTP 409 Conflict (อ้างอิง BR-13)
+  >    - สิ่งที่ต้องแก้: ดึงฟังก์ชันโหลดข้อมูลตั๋วใน useEffect ออกมาเป็นฟังก์ชันแยก (เช่น loadTicketData) แล้วส่งต่อเป็น onActionRecorded={loadTicketData} ให้กับ <ActionsTakenSection />
+  > 
+  > 2. [client/src/components/ActionsTakenSection.tsx] พร็อพ ticketCreatedAt ไม่ได้ถูกนำไปใช้ และขาดข้อจำกัด min/max บนช่องวันที่ (บรรทัด 22, 230):
+  >    - มีการรับพร็อพ ticketCreatedAt เข้ามาในคอมโพเนนต์แต่ไม่ได้ถูกนำไปอ้างอิงเลย
+  >    - ตามข้อกำหนด Handout 4.1 และกฎ BR-05 วันเวลาที่ปฏิบัติงาน (actionDateTime) ต้องไม่เกิดขึ้นก่อนเวลาที่สร้างตั๋ว และต้องไม่เป็นเวลาในอนาคต
+  >    - ปัจจุบันช่อง <input id="action-datetime" type="datetime-local"> ไม่มีแอตทริบิวต์ min และ max ทำให้ผู้ใช้สามารถเลือกเวลาที่ผิดและกดปุ่ม Save Action ได้ โดยจะไปล้มเหลวที่ Backend (422) แทนที่จะบล็อกตั้งแต่หน้าจอ
+  >    - สิ่งที่ต้องแก้: นำ ticketCreatedAt มาแปลงเป็น Local ISO String เพื่อกำหนดเป็นค่า min และใช้วันที่ปัจจุบันเป็นค่า max บน input พร้อมเพิ่มการตรวจเช็กช่วงเวลาในเงื่อนไข isFormValid
+  > 
+  > 3. [client/src/components/ActionsTakenSection.tsx] ขาดการรองรับปุ่ม Escape เพื่อปิด Modal (บรรทัด 210):
+  >    - หน้าต่าง Modal มี role="dialog" และ aria-modal="true" เรียบร้อยแล้ว แต่ยังไม่สามารถกดยกเลิกหรือปิดด้วยปุ่ม Escape บนคีย์บอร์ดได้
+  >    - ตามมาตรฐาน Accessibility และ WCAG 2.1 AA ใน ui-spec.md หน้าต่าง Modal ควรปิดได้เมื่อกดปุ่ม Escape
+  >    - สิ่งที่ต้องแก้: เพิ่ม Event Listener ดักจับการกดปุ่ม Escape ใน useEffect ขณะที่ Modal กำลังเปิดอยู่เพื่อสั่งเรียก closeModal()
+  > 
+  > 4. [client/src/api.ts] ลบโค้ด Header จำลอง X-Development-Requester-Id ที่ตกค้าง (บรรทัด 733):
+  >    - ในฟังก์ชัน fetchTicketActions ยังมีเงื่อนไข Fallback ส่ง headers["X-Development-Requester-Id"] ตกค้างอยู่
+  >    - เนื่องจากใน PR #71 ที่ผ่านมา เส้นทาง /api/tickets/:id/actions ฝั่ง Server บังคับใช้ JWT Authentication เต็มรูปแบบแล้ว และไม่ได้ดึงค่าจาก Header นี้อีกต่อไป
+  >    - สิ่งที่ต้องแก้: ปรับฟังก์ชันใน api.ts ให้เรียกผ่าน Bearer Token เพียงอย่างเดียวเพื่อความกระชับและไม่ให้เกิดความสับสน
+  > 
+  > คำตัดสิน: Request Changes — รบกวนแก้ไขประเด็นข้างต้น (โดยเฉพาะข้อ 1 และ 2) แล้วพุชคอมมิตใหม่เพื่อตรวจสอบอีกครั้ง"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Missing `onActionRecorded` Callback in StaffTicketDetail:**
+     - *Reviewer Feedback:* Without `onActionRecorded`, `StaffTicketDetail` was not notified to re-fetch ticket data when an action was recorded. Because the backend touches ticket `updatedAt`, subsequent ticket mutations (e.g., status changes, resolution) would fail with 409 Conflict.
+     - *My Action:* Extracted ticket loading into a reusable `loadTicketData` function and passed `onActionRecorded={loadTicketData}` to `<ActionsTakenSection />` in `StaffTicketDetail.tsx`.
+  2. **Comment on Unused `ticketCreatedAt` Prop & Missing Min/Max Date Bounds:**
+     - *Reviewer Feedback:* `ticketCreatedAt` prop was received but unused, and `<input id="action-datetime" type="datetime-local">` lacked `min` and `max` attributes, allowing users to enter dates prior to ticket creation or in the future and submit invalid dates.
+     - *My Action:* Converted `ticketCreatedAt` to local ISO format for `min` and current timestamp for `max`. Added date range validation in `isFormValid` and inline warning error messages to block form submission if the date is out of range.
+  3. **Comment on Missing Escape Key Modal Dismissal (WCAG 2.1 AA):**
+     - *Reviewer Feedback:* Modal could not be closed using the keyboard Escape key.
+     - *My Action:* Added a `keydown` window event listener in `useEffect` when `isModalOpen` is active, closing the modal when Escape is pressed.
+  4. **Comment on Legacy `X-Development-Requester-Id` Header Fallback in `api.ts`:**
+     - *Reviewer Feedback:* `fetchTicketActions` in `client/src/api.ts` still had development requester header fallback code which was deprecated in Sprint 4.
+     - *My Action:* Removed the header fallback, standardizing `fetchTicketActions` to use the `Authorization: Bearer ${authToken}` scheme.
+- **Round 1 Verdict:** Changes Requested
+- **Round 2 Status:** Addressed & Submitted for Verification
 
 ---
 
