@@ -15,7 +15,7 @@
 | PR | Issue / Branch | Reviewer Verdict | Status | Link |
 |:---|:---------------|:-----------------|:-------|:-----|
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
-| [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Pending Review | In Review | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
+| [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Changes Requested / Feedback Addressed | In Review | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 
 ---
 
@@ -76,8 +76,31 @@
 - **Pull Request:** [#70](https://github.com/lmaybelgracel/TokTickit/pull/70)
 - **Branch:** `feature/28-database-and-seed`
 - **Summary:** Evolves Prisma schema to introduce `ActionTaken` model with 1:N relationship under `Ticket` and foreign key to `User` (`performedById`). Adds SQL migration DDL under `server/prisma/migrations/20261016000000_lab4_actions_taken_model/migration.sql`. Expands seed script (`server/prisma/seed.ts`) with idempotent execution covering 0, 1, and multiple Actions Taken across diverse IT Staff. Verified via automated test suite (`database-schema-seed.test.ts`, API-MIG-01).
-- **Reviewer Verdict & Summary:** Pending Review by @phatthidawadi
-- **Status:** In Review (Awaiting Peer Review comments and verdict)
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-16T15:18:02Z):
+  > "### ผลการตรวจประเมิน Issue 28 - Database & Seed (Request Changes)
+  > 
+  > โครงสร้าง Prisma Schema, ไฟล์ Migration SQL และสคริปต์ Seed Data ทำออกมาได้ดีมากและผ่านการทดสอบ 215 เทสต์ครบ 100% โดยไม่มีข้อผิดพลาด
+  > 
+  > อย่างไรก็ตาม มีจุดที่ต้องขอให้แก้ไขในเอกสาร Test Plan ก่อนการอนุมัติ:
+  > 
+  > 1. **[docs/lab-04/tests.md] ความไม่สอดคล้องของเส้นทางไฟล์ทดสอบ (Traceability Mismatch):**
+  >    - ในตารางที่ 2 และตารางที่ 3 ของ `docs/lab-04/tests.md` ระบุว่าชุดทดสอบ `API-MIG-01` (AC-14: Idempotent database seed execution) จะอยู่ที่ไฟล์ `server/tests/lab-04/actions-taken.api.test.ts`
+  >    - แต่ไฟล์ทดสอบจริงที่ส่งมอบมาใน PR นี้ตั้งชื่อว่า `server/tests/lab-04/database-schema-seed.test.ts`
+  >    - **สิ่งที่ต้องแก้:** รบกวนอัปเดตพาธไฟล์ของ `API-MIG-01` ใน `docs/lab-04/tests.md` ให้เป็น `server/tests/lab-04/database-schema-seed.test.ts` เพื่อให้สอดคล้องกับไฟล์จริงในคลังโค้ดตามเกณฑ์การตรวจของ Handout Part 3
+  > 
+  > 2. **[docs/lab-04/reviewer.md] อัปเดตสถานะการรีวิว:**
+  >    - อัปเดตบันทึกประวัติการรีวิวของ Issue 28 / PR #70 ให้สะท้อนสถานะปัจจุบัน
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนปรับแก้พาธใน `tests.md` ให้ตรงกัน"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Test File Path Mismatch for API-MIG-01:**
+     - *Reviewer Feedback:* Traceability matrix and Master Test Catalog in `docs/lab-04/tests.md` listed `server/tests/lab-04/actions-taken.api.test.ts` for `API-MIG-01` instead of the actual test implementation file `server/tests/lab-04/database-schema-seed.test.ts`.
+     - *My Action:* Updated both Table 2 and Table 3 in `docs/lab-04/tests.md` to reference `server/tests/lab-04/database-schema-seed.test.ts` and marked status as `Passed`.
+  2. **Comment on Reviewer Log Update:**
+     - *Reviewer Feedback:* Update review records for Issue 28 / PR #70 to reflect current status.
+     - *My Action:* Recorded Round 1 Changes Requested verdict, verbatim review comments, and response actions in `docs/lab-04/reviewer.md`.
+- **Current Verdict:** Changes Requested / Feedback Addressed
+- **Status:** Feedback addressed in commit, awaiting Round 2 Approval on PR #70.
 
 ---
 
