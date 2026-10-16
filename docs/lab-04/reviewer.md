@@ -17,7 +17,7 @@
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
-| [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
+| [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 
 ---
 
@@ -226,7 +226,26 @@
      - *Reviewer Feedback:* `fetchTicketActions` in `client/src/api.ts` still had development requester header fallback code which was deprecated in Sprint 4.
      - *My Action:* Removed the header fallback, standardizing `fetchTicketActions` to use the `Authorization: Bearer ${authToken}` scheme.
 - **Round 1 Verdict:** Changes Requested
-- **Round 2 Status:** Addressed & Submitted for Verification
+- **Round 2 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-16T18:03:29Z):
+  > "### ผลการตรวจประเมินรอบที่ 2 (Re-review Round 2)
+  > 
+  > ขอบคุณสำหรับการแก้ไขโค้ดและชุดทดสอบอย่างรวดเร็วและตรงจุดใน commit `d0f0fd2` ได้ดำเนินการ Re-review ในระดับโค้ดจริงและรัน Full Regression Test Suite เรียบร้อยแล้ว มีผลการตรวจดังนี้:
+  > 
+  > 1. **การส่ง Callback `onActionRecorded` เพื่อซิงค์ข้อมูลตั๋วแม่ (F-01):**
+  >    - ใน `client/src/components/StaffTicketDetail.tsx` มีการแยกฟังก์ชันดึงข้อมูลตั๋วออกมาเป็น `loadTicketData` และส่งผ่านพร็อพ `onActionRecorded={loadTicketData}` ให้กับ `<ActionsTakenSection />` อย่างถูกต้อง เมื่อมีการบันทึกหรือแก้ไขการปฏิบัติงาน ข้อมูลตั๋วแม่รวมถึง `ticket.updatedAt` ในหน้าจอจะได้รับการรีเฟรชทันที ป้องกันปัญหา HTTP 409 Conflict ในการเปลี่ยนสถานะหรือ Resolve ตั๋วต่อ
+  > 2. **การจำกัดขอบเขต `min` / `max` ของ `actionDateTime` ตามกฎ BR-05 (F-02):**
+  >    - ใน `client/src/components/ActionsTakenSection.tsx` มีการนำ `ticketCreatedAt` มาแปลงเป็น `minDateTime` และใช้เวลาปัจจุบันสำหรับ `maxDateTime` ผูกเข้ากับ `<input id="action-datetime" type="datetime-local">` พร้อมทั้งเพิ่มฟังก์ชัน `isDateTimeValid()` ในเงื่อนไข `isFormValid` และแสดงข้อความเตือนสีแดงแบบเรียลไทม์ ป้องกันการระบุวันเวลาย้อนหลังก่อนสร้างตั๋วหรือเวลาในอนาคตได้อย่างสมบูรณ์
+  > 3. **การรองรับปุ่ม `Escape` เพื่อปิด Modal ตามมาตรฐาน Accessibility (F-03):**
+  >    - เพิ่ม `useEffect` ดักจับคีย์บอร์ด Event `keydown` เพื่อตรวจสอบ `e.key === "Escape"` และสั่งเรียก `closeModal()` พร้อมฟังก์ชัน Clean-up Event Listener อย่างถูกต้อง สอดคล้องกับมาตรฐาน WCAG 2.1 AA
+  > 4. **การเก็บกวาด Header จำลองใน `api.ts` (F-04):**
+  >    - นำพารามิเตอร์ `requesterId` และเงื่อนไขส่ง `X-Development-Requester-Id` ออกจากฟังก์ชัน `fetchTicketActions` ใน `client/src/api.ts` เรียบร้อยแล้ว ทำให้การเรียกใช้งานส่งเฉพาะ `Authorization: Bearer <token>` ตามมาตรฐานความปลอดภัยของ Sprint 4
+  > 5. **ชุดการทดสอบอัตโนมัติและความเข้ากันได้ย้อนหลัง (Regression Suite):**
+  >    - ขยายชุดทดสอบใน `client/src/__tests__/lab-04/ActionsTaken.test.tsx` ครอบคลุมทั้งกรณี min/max วันที่, ปุ่ม Escape และการเรียก `onActionRecorded` callback (ผ่านครบ 9/9 เทสต์)
+  >    - รัน Full Test Suite ทั้งระบบ: Server ผ่าน 19 ไฟล์ (181/181 เทสต์) และ Client ผ่าน 13 ไฟล์ (61/61 เทสต์) รวมทั้งสิ้น 242 เทสต์ผ่าน 100% โดยไม่มีข้อผิดพลาดและไม่มีผลกระทบต่อของเดิม (Zero Regression)
+  > 
+  > **คำตัดสิน: Approve** — งาน Actions Taken Frontend UI & Ticket Detail Integration ของ Issue 30 มีคุณภาพ สมบูรณ์ ถูกต้องตามข้อกำหนด"
+- **Final Verdict:** Approved
+- **Status:** Merged into `lab4-staging` by @phatthidawadi
 
 ---
 
