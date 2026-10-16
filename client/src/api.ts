@@ -724,15 +724,12 @@ export interface UpdateActionTakenPayload {
 
 export async function fetchTicketActions(
   ticketId: number,
-  token?: string | null,
-  requesterId?: number | null
+  token?: string | null
 ): Promise<ActionTaken[]> {
   const authToken = token || localStorage.getItem("toktickit_auth_token");
   const headers: Record<string, string> = {};
   if (authToken) {
     headers["Authorization"] = `Bearer ${authToken}`;
-  } else if (requesterId) {
-    headers["X-Development-Requester-Id"] = String(requesterId);
   }
 
   const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/actions`, { headers });

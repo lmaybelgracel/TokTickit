@@ -273,5 +273,93 @@ describe("ActionsTaken Component Tests (Sprint 4 - Issue 30)", () => {
       );
       expect(screen.queryByTestId("actions-table")).not.toBeInTheDocument();
     });
+
+    it("enforces min and max on action-datetime input and validates against ticketCreatedAt", async () => {
+      render(
+        <ActionsTakenSection
+          ticketId={101}
+          ticketCreatedAt="2026-10-15T09:00:00Z"
+          isStaffOrAdmin={true}
+        />
+      );
+
+      const recordBtn = await screen.findByTestId("btn-record-action");
+      fireEvent.click(recordBtn);
+
+      const dtInput = screen.getByLabelText(/Action Date & Time/i) as HTMLInputElement;
+      expect(dtInput.getAttribute("min")).toBeDefined();
+      expect(dtInput.getAttribute("max")).toBeDefined();
+
+      // Enter past date before ticket creation
+      fireEvent.change(dtInput, { target: { value: "1970-01-01T00:00" } });
+      const submitBtn = screen.getByTestId("btn-save-action");
+      expect(submitBtn).toBeDisabled();
+      expect(screen.getByTestId("datetime-error-msg")).toHaveTextContent(
+        "Action date/time cannot be earlier than ticket creation date."
+      );
+    });
+
+    it("closes modal when user presses Escape key (Accessibility WCAG 2.1 AA)", async () => {
+      render(
+        <ActionsTakenSection
+          ticketId={101}
+          ticketCreatedAt="2026-10-15T09:00:00Z"
+          isStaffOrAdmin={true}
+        />
+      );
+
+      const recordBtn = await screen.findByTestId("btn-record-action");
+      fireEvent.click(recordBtn);
+
+      expect(screen.getByText("Record Action Taken")).toBeInTheDocument();
+
+      // Press Escape
+      fireEvent.keyDown(window, { key: "Escape" });
+
+      expect(screen.queryByText("Record Action Taken")).not.toBeInTheDocument();
+    });
+
+    it("invokes onActionRecorded callback when new action is saved", async () => {
+      const handleActionRecorded = vi.fn();
+      vi.mocked(api.createTicketAction).mockResolvedValue({
+        id: 4,
+        ticketId: 101,
+        performedById: 10,
+        actionDateTime: "2026-10-15T12:00:00Z",
+        description: "Replaced faulty optical transceiver.",
+        result: "Fiber link is back up.",
+        followUpRequired: false,
+        followUpNote: null,
+        attachmentNotes: null,
+        createdAt: "2026-10-15T12:05:00Z",
+        updatedAt: "2026-10-15T12:05:00Z",
+      });
+
+      render(
+        <ActionsTakenSection
+          ticketId={101}
+          ticketCreatedAt="2026-10-15T09:00:00Z"
+          isStaffOrAdmin={true}
+          onActionRecorded={handleActionRecorded}
+        />
+      );
+
+      const recordBtn = await screen.findByTestId("btn-record-action");
+      fireEvent.click(recordBtn);
+
+      fireEvent.change(screen.getByLabelText(/Action Description/i), {
+        target: { value: "Replaced faulty optical transceiver." },
+      });
+      fireEvent.change(screen.getByLabelText(/^Result/i), {
+        target: { value: "Fiber link is back up." },
+      });
+
+      const submitBtn = screen.getByTestId("btn-save-action");
+      fireEvent.click(submitBtn);
+
+      await waitFor(() => {
+        expect(handleActionRecorded).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 });

@@ -51,7 +51,7 @@ export const ActionsTakenSection: React.FC<ActionsTakenSectionProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchTicketActions(ticketId, token, user?.id);
+      const data = await fetchTicketActions(ticketId, token);
       // Sort chronologically by actionDateTime ascending
       const sorted = [...data].sort(
         (a, b) => new Date(a.actionDateTime).getTime() - new Date(b.actionDateTime).getTime()
@@ -68,7 +68,7 @@ export const ActionsTakenSection: React.FC<ActionsTakenSectionProps> = ({
     if (ticketId) {
       void loadActions();
     }
-  }, [ticketId, token, user?.id]);
+  }, [ticketId, token]);
 
   const openCreateModal = () => {
     const now = new Date();
@@ -111,11 +111,44 @@ export const ActionsTakenSection: React.FC<ActionsTakenSectionProps> = ({
     setModalError(null);
   };
 
+  // Close modal on Escape key press (WCAG 2.1 AA)
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalOpen]);
+
+  // Derived min/max date time strings
+  const minDateTime = ticketCreatedAt
+    ? new Date(new Date(ticketCreatedAt).getTime() - new Date(ticketCreatedAt).getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16)
+    : undefined;
+
+  const maxDateTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16);
+
   // Validation rules
   const isDescValid = description.trim().length >= 3 && description.trim().length <= 2000;
   const isResultValid = result.trim().length >= 2 && result.trim().length <= 1000;
   const isFollowUpValid = !followUpRequired || (followUpNote.trim().length >= 3 && followUpNote.trim().length <= 1000);
-  const isFormValid = isDescValid && isResultValid && isFollowUpValid;
+  const isDateTimeValid = () => {
+    if (!actionDateTime) return false;
+    const t = new Date(actionDateTime).getTime();
+    if (isNaN(t)) return false;
+    if (ticketCreatedAt && t < new Date(ticketCreatedAt).getTime()) return false;
+    if (t > Date.now() + 60000) return false;
+    return true;
+  };
+  const isFormValid = isDescValid && isResultValid && isFollowUpValid && isDateTimeValid();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -311,9 +344,21 @@ export const ActionsTakenSection: React.FC<ActionsTakenSectionProps> = ({
                     id="action-datetime"
                     type="datetime-local"
                     value={actionDateTime}
+                    min={minDateTime}
+                    max={maxDateTime}
                     onChange={(e) => setActionDateTime(e.target.value)}
                     required
                   />
+                  {actionDateTime && ticketCreatedAt && new Date(actionDateTime).getTime() < new Date(ticketCreatedAt).getTime() && (
+                    <span className="input-error-msg" data-testid="datetime-error-msg">
+                      Action date/time cannot be earlier than ticket creation date.
+                    </span>
+                  )}
+                  {actionDateTime && new Date(actionDateTime).getTime() > Date.now() + 60000 && (
+                    <span className="input-error-msg" data-testid="datetime-error-msg">
+                      Action date/time cannot be in the future.
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group">
