@@ -49,12 +49,12 @@ Testing encompasses:
 | `API-DASH-02` | API | AC-05 | IT Staff Dashboard calculates queue metrics | Returns 200 OK with unassigned, mine, status & priority counts | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-DASH-03` | API | AC-05 | Admin Dashboard includes user stats | Returns 200 OK with `adminStats` populated | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-DASH-04` | API | AC-05 | IT Staff Dashboard returns current-user Actions Taken count | Returns 200 OK with `myActionsTakenCount` | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
-| `API-WORK-01` | API | AC-06 | Transition ticket to RESOLVED via resolve endpoint | Returns 200 OK, sets currentStatus=RESOLVED and summary | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| `API-WORK-02` | API | AC-07 | Transition to RESOLVED via general status endpoint | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| `API-WORK-03` | API | AC-08 | Mutate ticket with outdated timestamp | Returns 409 Conflict | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| `API-WORK-04` | API | AC-09 | Assign ticket to inactive user | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| `API-WORK-05` | API | AC-10 | Requester toggles problem resolved indication | Returns 200 OK, ticket currentStatus remains OPEN/IN_PROGRESS | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| `API-WORK-06` | API | AC-08 | Mutate ticket status without providing knownUpdatedAt | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
+| `API-WORK-01` | API | AC-06 | Transition ticket to RESOLVED via resolve endpoint | Returns 200 OK, sets currentStatus=RESOLVED and summary | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
+| `API-WORK-02` | API | AC-07 | Transition to RESOLVED via general status endpoint | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
+| `API-WORK-03` | API | AC-08 | Mutate ticket with outdated timestamp | Returns 409 Conflict | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
+| `API-WORK-04` | API | AC-09 | Assign ticket to inactive user | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
+| `API-WORK-05` | API | AC-10 | Requester toggles problem resolved indication | Returns 200 OK, ticket currentStatus remains OPEN/IN_PROGRESS | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
+| `API-WORK-06` | API | AC-08 | Mutate ticket status without providing knownUpdatedAt | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
 | `API-MIG-01` | API | AC-14 | Idempotent database seed execution | Safe repeat execution preserving all records | `server/tests/lab-04/database-schema-seed.test.ts` | Passed |
 | `UI-DASH-01` | UI | AC-04 | Requester Dashboard renders cards and recent list | Displays open count, action required, and tickets | `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` | Planned |
 | `UI-DASH-02` | UI | AC-05 | IT Staff Dashboard renders metric cards and queue | Displays operational cards and queue table | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
@@ -63,7 +63,7 @@ Testing encompasses:
 | `UI-ACT-01` | UI | AC-03 | Form validates required follow-up note | Shows error message, disables submit | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
 | `UI-ACT-02` | UI | AC-12 | Actions Taken table renders chronological items | Displays date, performer, description, result | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
 | `UI-ACT-03` | UI | AC-02 | Requester view hides action creation controls | Button "+ Record Action Taken" is not in DOM | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
-| `UI-WORK-01` | UI | AC-10 | Advisory resolved banner displayed for staff | Shows banner without changing status badge | `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` | Planned |
+| `UI-WORK-01` | UI | AC-10 | Advisory resolved banner displayed for staff | Shows banner without changing status badge | `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` | Passed |
 | `E2E-ACT-01` | E2E | AC-01 | Full flow: Login as Staff, record action, verify on detail | Action appears in list with correct performer | `e2e/lab-04/actions-taken-flow.spec.ts` | Planned |
 | `E2E-RES-01` | E2E | AC-06 | Full flow: Resolve ticket with modal summary | Status updates to RESOLVED, summary displayed | `e2e/lab-04/ticket-resolution.spec.ts` | Planned |
 | `E2E-DASH-01`| E2E | AC-11 | Staff Dashboard metric card drill-down flow | Click card, land on filtered queue matching count | `e2e/lab-04/dashboards.spec.ts` | Planned |

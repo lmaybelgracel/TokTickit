@@ -75,6 +75,18 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
     void loadTicketData();
   }, [ticketId]);
 
+  useEffect(() => {
+    if (!isResolveModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsResolveModalOpen(false);
+        setResolveError(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isResolveModalOpen]);
+
   const handleClaim = async () => {
     if (!ticket) return;
     try {
@@ -115,11 +127,16 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
     if (!ticket || !newStatus) return;
     try {
       setActionSuccess(null);
-      const updated = await updateTicketStatus(ticket.id, newStatus);
+      const updated = await updateTicketStatus(ticket.id, newStatus, null, ticket.updatedAt);
       setTicket((prev) => (prev ? { ...prev, ...updated } : null));
       setActionSuccess(`Status transitioned to ${newStatus}.`);
     } catch (err: any) {
-      setError(err.message || "Failed to update status");
+      if (err.status === 409) {
+        setError("Conflict: This ticket was modified by another user. Refreshing latest data...");
+        void loadTicketData();
+      } else {
+        setError(err.message || "Failed to update status");
+      }
     }
   };
 
@@ -133,13 +150,18 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
     setIsResolving(true);
     setResolveError(null);
     try {
-      const updated = await resolveTicket(ticket.id, resolutionSummary.trim());
+      const updated = await resolveTicket(ticket.id, resolutionSummary.trim(), null, ticket.updatedAt);
       setTicket((prev) => (prev ? { ...prev, ...updated } : null));
       setIsResolveModalOpen(false);
       setResolutionSummary("");
       setActionSuccess("Ticket has been resolved with resolution summary recorded.");
     } catch (err: any) {
-      setResolveError(err.message || "Failed to resolve ticket");
+      if (err.status === 409) {
+        setResolveError("Conflict: This ticket was modified by another user. Refreshing latest data...");
+        void loadTicketData();
+      } else {
+        setResolveError(err.message || "Failed to resolve ticket");
+      }
     } finally {
       setIsResolving(false);
     }
@@ -288,6 +310,25 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
           }}
         >
           {actionSuccess}
+        </div>
+      )}
+
+      {/* Error Notification */}
+      {error && (
+        <div
+          className="staff-detail__error-banner"
+          style={{
+            padding: "0.75rem 1rem",
+            marginBottom: "1rem",
+            backgroundColor: "#FFEBEE",
+            color: "#C62828",
+            borderRadius: "6px",
+            border: "1px solid #FFCDD2",
+            fontSize: "0.875rem",
+            fontWeight: "600",
+          }}
+        >
+          {error}
         </div>
       )}
 
