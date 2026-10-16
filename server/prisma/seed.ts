@@ -181,6 +181,26 @@ export const ticketsData = [
         content: "Active Directory replication queue was paused. Restarting AD sync service.",
       },
     ],
+    actionsTaken: [
+      {
+        performedByEmail: "somchai.it@toktickit.com",
+        actionDateTime: "2026-10-15T09:00:00.000Z",
+        description: "Queried Active Directory replication status for account pae.karn.",
+        result: "Replication failure detected on DC02. Synchronized manually with repadmin /syncall.",
+        followUpRequired: true,
+        followUpNote: "Monitor account login events for the next 24 hours.",
+        attachmentNotes: "AD diagnostic event logs exported to AD_rep_diag.log",
+      },
+      {
+        performedByEmail: "suda.staff@toktickit.com",
+        actionDateTime: "2026-10-15T10:15:00.000Z",
+        description: "Assisted user with password cache clearance on Outlook Web Access.",
+        result: "User successfully verified credential prompt on webmail.",
+        followUpRequired: false,
+        followUpNote: null,
+        attachmentNotes: null,
+      },
+    ],
   },
   {
     ticketNumber: "TKT-2025-001002",
@@ -206,6 +226,17 @@ export const ticketsData = [
       },
     ],
     notes: [],
+    actionsTaken: [
+      {
+        performedByEmail: "suda.staff@toktickit.com",
+        actionDateTime: "2026-10-15T14:10:00.000Z",
+        description: "Inspected EDP ribbon cable connection beneath hinge bezel.",
+        result: "Cable seated securely; pin 12 loose. Re-clamped connector.",
+        followUpRequired: true,
+        followUpNote: "Observe whether screen flickers during continuous video playback.",
+        attachmentNotes: "Photo of ribbon cable seated in housing.",
+      },
+    ],
   },
   {
     ticketNumber: "TKT-2025-001003",
@@ -222,6 +253,7 @@ export const ticketsData = [
     requesterResolvedIndication: false,
     comments: [],
     notes: [],
+    actionsTaken: [],
   },
   {
     ticketNumber: "TKT-2025-001004",
@@ -248,6 +280,26 @@ export const ticketsData = [
         content: "Tested upload with 15MB PDF sample; response returned 200 OK.",
       },
     ],
+    actionsTaken: [
+      {
+        performedByEmail: "somchai.it@toktickit.com",
+        actionDateTime: "2026-10-15T08:30:00.000Z",
+        description: "Analyzed Nginx ingress access logs and found 413 Request Entity Too Large.",
+        result: "Confirmed default client_max_body_size was set to 2MB.",
+        followUpRequired: false,
+        followUpNote: null,
+        attachmentNotes: "ingress_error_413.log",
+      },
+      {
+        performedByEmail: "somchai.it@toktickit.com",
+        actionDateTime: "2026-10-15T09:15:00.000Z",
+        description: "Patched Nginx configuration with client_max_body_size 20m and reloaded ingress deployment.",
+        result: "Validated with curl POST sending 15MB payload; returned 200 OK.",
+        followUpRequired: false,
+        followUpNote: null,
+        attachmentNotes: null,
+      },
+    ],
   },
   {
     ticketNumber: "TKT-2025-001005",
@@ -269,6 +321,17 @@ export const ticketsData = [
       },
     ],
     notes: [],
+    actionsTaken: [
+      {
+        performedByEmail: "suda.staff@toktickit.com",
+        actionDateTime: "2026-10-15T11:00:00.000Z",
+        description: "Cross-checked registration database for CSC210 TA roster.",
+        result: "Name pending approval in dean office faculty portal.",
+        followUpRequired: true,
+        followUpNote: "Awaiting signed faculty verification memo from instructor.",
+        attachmentNotes: null,
+      },
+    ],
   },
   {
     ticketNumber: "TKT-2025-001006",
@@ -290,6 +353,17 @@ export const ticketsData = [
         content: "Replaced roller part #RM1-4426-000 from local spare parts inventory.",
       },
     ],
+    actionsTaken: [
+      {
+        performedByEmail: "wichai.tech@toktickit.com",
+        actionDateTime: "2026-10-14T15:20:00.000Z",
+        description: "Removed paper jam from roller assembly and cleaned pickup sensor.",
+        result: "Test print of 5 test pages completed without any misfeed.",
+        followUpRequired: false,
+        followUpNote: null,
+        attachmentNotes: null,
+      },
+    ],
   },
   {
     ticketNumber: "TKT-2025-001007",
@@ -306,6 +380,7 @@ export const ticketsData = [
     requesterResolvedIndication: false,
     comments: [],
     notes: [],
+    actionsTaken: [],
   },
 ];
 
@@ -481,8 +556,36 @@ export async function seedDatabase(client = prisma) {
         }
       }
     }
+
+    // 8. Actions Taken (Lab 4)
+    for (const a of (tkt as any).actionsTaken || []) {
+      const performer = userMap.get(a.performedByEmail);
+      if (performer) {
+        const existing = await client.actionTaken.findFirst({
+          where: {
+            ticketId: ticketRecord.id,
+            performedById: performer.id,
+            description: a.description,
+          },
+        });
+        if (!existing) {
+          await client.actionTaken.create({
+            data: {
+              ticketId: ticketRecord.id,
+              performedById: performer.id,
+              actionDateTime: a.actionDateTime ? new Date(a.actionDateTime) : new Date(),
+              description: a.description,
+              result: a.result,
+              followUpRequired: a.followUpRequired ?? false,
+              followUpNote: a.followUpNote ?? null,
+              attachmentNotes: a.attachmentNotes ?? null,
+            },
+          });
+        }
+      }
+    }
   }
-  console.log(`Successfully seeded ${ticketsData.length} Tickets with Comments and Notes.`);
+  console.log(`Successfully seeded ${ticketsData.length} Tickets with Comments, Notes, and Actions Taken.`);
 }
 
 async function main() {

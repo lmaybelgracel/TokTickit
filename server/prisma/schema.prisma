@@ -49,6 +49,7 @@ model User {
   assignedTickets  Ticket[]        @relation("AssignedTickets")
   comments         PublicComment[]
   notes            InternalNote[]
+  actionsTaken     ActionTaken[]   @relation("PerformedActions")
 
   @@index([email])
   @@index([role, isActive])
@@ -116,9 +117,10 @@ model Ticket {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  attachments Attachment[]
-  comments    PublicComment[]
-  notes       InternalNote[]
+  attachments  Attachment[]
+  comments     PublicComment[]
+  notes        InternalNote[]
+  actionsTaken ActionTaken[]
 
   @@index([requesterId])
   @@index([requesterId, createdAt])
@@ -171,4 +173,26 @@ model InternalNote {
 
   @@index([ticketId])
   @@map("internal_notes")
+}
+
+model ActionTaken {
+  id               Int      @id @default(autoincrement())
+  ticketId         Int      @map("ticket_id")
+  performedById    Int      @map("performed_by_id")
+  actionDateTime   DateTime @default(now()) @map("action_date_time")
+  description      String   @db.Text
+  result           String   @db.Text
+  followUpRequired Boolean  @default(false) @map("follow_up_required")
+  followUpNote     String?  @map("follow_up_note") @db.Text
+  attachmentNotes  String?  @map("attachment_notes") @db.VarChar(500)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  ticket      Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  performedBy User   @relation("PerformedActions", fields: [performedById], references: [id], onDelete: Restrict)
+
+  @@index([ticketId])
+  @@index([performedById])
+  @@index([actionDateTime])
+  @@map("actions_taken")
 }
