@@ -682,4 +682,116 @@ export async function resetAdminUserPassword(
   return res.json();
 }
 
+// Sprint 4 — Issue 29 & 30: Actions Taken APIs
+export interface ActionTaken {
+  id: number;
+  ticketId: number;
+  performedById: number;
+  actionDateTime: string;
+  description: string;
+  result: string;
+  followUpRequired: boolean;
+  followUpNote?: string | null;
+  attachmentNotes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  performedBy?: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
+
+export interface CreateActionTakenPayload {
+  description: string;
+  result: string;
+  actionDateTime?: string;
+  followUpRequired?: boolean;
+  followUpNote?: string | null;
+  attachmentNotes?: string | null;
+}
+
+export interface UpdateActionTakenPayload {
+  knownUpdatedAt: string;
+  description?: string;
+  result?: string;
+  actionDateTime?: string;
+  followUpRequired?: boolean;
+  followUpNote?: string | null;
+  attachmentNotes?: string | null;
+}
+
+export async function fetchTicketActions(
+  ticketId: number,
+  token?: string | null,
+  requesterId?: number | null
+): Promise<ActionTaken[]> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const headers: Record<string, string> = {};
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  } else if (requesterId) {
+    headers["X-Development-Requester-Id"] = String(requesterId);
+  }
+
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/actions`, { headers });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load actions taken");
+  }
+  return res.json();
+}
+
+export async function createTicketAction(
+  ticketId: number,
+  payload: CreateActionTakenPayload,
+  token?: string | null
+): Promise<ActionTaken> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/actions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const errorMsg = data.details ? data.details.join(", ") : (data.error || "Failed to record action taken");
+    const err = new Error(errorMsg);
+    (err as any).details = data.details;
+    throw err;
+  }
+  return data;
+}
+
+export async function updateTicketAction(
+  actionId: number,
+  payload: UpdateActionTakenPayload,
+  token?: string | null
+): Promise<ActionTaken> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const res = await fetch(`${BASE_URL}/api/actions/${actionId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const errorMsg = data.details ? data.details.join(", ") : (data.error || "Failed to update action taken");
+    const err = new Error(errorMsg);
+    (err as any).currentUpdatedAt = data.currentUpdatedAt;
+    (err as any).status = res.status;
+    throw err;
+  }
+  return data;
+}
+
 

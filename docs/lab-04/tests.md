@@ -60,9 +60,9 @@ Testing encompasses:
 | `UI-DASH-02` | UI | AC-05 | IT Staff Dashboard renders metric cards and queue | Displays operational cards and queue table | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
 | `UI-DASH-03` | UI | AC-11 | Clicking metric card navigates with filter | Navigates to queue with expected query param | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
 | `UI-DASH-04` | UI | AC-05 | Render My Actions Recorded metric card | Displays `myActionsTakenCount` and links to my-actions | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |
-| `UI-ACT-01` | UI | AC-03 | Form validates required follow-up note | Shows error message, disables submit | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Planned |
-| `UI-ACT-02` | UI | AC-12 | Actions Taken table renders chronological items | Displays date, performer, description, result | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Planned |
-| `UI-ACT-03` | UI | AC-02 | Requester view hides action creation controls | Button "+ Record Action Taken" is not in DOM | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Planned |
+| `UI-ACT-01` | UI | AC-03 | Form validates required follow-up note | Shows error message, disables submit | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
+| `UI-ACT-02` | UI | AC-12 | Actions Taken table renders chronological items | Displays date, performer, description, result | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
+| `UI-ACT-03` | UI | AC-02 | Requester view hides action creation controls | Button "+ Record Action Taken" is not in DOM | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
 | `UI-WORK-01` | UI | AC-10 | Advisory resolved banner displayed for staff | Shows banner without changing status badge | `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` | Planned |
 | `E2E-ACT-01` | E2E | AC-01 | Full flow: Login as Staff, record action, verify on detail | Action appears in list with correct performer | `e2e/lab-04/actions-taken-flow.spec.ts` | Planned |
 | `E2E-RES-01` | E2E | AC-06 | Full flow: Resolve ticket with modal summary | Status updates to RESOLVED, summary displayed | `e2e/lab-04/ticket-resolution.spec.ts` | Planned |

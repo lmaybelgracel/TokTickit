@@ -15,6 +15,7 @@ import {
   addTicketNote,
 } from "../api";
 import "./StaffTicketDetail.css";
+import { ActionsTakenSection } from "./ActionsTakenSection";
 
 export interface StaffTicketDetailProps {
   ticketId: number;
@@ -453,6 +454,13 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
               </ul>
             </section>
           )}
+
+          {/* Actions Taken Section */}
+          <ActionsTakenSection
+            ticketId={ticket.id}
+            ticketCreatedAt={ticket.createdAt}
+            isStaffOrAdmin={true}
+          />
 
           {/* Dual Communication Panel (Public Comments vs Internal Notes) */}
           <section className="dual-comm" aria-label="Discussion and Notes">
