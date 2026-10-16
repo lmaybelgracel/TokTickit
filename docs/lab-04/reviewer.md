@@ -17,6 +17,7 @@
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
+| [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Pending Review | Under Review | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 
 ---
 
@@ -175,6 +176,15 @@
   > **คำตัดสิน: Approve** — งาน Actions Taken Backend REST API ของ Issue 29 มีคุณภาพ สมบูรณ์"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 30 - Actions Taken Frontend UI & Ticket Detail Integration
+
+- **Pull Request:** [#72](https://github.com/lmaybelgracel/TokTickit/pull/72)
+- **Branch:** `feature/30-actions-taken-ui`
+- **Summary:** Built the Actions Taken Frontend component (`ActionsTakenSection.tsx` & `ActionsTakenSection.css`) adhering strictly to the Zen Green design system. Implemented chronological action history rendering (`UI-ACT-02`), performer badges, result callout boxes, conditional Amber follow-up banners, and file attachment notes. Built accessible Record & Edit modals with real-time character counters, datetime picker, and inline validation disabling submit if followUpRequired is checked without followUpNote (`UI-ACT-01`). Embedded component into both `StaffTicketDetail.tsx` (interactive permissions) and `TicketDetail.tsx` (Requester view-only mode hiding all creation/edit controls, `UI-ACT-03`). Added client Vitest suite (`client/src/__tests__/lab-04/ActionsTaken.test.tsx`, 6/6 tests passing) and verified zero regressions across 239 total tests (Server 181, Client 58).
+- **Current Status:** Under Review by @phatthidawadi
 
 ---
 
