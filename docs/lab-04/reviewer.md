@@ -16,6 +16,7 @@
 |:---|:---------------|:-----------------|:-------|:-----|
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
+| [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Pending Review | Under Review | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 
 ---
 
@@ -114,6 +115,15 @@
   > **คำตัดสิน: Approve** — งานฐานข้อมูล โมเดล ActionTaken, Migration SQL และ Idempotent Seed Data สำหรับ Issue 28 ผ่านการตรวจสอบความถูกต้องและรัดกุมครบถ้วน"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 29 - Actions Taken Backend REST API & Authorization Guards
+
+- **Pull Request:** [#71](https://github.com/lmaybelgracel/TokTickit/pull/71)
+- **Branch:** `feature/29-actions-taken-api`
+- **Summary:** Implemented `GET /api/tickets/:id/actions`, `POST /api/tickets/:id/actions`, and `PATCH /api/actions/:id` with comprehensive authorization guards (Staff/Admin write, Requester read-only for owned tickets, 403 on unowned), active user checks, optimistic concurrency check (`knownUpdatedAt` mandatory with 422, 409 Conflict on mismatch), input validation (description 3–2000 chars, result 2–1000 chars, followUpNote mandatory 3–1000 chars when followUpRequired=true, rejection of future actionDateTime), auto-stamping of `performedById`, and touching ticket `updatedAt`. Added automated Vitest suite `server/tests/lab-04/actions-taken.api.test.ts` (15/15 tests passing, 230/230 regression tests passing 100%).
+- **Current Status:** Under Review by @phatthidawadi
 
 ---
 
