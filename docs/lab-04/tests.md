@@ -39,12 +39,12 @@ Testing encompasses:
 
 | Test ID | Type | Req / AC | What It Tests | Expected Result | Automated Test File | Final Status |
 |:---|:---|:---|:---|:---|:---|:---:|
-| `API-ACT-01` | API | AC-01 | Create Action Taken by IT Staff with valid data | Returns 201 Created, sets `performedById` from token | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| `API-ACT-02` | API | AC-02 | Requester attempting to create Action Taken | Returns 403 Forbidden | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| `API-ACT-03` | API | AC-03 | Create Action Taken with `followUpRequired=true` but missing note | Returns 422 Unprocessable Entity | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| `API-ACT-04` | API | AC-01 | Fetch Actions Taken for owned ticket as Requester | Returns 200 OK with list of actions | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| `API-ACT-05` | API | AC-02 | Fetch Actions Taken for unowned ticket as Requester | Returns 403 Forbidden | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
-| `API-ACT-06` | API | AC-01 | Update existing Action Taken by IT Staff | Returns 200 OK with updated fields | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
+| `API-ACT-01` | API | AC-01 | Create Action Taken by IT Staff with valid data | Returns 201 Created, sets `performedById` from token | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
+| `API-ACT-02` | API | AC-02 | Requester attempting to create Action Taken | Returns 403 Forbidden | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
+| `API-ACT-03` | API | AC-03 | Create Action Taken with `followUpRequired=true` but missing note | Returns 422 Unprocessable Entity | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
+| `API-ACT-04` | API | AC-01 | Fetch Actions Taken for owned ticket as Requester | Returns 200 OK with list of actions | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
+| `API-ACT-05` | API | AC-02 | Fetch Actions Taken for unowned ticket as Requester | Returns 403 Forbidden | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
+| `API-ACT-06` | API | AC-01 | Update existing Action Taken by IT Staff | Returns 200 OK with updated fields | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
 | `API-DASH-01` | API | AC-04 | Requester Dashboard returns only caller's metrics | Returns 200 OK with accurate counts and recent tickets | `server/tests/lab-04/requester-dashboard.api.test.ts` | Planned |
 | `API-DASH-02` | API | AC-05 | IT Staff Dashboard calculates queue metrics | Returns 200 OK with unassigned, mine, status & priority counts | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-DASH-03` | API | AC-05 | Admin Dashboard includes user stats | Returns 200 OK with `adminStats` populated | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |

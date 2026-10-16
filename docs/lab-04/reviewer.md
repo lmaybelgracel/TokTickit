@@ -16,6 +16,7 @@
 |:---|:---------------|:-----------------|:-------|:-----|
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
+| [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 
 ---
 
@@ -114,6 +115,50 @@
   > **คำตัดสิน: Approve** — งานฐานข้อมูล โมเดล ActionTaken, Migration SQL และ Idempotent Seed Data สำหรับ Issue 28 ผ่านการตรวจสอบความถูกต้องและรัดกุมครบถ้วน"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 29 - Actions Taken Backend REST API & Authorization Guards
+
+- **Pull Request:** [#71](https://github.com/lmaybelgracel/TokTickit/pull/71)
+- **Branch:** `feature/29-actions-taken-api`
+- **Summary:** Implemented `GET /api/tickets/:id/actions`, `POST /api/tickets/:id/actions`, and `PATCH /api/actions/:id` with comprehensive authorization guards (Staff/Admin write, Requester read-only for owned tickets, 403 on unowned), active user checks, optimistic concurrency check (`knownUpdatedAt` mandatory with 422, 409 Conflict on mismatch), input validation (description 3–2000 chars, result 2–1000 chars, followUpNote mandatory 3–1000 chars when followUpRequired=true, rejection of future actionDateTime and lower-bound rejection of timestamps earlier than ticket creation date), auto-stamping of `performedById`, and touching ticket `updatedAt`. Added automated Vitest suite `server/tests/lab-04/actions-taken.api.test.ts` (18/18 tests passing, 233/233 regression tests passing 100%).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-16T16:19:59Z):
+  > "### ผลการตรวจประเมิน Issue 29 - Actions Taken Backend REST API (Request Changes)
+  > การ implement endpoint ทั้ง 3 ตัว (GET, POST, PATCH) พร้อม optimistic concurrency, inactive user guard, role-based authorization และ test suite 15 tests ทำออกมาได้ดีและครบถ้วนมาก
+  > 
+  > อย่างไรก็ตาม มีจุดที่ต้องขอให้แก้ไขก่อนการอนุมัติ:
+  > 
+  > 1. **[server/src/routes/actions.routes.ts] ขาดการตรวจ lower-bound ของ actionDateTime (BR-05 Violation):**
+  > - ตาม **BR-05** ใน docs/lab-04/specification.md ระบุว่า actionDateTime ที่ client ส่งมาต้องอยู่ **"between the ticket's createdAt timestamp and the current server timestamp"**
+  > - ปัจจุบัน POST handler และ PATCH handler ตรวจเฉพาะ upper-bound (future dates) เท่านั้น: if (parsed.getTime() > Date.now() + 60000) แต่ไม่มีการตรวจว่า parsed >= ticket.createdAt เลย
+  > - ทำให้สามารถส่ง actionDateTime: "1970-01-01T00:00:00Z" ผ่านได้โดยไม่มี error ทั้งที่วันดังกล่าวเกิดก่อน ticket จะถูกสร้าง
+  > - **สิ่งที่ต้องแก้:**
+  > - ใน POST handler: เพิ่ม createdAt: true ใน ticket select แล้วตรวจ parsed < ticket.createdAt → reject 422
+  > - ใน PATCH handler: ปัจจุบันไม่ได้ fetch ticket เลยในส่วน actionDateTime validation รบกวน fetch ticket มาเพื่อนำ createdAt มาใช้ตรวจ lower-bound ด้วย
+  > 
+  > 2. **[server/src/routes/actions.routes.ts] Dev-requester header fallback ยังคงอยู่ใน Lab 4 routes:**
+  > - ฟังก์ชัน requireAuthenticatedUser มีการ copy x-development-requester-id fallback มาจาก Lab 1–2 ไว้ด้วย
+  > - เนื่องจาก authenticateToken middleware ถูก mount ใน app.ts ก่อนแล้ว การมี header-based fallback ซ้ำใน Lab 4 routes ทำให้สามารถส่ง header นี้เพื่อ bypass JWT authentication และ impersonate requester ID ใดก็ได้โดยไม่ต้องมี token
+  > - **สิ่งที่ต้องแก้:** รบกวนลบ dev-header block ออกจาก requireAuthenticatedUser ให้เหลือเพียง if (req.user) check และ return 401 หากไม่มี user
+  > 
+  > 3. **[server/tests/lab-04/actions-taken.api.test.ts] ขาด test case สำหรับ actionDateTime ก่อน ticket.createdAt:**
+  > - Test suite ครอบคลุม future date ✅ แต่ยังขาด test ที่ตรวจ lower-bound ตาม BR-05
+  > - **สิ่งที่ต้องแก้:** รบกวนเพิ่ม test case ที่ส่ง actionDateTime: "1970-01-01T00:00:00.000Z" และ expect 422 Unprocessable Entity พร้อมกับการแก้ implementation ในข้อ 1 ครับ
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนแก้ไขทั้ง 3 จุดข้างต้น"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Missing Lower-Bound Check for actionDateTime (BR-05):**
+     - *Reviewer Feedback:* In `server/src/routes/actions.routes.ts`, POST and PATCH endpoints only checked upper-bound (future dates) and allowed `actionDateTime` timestamps earlier than `ticket.createdAt` to pass through without error.
+     - *My Action:* Updated POST handler to include `createdAt: true` in ticket select and reject with HTTP 422 (`details: ["actionDateTime: Cannot be earlier than ticket creation date."]`) if `parsed < ticket.createdAt`. Updated PATCH handler to include `ticket: { select: { id: true, createdAt: true } }` on `existingAction` and reject with HTTP 422 if updated `actionDateTime < existingAction.ticket.createdAt`.
+  2. **Comment on Development Requester Header Fallback in Lab 4 Routes:**
+     - *Reviewer Feedback:* `requireAuthenticatedUser` retained the `x-development-requester-id` fallback, allowing header-based bypass of JWT authentication.
+     - *My Action:* Completely removed the development header fallback block from `requireAuthenticatedUser`, strictly enforcing JWT verification through `req.user` and returning HTTP 401 Unauthorized for unauthenticated requests.
+  3. **Comment on Automated Tests for BR-05 Lower-Bound and Header Rejection:**
+     - *Reviewer Feedback:* Vitest suite lacked negative test cases validating `actionDateTime` earlier than `ticket.createdAt`.
+     - *My Action:* Added automated tests in `server/tests/lab-04/actions-taken.api.test.ts` verifying that `POST` and `PATCH` reject timestamps earlier than `ticket.createdAt` with HTTP 422, and verifying that `x-development-requester-id` without token is rejected with HTTP 401 (expanding suite to 18/18 passing tests).
+- **Round 1 Verdict:** Changes Requested
+- **Round 2 Status:** Addressed & Submitted for Verification
 
 ---
 

@@ -9,6 +9,7 @@ import { authRouter } from "./routes/auth.routes.js";
 import { staffRouter } from "./routes/staff.routes.js";
 import { commentsRouter } from "./routes/comments.routes.js";
 import { adminRouter } from "./routes/admin.routes.js";
+import { ticketActionsRouter, actionsRouter } from "./routes/actions.routes.js";
 import { authenticateToken } from "./middleware/auth.middleware.js";
 
 // The Express app is exported separately from app.listen() (see index.ts) so
@@ -22,6 +23,8 @@ app.use(authenticateToken);
 app.use("/api/auth", authRouter);
 app.use("/api/staff", staffRouter);
 app.use("/api/tickets", commentsRouter);
+app.use("/api/tickets", ticketActionsRouter);
+app.use("/api/actions", actionsRouter);
 app.use("/api/admin", adminRouter);
 
 const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024;
