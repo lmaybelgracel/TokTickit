@@ -23,7 +23,7 @@ Testing encompasses:
 | **AC-05** | IT Staff dashboard aggregates authoritative metrics | `API-DASH-02`, `API-DASH-04`, `UI-DASH-02`, `UI-DASH-04` | API, UI | `server/tests/lab-04/staff-dashboard.api.test.ts`, `client/src/__tests__/lab-04/StaffDashboard.test.tsx` |
 | **AC-06** | Resolution gate transition requires valid summary | `API-WORK-01`, `E2E-RES-01` | API, E2E | `server/tests/lab-04/ticket-workflow.api.test.ts`, `e2e/lab-04/ticket-resolution.spec.ts` |
 | **AC-07** | Direct status transition to Resolved rejected (422) | `API-WORK-02` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
-| **AC-08** | Stale update rejected with 409 Conflict | `API-WORK-03` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
+| **AC-08** | Missing knownUpdatedAt rejected (422) and stale update rejected (409) | `API-WORK-03`, `API-WORK-06` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
 | **AC-09** | Inactive user assignment/action rejected (422) | `API-WORK-04` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
 | **AC-10** | Requester resolution toggle is advisory only | `API-WORK-05`, `UI-WORK-01` | API, UI | `server/tests/lab-04/ticket-workflow.api.test.ts`, `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` |
 | **AC-11** | IT Staff dashboard card drill-down navigation | `UI-DASH-03`, `E2E-DASH-01` | UI, E2E | `client/src/__tests__/lab-04/StaffDashboard.test.tsx`, `e2e/lab-04/dashboards.spec.ts` |
@@ -49,11 +49,12 @@ Testing encompasses:
 | `API-DASH-02` | API | AC-05 | IT Staff Dashboard calculates queue metrics | Returns 200 OK with unassigned, mine, status & priority counts | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-DASH-03` | API | AC-05 | Admin Dashboard includes user stats | Returns 200 OK with `adminStats` populated | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
 | `API-DASH-04` | API | AC-05 | IT Staff Dashboard returns current-user Actions Taken count | Returns 200 OK with `myActionsTakenCount` | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
-| `API-WORK-01` | API | AC-06 | Transition ticket to RESOLVED via resolve endpoint | Returns 200 OK, sets status=RESOLVED and summary | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
+| `API-WORK-01` | API | AC-06 | Transition ticket to RESOLVED via resolve endpoint | Returns 200 OK, sets currentStatus=RESOLVED and summary | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-02` | API | AC-07 | Transition to RESOLVED via general status endpoint | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-03` | API | AC-08 | Mutate ticket with outdated timestamp | Returns 409 Conflict | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-WORK-04` | API | AC-09 | Assign ticket to inactive user | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
-| `API-WORK-05` | API | AC-10 | Requester toggles problem resolved indication | Returns 200 OK, ticket status remains OPEN/IN_PROGRESS | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
+| `API-WORK-05` | API | AC-10 | Requester toggles problem resolved indication | Returns 200 OK, ticket currentStatus remains OPEN/IN_PROGRESS | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
+| `API-WORK-06` | API | AC-08 | Mutate ticket status without providing knownUpdatedAt | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Planned |
 | `API-MIG-01` | API | AC-14 | Idempotent database seed execution | Safe repeat execution preserving all records | `server/tests/lab-04/actions-taken.api.test.ts` | Planned |
 | `UI-DASH-01` | UI | AC-04 | Requester Dashboard renders cards and recent list | Displays open count, action required, and tickets | `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` | Planned |
 | `UI-DASH-02` | UI | AC-05 | IT Staff Dashboard renders metric cards and queue | Displays operational cards and queue table | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Planned |

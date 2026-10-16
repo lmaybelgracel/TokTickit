@@ -13,13 +13,22 @@
   }
   ```
 - **Concurrency & Stale Update Handling**:
-  Mutating endpoints accept an optional or mandatory `updatedAt` field. If the database record contains a more recent `updatedAt` than the client's provided timestamp, the server rejects the request with `409 Conflict`:
-  ```json
-  {
-    "error": "Conflict: The record has been modified by another user. Please refresh and try again.",
-    "currentUpdatedAt": "2026-10-15T12:00:00.000Z"
-  }
-  ```
+  Mutating endpoints for ticket status transitions and record updates (`PATCH /api/staff/tickets/:id/status`, `PATCH /api/staff/tickets/:id/resolve`, and `PATCH /api/actions/:id`) require a mandatory `knownUpdatedAt` ISO timestamp in the request body.
+  - **Missing Timestamp Validation (`422 Unprocessable Entity`)**: If the client omits `knownUpdatedAt`, the server rejects the request with HTTP `422 Unprocessable Entity`:
+    ```json
+    {
+      "error": "Validation failed: knownUpdatedAt is required",
+      "details": ["knownUpdatedAt: Field is mandatory to prevent stale updates."]
+    }
+    ```
+  - **Stale Update Detection (`409 Conflict`)**: If the supplied `knownUpdatedAt` does not match the database record's current `updatedAt` timestamp (indicating concurrent modification by another user), the server aborts the transaction and returns HTTP `409 Conflict`:
+    ```json
+    {
+      "error": "Conflict: The record has been modified by another user. Please refresh and try again.",
+      "currentUpdatedAt": "2026-10-15T12:00:00.000Z"
+    }
+    ```
+
 
 ---
 
@@ -151,7 +160,7 @@
         "id": 142,
         "ticketNumber": "TKT-2026-000142",
         "summary": "VPN connection drops every 15 minutes",
-        "status": "WAITING_FOR_REQUESTER",
+        "currentStatus": "WAITING_FOR_REQUESTER",
         "requestedPriority": "HIGH",
         "updatedAt": "2026-10-15T09:30:00.000Z"
       }
@@ -161,7 +170,7 @@
         "id": 139,
         "ticketNumber": "TKT-2026-000139",
         "summary": "Request second monitor for workstation",
-        "status": "RESOLVED",
+        "currentStatus": "RESOLVED",
         "resolutionSummary": "Dual display adapter installed and tested.",
         "resolvedAt": "2026-10-14T16:00:00.000Z"
       }
@@ -206,7 +215,7 @@
         "id": 145,
         "ticketNumber": "TKT-2026-000145",
         "summary": "Payroll portal login failing with 500 error",
-        "status": "IN_PROGRESS",
+        "currentStatus": "IN_PROGRESS",
         "itPriority": "URGENT",
         "owner": {
           "id": 2,
@@ -239,14 +248,16 @@
 - **Request Body**:
   ```json
   {
-    "status": "IN_PROGRESS",
+    "currentStatus": "IN_PROGRESS",
     "knownUpdatedAt": "2026-10-15T10:00:00.000Z"
   }
   ```
 - **Rules**:
+  - `knownUpdatedAt`: Mandatory ISO DateTime string. If omitted, the request is rejected with `422 Unprocessable Entity` (`"knownUpdatedAt is required"`).
+  - `currentStatus`: Mandatory target status string. (For backward compatibility, the server also accepts `status` in the payload).
   - Rejects transition to `RESOLVED` with `422 Unprocessable Entity` (`"Transition to RESOLVED must be performed via /api/staff/tickets/:id/resolve with resolutionSummary"`).
   - Enforces State Transition Matrix. Invalid transitions return `422 Unprocessable Entity`.
-  - Rejects stale updates with `409 Conflict`.
+  - Rejects stale updates with `409 Conflict` when `knownUpdatedAt !== ticket.updatedAt`.
 
 ---
 
@@ -261,8 +272,10 @@
   }
   ```
 - **Validation**:
+  - `knownUpdatedAt`: Mandatory ISO DateTime string. If omitted, the request is rejected with `422 Unprocessable Entity` (`"knownUpdatedAt is required"`).
   - `resolutionSummary`: Required, 3–500 characters.
-  - Automatically sets `status = "RESOLVED"`, `resolvedAt = now()`, and `resolvedById = caller.id`.
+  - Rejects stale updates with `409 Conflict` when `knownUpdatedAt !== ticket.updatedAt`.
+  - Automatically sets `currentStatus = "RESOLVED"`, `resolvedAt = now()`, and `resolvedById = caller.id`.
 - **Response `200 OK`**: Returns updated `Ticket` object.
 
 ---
@@ -276,5 +289,5 @@
     "indicated": true
   }
   ```
-- **Behavior**: Sets `requesterResolvedIndication: true` without changing `Ticket.status`.
+- **Behavior**: Sets `requesterResolvedIndication: true` without changing `Ticket.currentStatus`.
 - **Response `200 OK`**: Returns `{ "success": true, "requesterResolvedIndication": true }`.

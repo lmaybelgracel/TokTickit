@@ -94,24 +94,24 @@ The stakeholder requires a structured and reliable mechanism to plan, execute, a
   - From `Reopened`: May transition to `In Progress`, `Waiting for Requester`, or `Resolved`.
   - From `Cancelled`: Terminal state; cannot be transitioned except by Administrator.
 - **BR-11:** Transition to `Resolved` must occur strictly through the resolution endpoint (`PATCH /api/staff/tickets/:id/resolve`) requiring a mandatory `resolutionSummary` (3–500 characters). Calling the general status transition endpoint with `status = "Resolved"` is rejected with HTTP 422 Unprocessable Entity.
-- **BR-12:** The Requester "Problem Appears Resolved" toggle (`requesterResolvedIndication`) is strictly an advisory signal. It displays a visual banner for IT Staff but does not modify `Ticket.status`.
-- **BR-13:** When updating a ticket or action taken, the client must supply the record's known `updatedAt` timestamp. If the database record has a newer timestamp, the update is rejected with HTTP 409 Conflict.
+- **BR-12:** The Requester "Problem Appears Resolved" toggle (`requesterResolvedIndication`) is strictly an advisory signal. It displays a visual banner for IT Staff but does not modify `Ticket.currentStatus`.
+- **BR-13:** When updating a ticket status or action taken, the client must supply the record's known `knownUpdatedAt` timestamp. If omitted, the request is rejected with HTTP 422 Unprocessable Entity (`knownUpdatedAt is required`). If the database record has a newer timestamp, the update is rejected with HTTP 409 Conflict.
 - **BR-14:** Assigning ticket ownership or recording actions to an inactive user (`isActive = false`) is rejected with HTTP 422 Unprocessable Entity.
 
 ### Dashboard Calculation Rules
 - **BR-15:** All dashboard metrics must be computed dynamically by the backend from authoritative database records. Client-side aggregation of full collections is prohibited.
 - **BR-16:** Requester Dashboard Calculation Rules:
-  - `totalOpenTickets`: Count of tickets where `requesterId = caller.id` and `status IN ('New', 'Open', 'In Progress', 'Waiting for Requester', 'Reopened')`.
-  - `waitingForRequester`: Count of tickets where `requesterId = caller.id` and `status = 'Waiting for Requester'`.
+  - `totalOpenTickets`: Count of tickets where `requesterId = caller.id` and `currentStatus IN ('New', 'Open', 'In Progress', 'Waiting for Requester', 'Reopened')`.
+  - `waitingForRequester`: Count of tickets where `requesterId = caller.id` and `currentStatus = 'Waiting for Requester'`.
   - `recentlyUpdated`: Up to 5 tickets where `requesterId = caller.id`, sorted by `updatedAt DESC`.
-  - `recentlyResolved`: Up to 5 tickets where `requesterId = caller.id` and `status IN ('Resolved', 'Closed')`, sorted by `updatedAt DESC`.
+  - `recentlyResolved`: Up to 5 tickets where `requesterId = caller.id` and `currentStatus IN ('Resolved', 'Closed')`, sorted by `updatedAt DESC`.
 - **BR-17:** IT Staff Dashboard Calculation Rules:
-  - `unassignedTickets`: Count of active tickets where `ownerId IS NULL` and `status NOT IN ('Closed', 'Cancelled')`.
-  - `myAssignedTickets`: Count of active tickets where `ownerId = caller.id` and `status NOT IN ('Closed', 'Cancelled')`.
+  - `unassignedTickets`: Count of active tickets where `ownerId IS NULL` and `currentStatus NOT IN ('Closed', 'Cancelled')`.
+  - `myAssignedTickets`: Count of active tickets where `ownerId = caller.id` and `currentStatus NOT IN ('Closed', 'Cancelled')`.
   - `myActionsTakenCount`: Count of all `ActionTaken` records performed by the authenticated staff member (`performedById = caller.id`).
-  - `statusCounts`: Aggregate counts grouped by `status` for all active tickets.
+  - `statusCounts`: Aggregate counts grouped by `currentStatus` for all active tickets.
   - `priorityCounts`: Aggregate counts grouped by `itPriority` for all active tickets.
-  - `urgentOpenTickets`: Count of tickets with `itPriority = 'URGENT'` and `status NOT IN ('Resolved', 'Closed', 'Cancelled')`.
+  - `urgentOpenTickets`: Count of tickets with `itPriority = 'URGENT'` and `currentStatus NOT IN ('Resolved', 'Closed', 'Cancelled')`.
   - `recentQueueTickets`: Up to 5 tickets across the queue, sorted by `updatedAt DESC`.
 - **BR-18:** Administrator Dashboard Calculation Rules:
   - Inherits all IT Staff metrics plus: `totalUsers`, `activeUsers`, `inactiveUsers`, and breakdown by `role`.
@@ -223,7 +223,7 @@ model ActionTaken {
 - **AC-05:** Given an authenticated IT Staff member calling `GET /api/dashboard/staff`, then the response returns accurate counts for unassigned tickets, my tickets, urgent tickets, and status breakdowns.
 - **AC-06:** Given a ticket in `In Progress`, when IT Staff calls `PATCH /api/staff/tickets/:id/resolve` with a valid `resolutionSummary` (>= 3 chars), the ticket status transitions to `Resolved`.
 - **AC-07:** Given a ticket in `In Progress`, when IT Staff attempts to transition `status = "Resolved"` via `PATCH /api/staff/tickets/:id/status`, the request is rejected with HTTP 422.
-- **AC-08:** Given a ticket modification request where the provided `updatedAt` is older than the database record, the backend rejects with HTTP 409 Conflict.
+- **AC-08:** Given a ticket or action modification request omitting `knownUpdatedAt`, the backend rejects with HTTP 422 Unprocessable Entity. When the provided `knownUpdatedAt` does not match the database record, the backend rejects with HTTP 409 Conflict.
 - **AC-09:** Given a user with `isActive = false`, any attempt to assign them as Ticket Owner or Action Performer is rejected with HTTP 422.
 - **AC-10:** Given a Requester toggling "Problem Appears Resolved", the flag is saved but the ticket status remains unchanged.
 - **AC-11:** Given the IT Staff Dashboard UI, clicking on the "Unassigned Tickets" card navigates to the Ticket Queue with filter preset to unassigned tickets.
