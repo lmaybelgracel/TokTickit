@@ -16,7 +16,7 @@
 |:---|:---------------|:-----------------|:-------|:-----|
 | [#69](https://github.com/lmaybelgracel/TokTickit/pull/69) | Issue 27: Sprint 4 Engineering Contract & Specifications / `feature/27-sprint4-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #69](https://github.com/lmaybelgracel/TokTickit/pull/69) |
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
-| [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
+| [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 
 ---
 
@@ -158,7 +158,23 @@
      - *Reviewer Feedback:* Vitest suite lacked negative test cases validating `actionDateTime` earlier than `ticket.createdAt`.
      - *My Action:* Added automated tests in `server/tests/lab-04/actions-taken.api.test.ts` verifying that `POST` and `PATCH` reject timestamps earlier than `ticket.createdAt` with HTTP 422, and verifying that `x-development-requester-id` without token is rejected with HTTP 401 (expanding suite to 18/18 passing tests).
 - **Round 1 Verdict:** Changes Requested
-- **Round 2 Status:** Addressed & Submitted for Verification
+- **Round 2 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-16T16:43:29Z):
+  > "### ผลการตรวจประเมินรอบที่ 2 (Re-review Round 2) 
+  > 
+  > ขอบคุณสำหรับการแก้ไขโค้ดและชุดทดสอบอย่างรวดเร็วและตรงจุดใน commit `4810a75` ได้ดำเนินการ Re-review ในระดับโค้ดจริงและรัน Full Regression Test Suite เรียบร้อยแล้ว มีผลการตรวจดังนี้:
+  > 
+  > 1. **การตรวจสอบ Lower-Bound ของ `actionDateTime` (BR-05):**
+  >    - ใน `server/src/routes/actions.routes.ts` ทั้ง `POST /api/tickets/:id/actions` และ `PATCH /api/actions/:id` มีการดึง `ticket.createdAt` มาเปรียบเทียบ หากระบุเวลาก่อนหน้าวันสร้างตั๋ว จะถูกปฏิเสธด้วย HTTP 422 Unprocessable Entity ตามสเปกอย่างถูกต้อง
+  > 2. **ความปลอดภัยของ Authentication Middleware:**
+  >    - นำโค้ดดัก `x-development-requester-id` ออกจาก `requireAuthenticatedUser` เรียบร้อยแล้ว ทำให้ไม่มีช่องโหว่ในการส่ง header จำลองผู้ใช้โดยไม่มี JWT Token อีกต่อไป
+  > 3. **ชุดการทดสอบอัตโนมัติ (Automated Tests):**
+  >    - เพิ่ม test cases ครอบคลุมทั้งกรณีส่งเวลา 1970 ใน create/update และกรณีส่ง dev header โดยไม่มี token ได้อย่างครบถ้วน (Actions Taken suite ผ่านครบ 18/18 เทสต์)
+  > 4. **การทดสอบความเข้ากันได้ย้อนหลัง (Regression Suite):**
+  >    - รัน Full Test Suite ทั้งระบบ: Server ผ่าน 19 ไฟล์ (181/181 เทสต์) และ Client ผ่าน 12 ไฟล์ (52/52 เทสต์) รวมทั้งสิ้น 233 เทสต์ผ่าน 100% โดยไม่มีข้อผิดพลาด
+  > 
+  > **คำตัดสิน: Approve** — งาน Actions Taken Backend REST API ของ Issue 29 มีคุณภาพ สมบูรณ์"
+- **Final Verdict:** Approved
+- **Status:** Merged into `lab4-staging` by @phatthidawadi
 
 ---
 
