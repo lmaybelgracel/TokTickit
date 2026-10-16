@@ -395,19 +395,19 @@ staffRouter.patch("/tickets/:id/status", async (req: Request, res: Response) => 
     const { status, currentStatus, knownUpdatedAt } = req.body;
     const targetStatusRaw = currentStatus || status;
 
-    // Direct transition to RESOLVED via general status endpoint is strictly rejected per BR-11
-    if (typeof targetStatusRaw === "string" && targetStatusRaw.trim().toUpperCase() === TicketStatus.RESOLVED) {
-      res.status(422).json({
-        error: "Direct transition to RESOLVED via general status endpoint is not permitted. Please use PATCH /api/staff/tickets/:id/resolve with resolution summary.",
-      });
-      return;
-    }
-
     // BR-13 / AC-08: knownUpdatedAt is mandatory for status transitions
     if (!knownUpdatedAt || typeof knownUpdatedAt !== "string") {
       res.status(422).json({
         error: "Validation failed: knownUpdatedAt is required",
         details: ["knownUpdatedAt: Field is mandatory to prevent stale updates."],
+      });
+      return;
+    }
+
+    // Direct transition to RESOLVED via general status endpoint is strictly rejected per BR-11
+    if (typeof targetStatusRaw === "string" && targetStatusRaw.trim().toUpperCase() === TicketStatus.RESOLVED) {
+      res.status(422).json({
+        error: "Direct transition to RESOLVED via general status endpoint is not permitted. Please use PATCH /api/staff/tickets/:id/resolve with resolution summary.",
       });
       return;
     }

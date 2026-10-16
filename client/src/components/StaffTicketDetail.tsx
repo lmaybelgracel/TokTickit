@@ -684,7 +684,7 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
 
             <div className="modal-body">
               <p style={{ fontSize: "0.875rem", color: "#5A6E63", margin: 0 }}>
-                Per course business rule BR-20, resolving a ticket requires providing a clear resolution summary
+                Per course business rule BR-11, resolving a ticket requires providing a clear resolution summary
                 explaining the diagnostic steps and corrective action taken (3 to 500 characters).
               </p>
 

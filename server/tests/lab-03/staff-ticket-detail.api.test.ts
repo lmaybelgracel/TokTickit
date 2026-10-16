@@ -272,7 +272,10 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
       const res = await request(app)
         .patch("/api/staff/tickets/101/status")
         .set("Authorization", `Bearer ${staffToken}`)
-        .send({ status: "RESOLVED" });
+        .send({
+          status: "RESOLVED",
+          knownUpdatedAt: mockTicket.updatedAt.toISOString(),
+        });
 
       expect(res.status).toBe(422);
       expect(res.body.error).toContain("Direct transition to RESOLVED via general status endpoint is not permitted");
