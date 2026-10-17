@@ -10,6 +10,7 @@ import { staffRouter } from "./routes/staff.routes.js";
 import { commentsRouter } from "./routes/comments.routes.js";
 import { adminRouter } from "./routes/admin.routes.js";
 import { ticketActionsRouter, actionsRouter } from "./routes/actions.routes.js";
+import { dashboardRouter } from "./routes/dashboard.routes.js";
 import { authenticateToken } from "./middleware/auth.middleware.js";
 
 // The Express app is exported separately from app.listen() (see index.ts) so
@@ -26,6 +27,21 @@ app.use("/api/tickets", commentsRouter);
 app.use("/api/tickets", ticketActionsRouter);
 app.use("/api/actions", actionsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/dashboard", dashboardRouter);
+
+// Aliases for direct role paths
+app.get("/api/requester/dashboard", (req, res, next) => {
+  req.url = "/requester";
+  dashboardRouter(req, res, next);
+});
+app.get("/api/staff/dashboard", (req, res, next) => {
+  req.url = "/staff";
+  dashboardRouter(req, res, next);
+});
+app.get("/api/admin/dashboard", (req, res, next) => {
+  req.url = "/admin";
+  dashboardRouter(req, res, next);
+});
 
 const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024;
 const ALLOWED_ATTACHMENT_TYPES = new Set([
