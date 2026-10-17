@@ -18,7 +18,7 @@
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
-| [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
+| [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 
 ---
 
@@ -280,7 +280,22 @@
      - *Reviewer Feedback:* In `server/src/routes/staff.routes.ts`, the check rejecting direct transition to `RESOLVED` was executed before verifying the mandatory presence of `knownUpdatedAt`.
      - *My Action:* Reordered endpoint validation logic so that the `knownUpdatedAt` presence check (returning 422 Unprocessable Entity) executes prior to target status examination, strictly aligning with `api-spec.md` error precedence.
 - **Round 1 Verdict:** Changes Requested
-- **Round 2 Status:** Addressed & Submitted for Verification
+- **Round 2 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-17T06:11:56Z):
+  > "### ผลการตรวจประเมินรอบที่ 2 (Re-review Round 2)
+  > 
+  > ขอบคุณสำหรับการแก้ไขโค้ดและชุดทดสอบอย่างรวดเร็วและตรงจุดใน commit `cf7f558` ได้ดำเนินการ Re-review ในระดับโค้ดจริงและรัน Full Regression Test Suite เรียบร้อยแล้ว มีผลการตรวจดังนี้:
+  > 
+  > 1. **การอัปเดตรหัสข้อกำหนดใน Resolve Modal (F-01):**
+  >    - ใน `client/src/components/StaffTicketDetail.tsx` (บรรทัด 687) มีการปรับแก้ข้อความคำอธิบายใน Modal จาก `BR-20` เป็น **`BR-11`** เพื่อให้สอดคล้องกับเอกสารสเปกของ Sprint 4 (`docs/lab-04/specification.md`) อย่างถูกต้อง
+  > 2. **การปรับลำดับ Error Precedence ของ `knownUpdatedAt` ใน `PATCH /status` (F-02):**
+  >    - ใน `server/src/routes/staff.routes.ts` (บรรทัด 398–412) มีการสลับนำการตรวจสอบฟิลด์ `knownUpdatedAt` ขึ้นมาทำงานก่อนการตรวจสอบค่าสถานะ `RESOLVED` โดยหาก Client ไม่ได้แนบ Timestamp มาจะถูกปฏิเสธด้วย `422 Unprocessable Entity: knownUpdatedAt is required` เป็นลำดับแรก สอดคล้องกับข้อกำหนดใน `api-spec.md` (หัวข้อที่ 1) อย่างสมบูรณ์
+  > 3. **ชุดการทดสอบอัตโนมัติและความเข้ากันได้ย้อนหลัง (Regression Suite):**
+  >    - มีการอัปเดตชุดทดสอบ `staff-ticket-detail.api.test.ts` ให้แนบ `knownUpdatedAt` สอดคล้องกับลำดับการตรวจสอบใหม่ โดยไม่มีการข้ามเทสต์หรือลดทอนเงื่อนไข
+  >    - รัน Full Test Suite ทั้งระบบ: Server ผ่าน 20 ไฟล์ (192/192 เทสต์) และ Client ผ่าน 14 ไฟล์ (67/67 เทสต์) รวมทั้งสิ้น 259 เทสต์ผ่าน 100% โดยไม่มีข้อผิดพลาดและไม่มีผลกระทบต่อของเดิม (Zero Regression)
+  > 
+  > **คำตัดสิน: Approve** — งาน Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling ของ Issue 31 มีคุณภาพ สมบูรณ์ ถูกต้องตามข้อกำหนด"
+- **Final Verdict:** Approved
+- **Status:** Merged into `lab4-staging` by @phatthidawadi
 
 ---
 
