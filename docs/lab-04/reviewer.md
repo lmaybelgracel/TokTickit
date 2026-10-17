@@ -19,6 +19,7 @@
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
+| [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Pending Review | Under Review | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 
 ---
 
@@ -296,6 +297,15 @@
   > **คำตัดสิน: Approve** — งาน Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling ของ Issue 31 มีคุณภาพ สมบูรณ์ ถูกต้องตามข้อกำหนด"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 32 - Role Dashboards Backend API & Authoritative Query Engine
+
+- **Pull Request:** [#74](https://github.com/lmaybelgracel/TokTickit/pull/74)
+- **Branch:** `feature/32-dashboards-api`
+- **Summary:** Implemented authoritative backend dashboard calculation endpoints for Requesters, IT Staff, and Administrators in `server/src/routes/dashboard.routes.ts` with direct route aliases in `server/src/app.ts`. Computed dynamic metrics directly from the database without client-side aggregation (BR-15). Enforced strict data isolation for Requesters (`requesterId = caller.id`) providing `totalOpenTickets`, `waitingForRequester`, `resolvedOrClosed`, `recentTickets`, and `recentlyResolved` (BR-16, AC-04, API-DASH-01). Provided IT Staff and Admin metrics including `unassignedTickets`, `myAssignedTickets`, `myActionsTakenCount`, `urgentTickets`, `waitingForRequester`, `totalActiveTickets`, complete 8-state `statusDistribution`, 4-level `priorityDistribution`, and `recentQueueActivity` (BR-17, AC-05, API-DASH-02, API-DASH-04). Populated `adminStats` with user counts (`totalUsers`, `activeUsers`, `inactiveUsers`) and role breakdown for Administrators while omitting for IT Staff (BR-18, AC-05, API-DASH-03). Enforced authentication, role authorization, and mustChangePassword guards. Added automated Vitest suites `server/tests/lab-04/requester-dashboard.api.test.ts` (6/6 tests passing) and `server/tests/lab-04/staff-dashboard.api.test.ts` (8/8 tests passing), maintaining 100% zero regression across all 273 project tests (Server 206, Client 67).
+- **Round 1 Status:** Submitted for Review by @phatthidawadi
 
 ---
 

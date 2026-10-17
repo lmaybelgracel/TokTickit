@@ -45,10 +45,10 @@ Testing encompasses:
 | `API-ACT-04` | API | AC-01 | Fetch Actions Taken for owned ticket as Requester | Returns 200 OK with list of actions | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
 | `API-ACT-05` | API | AC-02 | Fetch Actions Taken for unowned ticket as Requester | Returns 403 Forbidden | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
 | `API-ACT-06` | API | AC-01 | Update existing Action Taken by IT Staff | Returns 200 OK with updated fields | `server/tests/lab-04/actions-taken.api.test.ts` | Passed |
-| `API-DASH-01` | API | AC-04 | Requester Dashboard returns only caller's metrics | Returns 200 OK with accurate counts and recent tickets | `server/tests/lab-04/requester-dashboard.api.test.ts` | Planned |
-| `API-DASH-02` | API | AC-05 | IT Staff Dashboard calculates queue metrics | Returns 200 OK with unassigned, mine, status & priority counts | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
-| `API-DASH-03` | API | AC-05 | Admin Dashboard includes user stats | Returns 200 OK with `adminStats` populated | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
-| `API-DASH-04` | API | AC-05 | IT Staff Dashboard returns current-user Actions Taken count | Returns 200 OK with `myActionsTakenCount` | `server/tests/lab-04/staff-dashboard.api.test.ts` | Planned |
+| `API-DASH-01` | API | AC-04 | Requester Dashboard returns only caller's metrics | Returns 200 OK with accurate counts and recent tickets | `server/tests/lab-04/requester-dashboard.api.test.ts` | Passed |
+| `API-DASH-02` | API | AC-05 | IT Staff Dashboard calculates queue metrics | Returns 200 OK with unassigned, mine, status & priority counts | `server/tests/lab-04/staff-dashboard.api.test.ts` | Passed |
+| `API-DASH-03` | API | AC-05 | Admin Dashboard includes user stats | Returns 200 OK with `adminStats` populated | `server/tests/lab-04/staff-dashboard.api.test.ts` | Passed |
+| `API-DASH-04` | API | AC-05 | IT Staff Dashboard returns current-user Actions Taken count | Returns 200 OK with `myActionsTakenCount` | `server/tests/lab-04/staff-dashboard.api.test.ts` | Passed |
 | `API-WORK-01` | API | AC-06 | Transition ticket to RESOLVED via resolve endpoint | Returns 200 OK, sets currentStatus=RESOLVED and summary | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
 | `API-WORK-02` | API | AC-07 | Transition to RESOLVED via general status endpoint | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
 | `API-WORK-03` | API | AC-08 | Mutate ticket with outdated timestamp | Returns 409 Conflict | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
