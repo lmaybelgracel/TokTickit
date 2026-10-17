@@ -18,6 +18,7 @@
 | [#70](https://github.com/lmaybelgracel/TokTickit/pull/70) | Issue 28: Database Evolution, Actions Taken Model, Migration & Idempotent Seed Data / `feature/28-database-and-seed` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #70](https://github.com/lmaybelgracel/TokTickit/pull/70) |
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
+| [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 
 ---
 
@@ -246,6 +247,40 @@
   > **คำตัดสิน: Approve** — งาน Actions Taken Frontend UI & Ticket Detail Integration ของ Issue 30 มีคุณภาพ สมบูรณ์ ถูกต้องตามข้อกำหนด"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 31 - Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling
+
+- **Pull Request:** [#73](https://github.com/lmaybelgracel/TokTickit/pull/73)
+- **Branch:** `feature/31-status-workflow-and-resolution`
+- **Summary:** Enforces the 8-state transition matrix on `PATCH /api/staff/tickets/:id/status` (BR-10). Rejects direct transition to `RESOLVED` via status endpoint with HTTP 422 (BR-11, API-WORK-02). Implements the formal resolution gate on `PATCH /api/staff/tickets/:id/resolve` requiring mandatory `resolutionSummary` (3–500 chars) and transitioning status to `RESOLVED` (API-WORK-01). Enforces mandatory `knownUpdatedAt` across both status and resolve endpoints with HTTP 422 if omitted (API-WORK-06) and HTTP 409 Conflict if stale (API-WORK-03). Enforces inactive user guard on `PATCH /api/staff/tickets/:id/assign` returning HTTP 422 (BR-14, API-WORK-04). Supports requester resolution advisory toggle via `PATCH /api/tickets/:id/resolve-indication` without mutating ticket currentStatus (BR-12, API-WORK-05). Adds user-facing error and conflict alert banners with automatic reload on HTTP 409 Conflict, Escape key dismiss on resolve modal, and advisory banner in `StaffTicketDetail.tsx` (UI-WORK-01). Verified via automated test suites `server/tests/lab-04/ticket-workflow.api.test.ts` (11/11 tests passing) and `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` (6/6 tests passing), maintaining 100% zero regression across all 259 project tests (Server 192, Client 67).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-16T19:11:28Z):
+  > "### ผลการตรวจประเมิน Issue 31 - Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling
+  > 
+  > จากการตรวจสอบโค้ดและการทำงานใน PR #73 (Branch `feature/31-status-workflow-and-resolution`) ตัวฟีเจอร์หลักทั้ง Transition Matrix, Resolution Gate, 409 Conflict, Inactive User Guard และชุดทดสอบ 259 เคสทำออกมาได้ดีมากและผ่าน 100%
+  > 
+  > มีจุดที่อยากให้ปรับแก้เล็กน้อยในไฟล์ของ PR #73 ก่อน ดังนี้:
+  > 
+  > 1. **[client/src/components/StaffTicketDetail.tsx] อัปเดตรหัสกฎใน Resolve Modal (บรรทัด 670):**
+  >    - ข้อความคำอธิบายใน Modal ยังระบุว่า *"Per course business rule BR-20..."* ซึ่งเป็นรหัสเดิมของ Sprint 3
+  >    - ในเอกสารสเปกของ Sprint 4 (`docs/lab-04/specification.md`) กฎ Resolution Gate ถูกจัดลำดับเป็น **`BR-11`**
+  >    - **สิ่งที่ต้องแก้:** ปรับข้อความเป็น `BR-11` เพื่อความถูกต้องในการ Traceability กับเอกสาร Lab 4 ครับ
+  > 
+  > 2. **[server/src/routes/staff.routes.ts] ลำดับการตรวจสอบใน `PATCH /api/staff/tickets/:id/status` (บรรทัด 398–408):**
+  >    - ปัจจุบันโค้ดดักจับการห้ามเปลี่ยนสถานะเป็น `RESOLVED` ทำงานก่อนการตรวจสอบว่ามี `knownUpdatedAt` หรือไม่
+  >    - **สิ่งที่ต้องแก้:** สลับนำการตรวจเช็ก `knownUpdatedAt` ขึ้นมาไว้ก่อนการตรวจเช็กค่าสถานะ เพื่อให้ลำดับ Error Precedence สอดคล้องกับ `api-spec.md`
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนปรับแก้จุดข้างต้นเล็กน้อย"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Business Rule Code in Resolve Modal:**
+     - *Reviewer Feedback:* In `client/src/components/StaffTicketDetail.tsx`, the modal description referenced legacy Sprint 3 rule code `BR-20` instead of Sprint 4 rule `BR-11`.
+     - *My Action:* Updated modal description text to explicitly reference `BR-11` conforming to `docs/lab-04/specification.md`.
+  2. **Comment on Validation Precedence in Status Mutation Endpoint:**
+     - *Reviewer Feedback:* In `server/src/routes/staff.routes.ts`, the check rejecting direct transition to `RESOLVED` was executed before verifying the mandatory presence of `knownUpdatedAt`.
+     - *My Action:* Reordered endpoint validation logic so that the `knownUpdatedAt` presence check (returning 422 Unprocessable Entity) executes prior to target status examination, strictly aligning with `api-spec.md` error precedence.
+- **Round 1 Verdict:** Changes Requested
+- **Round 2 Status:** Addressed & Submitted for Verification
 
 ---
 

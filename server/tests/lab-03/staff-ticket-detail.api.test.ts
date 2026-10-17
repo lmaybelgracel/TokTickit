@@ -238,7 +238,7 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
       const res = await request(app)
         .patch("/api/staff/tickets/101/status")
         .set("Authorization", `Bearer ${staffToken}`)
-        .send({ status: "IN_PROGRESS" });
+        .send({ status: "IN_PROGRESS", knownUpdatedAt: mockTicket.updatedAt.toISOString() });
 
       expect(res.status).toBe(200);
       expect(mockPrisma.ticket.update).toHaveBeenCalledWith(
@@ -257,7 +257,7 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
       const res = await request(app)
         .patch("/api/staff/tickets/101/status")
         .set("Authorization", `Bearer ${staffToken}`)
-        .send({ status: "CLOSED" });
+        .send({ status: "CLOSED", knownUpdatedAt: mockTicket.updatedAt.toISOString() });
 
       expect(res.status).toBe(400);
       expect(res.body.error).toContain("Invalid status transition from OPEN to CLOSED");
@@ -272,7 +272,10 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
       const res = await request(app)
         .patch("/api/staff/tickets/101/status")
         .set("Authorization", `Bearer ${staffToken}`)
-        .send({ status: "RESOLVED" });
+        .send({
+          status: "RESOLVED",
+          knownUpdatedAt: mockTicket.updatedAt.toISOString(),
+        });
 
       expect(res.status).toBe(422);
       expect(res.body.error).toContain("Direct transition to RESOLVED via general status endpoint is not permitted");
@@ -291,6 +294,7 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
         .set("Authorization", `Bearer ${staffToken}`)
         .send({
           resolutionSummary: "Replaced faulty HDMI display cable; monitor now runs steadily without flicker.",
+          knownUpdatedAt: mockTicket.updatedAt.toISOString(),
         });
 
       expect(res.status).toBe(200);
@@ -313,7 +317,7 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
       const res = await request(app)
         .patch("/api/staff/tickets/101/resolve")
         .set("Authorization", `Bearer ${staffToken}`)
-        .send({ resolutionSummary: "ok" });
+        .send({ resolutionSummary: "ok", knownUpdatedAt: mockTicket.updatedAt.toISOString() });
 
       expect(res.status).toBe(422);
       expect(res.body.error).toContain("Resolution summary is required and must be between 3 and 500 characters");
@@ -330,6 +334,7 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
         .set("Authorization", `Bearer ${staffToken}`)
         .send({
           resolutionSummary: "Solved properly and completely.",
+          knownUpdatedAt: mockTicket.updatedAt.toISOString(),
         });
 
       expect(res.status).toBe(400);

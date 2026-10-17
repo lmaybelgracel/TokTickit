@@ -466,7 +466,12 @@ export async function updateItPriority(ticketId: number, itPriority: string, tok
   return res.json();
 }
 
-export async function updateTicketStatus(ticketId: number, status: string, token?: string | null): Promise<Ticket> {
+export async function updateTicketStatus(
+  ticketId: number,
+  status: string,
+  token?: string | null,
+  knownUpdatedAt?: string
+): Promise<Ticket> {
   const authToken = token || localStorage.getItem("toktickit_auth_token");
   const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/status`, {
     method: "PATCH",
@@ -474,16 +479,28 @@ export async function updateTicketStatus(ticketId: number, status: string, token
       "Content-Type": "application/json",
       ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({
+      status,
+      currentStatus: status,
+      ...(knownUpdatedAt ? { knownUpdatedAt } : {}),
+    }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.error || "Failed to update ticket status");
+    const err: any = new Error(data.error || "Failed to update ticket status");
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
   return res.json();
 }
 
-export async function resolveTicket(ticketId: number, resolutionSummary: string, token?: string | null): Promise<Ticket> {
+export async function resolveTicket(
+  ticketId: number,
+  resolutionSummary: string,
+  token?: string | null,
+  knownUpdatedAt?: string
+): Promise<Ticket> {
   const authToken = token || localStorage.getItem("toktickit_auth_token");
   const res = await fetch(`${BASE_URL}/api/staff/tickets/${ticketId}/resolve`, {
     method: "PATCH",
@@ -491,11 +508,17 @@ export async function resolveTicket(ticketId: number, resolutionSummary: string,
       "Content-Type": "application/json",
       ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
     },
-    body: JSON.stringify({ resolutionSummary }),
+    body: JSON.stringify({
+      resolutionSummary,
+      ...(knownUpdatedAt ? { knownUpdatedAt } : {}),
+    }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.error || "Failed to resolve ticket");
+    const err: any = new Error(data.error || "Failed to resolve ticket");
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
   return res.json();
 }
@@ -569,7 +592,7 @@ export async function indicateTicketResolved(ticketId: number, appearsResolved =
   const res = await fetch(`${BASE_URL}/api/tickets/${ticketId}/resolve-indication`, {
     method: "PATCH",
     headers,
-    body: JSON.stringify({ appearsResolved }),
+    body: JSON.stringify({ appearsResolved, indicated: appearsResolved }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

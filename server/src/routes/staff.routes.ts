@@ -280,7 +280,19 @@ staffRouter.patch("/tickets/:id/assign", async (req: Request, res: Response) => 
       select: { id: true, isActive: true, role: true },
     });
 
-    if (!targetUser || !targetUser.isActive || (targetUser.role !== Role.IT_STAFF && targetUser.role !== Role.ADMINISTRATOR)) {
+    if (!targetUser) {
+      res.status(404).json({ error: "Target owner not found" });
+      return;
+    }
+
+    if (!targetUser.isActive) {
+      res.status(422).json({
+        error: "Cannot assign ticket to an inactive user (BR-14)",
+      });
+      return;
+    }
+
+    if (targetUser.role !== Role.IT_STAFF && targetUser.role !== Role.ADMINISTRATOR) {
       res.status(400).json({ error: "Target owner must be an active IT Staff or Administrator" });
       return;
     }
@@ -370,7 +382,7 @@ const ALLOWED_STATUS_TRANSITIONS: Record<TicketStatus, TicketStatus[]> = {
   CANCELLED: [],
 };
 
-// PATCH /api/staff/tickets/:id/status - Transition Status per BR-19
+// PATCH /api/staff/tickets/:id/status - Transition Status per BR-10, BR-11, BR-13
 staffRouter.patch("/tickets/:id/status", async (req: Request, res: Response) => {
   try {
     const prisma = getPrisma();
@@ -380,21 +392,32 @@ staffRouter.patch("/tickets/:id/status", async (req: Request, res: Response) => 
       return;
     }
 
-    const { status } = req.body;
-    if (!status || typeof status !== "string") {
-      res.status(400).json({ error: "status is required" });
+    const { status, currentStatus, knownUpdatedAt } = req.body;
+    const targetStatusRaw = currentStatus || status;
+
+    // BR-13 / AC-08: knownUpdatedAt is mandatory for status transitions
+    if (!knownUpdatedAt || typeof knownUpdatedAt !== "string") {
+      res.status(422).json({
+        error: "Validation failed: knownUpdatedAt is required",
+        details: ["knownUpdatedAt: Field is mandatory to prevent stale updates."],
+      });
       return;
     }
 
-    const upperStatus = status.trim().toUpperCase();
-
-    // Guard: Direct transition to RESOLVED via general status endpoint is strictly rejected per BR-20
-    if (upperStatus === TicketStatus.RESOLVED) {
+    // Direct transition to RESOLVED via general status endpoint is strictly rejected per BR-11
+    if (typeof targetStatusRaw === "string" && targetStatusRaw.trim().toUpperCase() === TicketStatus.RESOLVED) {
       res.status(422).json({
         error: "Direct transition to RESOLVED via general status endpoint is not permitted. Please use PATCH /api/staff/tickets/:id/resolve with resolution summary.",
       });
       return;
     }
+
+    if (!targetStatusRaw || typeof targetStatusRaw !== "string") {
+      res.status(400).json({ error: "currentStatus is required" });
+      return;
+    }
+
+    const upperStatus = targetStatusRaw.trim().toUpperCase();
 
     if (!Object.values(TicketStatus).includes(upperStatus as TicketStatus)) {
       res.status(400).json({ error: "Invalid status value" });
@@ -404,6 +427,17 @@ staffRouter.patch("/tickets/:id/status", async (req: Request, res: Response) => 
     const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
     if (!ticket) {
       res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    // Concurrency check: knownUpdatedAt vs ticket.updatedAt
+    const clientTimestamp = new Date(knownUpdatedAt).getTime();
+    const serverTimestamp = ticket.updatedAt.getTime();
+    if (isNaN(clientTimestamp) || clientTimestamp !== serverTimestamp) {
+      res.status(409).json({
+        error: "Conflict: The record has been modified by another user. Please refresh and try again.",
+        currentUpdatedAt: ticket.updatedAt.toISOString(),
+      });
       return;
     }
 
@@ -432,7 +466,7 @@ staffRouter.patch("/tickets/:id/status", async (req: Request, res: Response) => 
   }
 });
 
-// PATCH /api/staff/tickets/:id/resolve - Resolve with Mandatory Resolution Summary (BR-19, BR-20)
+// PATCH /api/staff/tickets/:id/resolve - Resolve with Mandatory Resolution Summary (BR-11, BR-13, BR-20)
 staffRouter.patch("/tickets/:id/resolve", async (req: Request, res: Response) => {
   try {
     const prisma = getPrisma();
@@ -442,9 +476,31 @@ staffRouter.patch("/tickets/:id/resolve", async (req: Request, res: Response) =>
       return;
     }
 
+    const { resolutionSummary, knownUpdatedAt } = req.body;
+
+    // BR-13 / AC-08: knownUpdatedAt is mandatory for resolve mutations
+    if (!knownUpdatedAt || typeof knownUpdatedAt !== "string") {
+      res.status(422).json({
+        error: "Validation failed: knownUpdatedAt is required",
+        details: ["knownUpdatedAt: Field is mandatory to prevent stale updates."],
+      });
+      return;
+    }
+
     const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
     if (!ticket) {
       res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    // Concurrency check: knownUpdatedAt vs ticket.updatedAt
+    const clientTimestamp = new Date(knownUpdatedAt).getTime();
+    const serverTimestamp = ticket.updatedAt.getTime();
+    if (isNaN(clientTimestamp) || clientTimestamp !== serverTimestamp) {
+      res.status(409).json({
+        error: "Conflict: The record has been modified by another user. Please refresh and try again.",
+        currentUpdatedAt: ticket.updatedAt.toISOString(),
+      });
       return;
     }
 
@@ -461,7 +517,6 @@ staffRouter.patch("/tickets/:id/resolve", async (req: Request, res: Response) =>
       return;
     }
 
-    const { resolutionSummary } = req.body;
     if (
       !resolutionSummary ||
       typeof resolutionSummary !== "string" ||
