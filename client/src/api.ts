@@ -320,6 +320,7 @@ export interface FetchStaffTicketsParams {
   priority?: string;
   itPriority?: string;
   ownerId?: string | number;
+  actionBy?: string;
   sort?: string;
   order?: "asc" | "desc";
   page?: number;
@@ -350,6 +351,7 @@ export async function fetchStaffTickets(
   if (params.ownerId !== undefined && params.ownerId !== null && String(params.ownerId) !== "") {
     query.set("ownerId", String(params.ownerId));
   }
+  if (params.actionBy) query.set("actionBy", params.actionBy);
   if (params.sort) query.set("sort", params.sort);
   if (params.order) query.set("order", params.order);
   if (params.page) query.set("page", params.page.toString());

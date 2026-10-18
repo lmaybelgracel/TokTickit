@@ -33,6 +33,7 @@ function AppContent() {
   const isStaffOrAdmin = user?.role === "IT_STAFF" || isAdmin;
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
   const [queueFilter, setQueueFilter] = useState<DrillDownFilter | null>(null);
+  const [previousStaffView, setPreviousStaffView] = useState<CurrentView>("staff-queue");
 
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(() => {
     try {
@@ -266,6 +267,7 @@ function AppContent() {
               setCurrentView("staff-queue");
             }}
             onSelectTicket={(ticketId) => {
+              setPreviousStaffView("staff-dashboard");
               setSelectedTicketId(ticketId);
               setCurrentView("ticket-detail");
             }}
@@ -280,7 +282,9 @@ function AppContent() {
               initialStatus={queueFilter?.status}
               initialItPriority={queueFilter?.itPriority}
               initialSearch={queueFilter?.search}
+              initialActionBy={queueFilter?.actionBy}
               onSelectTicket={(ticket) => {
+                setPreviousStaffView("staff-queue");
                 setSelectedTicketId(ticket.id);
                 setCurrentView("ticket-detail");
               }}
@@ -292,7 +296,9 @@ function AppContent() {
             initialStatus={queueFilter?.status}
             initialItPriority={queueFilter?.itPriority}
             initialSearch={queueFilter?.search}
+            initialActionBy={queueFilter?.actionBy}
             onSelectTicket={(ticket) => {
+              setPreviousStaffView("staff-queue");
               setSelectedTicketId(ticket.id);
               setCurrentView("ticket-detail");
             }}
@@ -320,7 +326,7 @@ function AppContent() {
           isStaffOrAdmin ? (
             <StaffTicketDetail
               ticketId={selectedTicketId}
-              onBack={() => setCurrentView("staff-queue")}
+              onBack={() => setCurrentView(previousStaffView || "staff-queue")}
             />
           ) : (
             <TicketDetail

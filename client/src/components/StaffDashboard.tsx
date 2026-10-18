@@ -8,10 +8,11 @@ import {
 import "./StaffDashboard.css";
 
 export interface DrillDownFilter {
-  ownerFilter?: string; // "unassigned" | "me" | "all"
+  ownerFilter?: string; // "unassigned" | "me" | "my-actions" | "all"
   status?: string;
   itPriority?: string;
   search?: string;
+  actionBy?: string;
   filter?: string;
 }
 
@@ -315,11 +316,11 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           data-testid="metric-my-actions"
           role="button"
           tabIndex={0}
-          onClick={() => onDrillDown?.({ ownerFilter: "me" })}
+          onClick={() => onDrillDown?.({ ownerFilter: "my-actions", actionBy: "me" })}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              onDrillDown?.({ ownerFilter: "me" });
+              onDrillDown?.({ ownerFilter: "my-actions", actionBy: "me" });
             }
           }}
           aria-label={`My Actions Recorded: ${metrics.myActionsTakenCount}. Click to view actions history.`}
@@ -345,11 +346,11 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
           data-testid="metric-urgent"
           role="button"
           tabIndex={0}
-          onClick={() => onDrillDown?.({ itPriority: "URGENT" })}
+          onClick={() => onDrillDown?.({ itPriority: "URGENT", status: "ACTIVE" })}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              onDrillDown?.({ itPriority: "URGENT" });
+              onDrillDown?.({ itPriority: "URGENT", status: "ACTIVE" });
             }
           }}
           aria-label={`Urgent Tickets: ${metrics.urgentTickets}. Click to filter urgent tickets.`}

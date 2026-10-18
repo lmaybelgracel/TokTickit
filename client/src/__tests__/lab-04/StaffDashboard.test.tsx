@@ -232,7 +232,7 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
 
       fireEvent.click(screen.getByTestId("metric-urgent"));
       expect(handleDrillDown).toHaveBeenCalledTimes(1);
-      expect(handleDrillDown).toHaveBeenCalledWith({ itPriority: "URGENT" });
+      expect(handleDrillDown).toHaveBeenCalledWith({ itPriority: "URGENT", status: "ACTIVE" });
     });
 
     it("triggers onDrillDown with status: WAITING_FOR_REQUESTER when clicking Waiting for Requester card", async () => {
@@ -323,7 +323,7 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
       expect(card).toHaveTextContent(/actions taken performed by you/i);
 
       fireEvent.click(card);
-      expect(handleDrillDown).toHaveBeenCalledWith({ ownerFilter: "me" });
+      expect(handleDrillDown).toHaveBeenCalledWith({ ownerFilter: "my-actions", actionBy: "me" });
     });
   });
 

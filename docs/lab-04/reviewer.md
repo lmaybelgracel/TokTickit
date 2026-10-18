@@ -398,6 +398,27 @@
      - *Reviewer Feedback:* Update review records for Issue 33 / PR #75 to reflect Round 1 Changes Requested verdict and response actions.
      - *My Action:* Recorded Round 1 Changes Requested verdict, verbatim quotes, and detailed responses in `docs/lab-04/reviewer.md`.
 
+- **Round 2 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-18T18:29:46Z):
+  > "### Second Reviewer Feedback — Request Changes
+  > 
+  > จากการ Re-review เชิงลึกใน PR #75 พบประเด็นด้าน Data Semantic และ Drill-Down Consistency ที่ต้องขอให้ปรับปรุงเพิ่มเติมก่อนอนุมัติ ดังนี้:
+  > 1. **[Drill-Down Mismatch] การเชื่อมโยงการ์ด \"My Actions Recorded\" (`StaffDashboard.tsx:L318`):**
+  >    - ตัวเลข `myActionsTakenCount` นับการกระทำที่ผู้ใช้เป็นผู้บันทึก (`performedById = caller.id`) แต่ Handler กลับส่ง `ownerFilter: \"me\"` ซึ่งไปกรองตั๋วที่ผู้ใช้เป็นเจ้าของตั๋วหลัก หากผู้ใช้ไปช่วยทำ Action บนตั๋วของคนอื่น (ตาม BR-02) ตั๋วเหล่านั้นจะไม่ปรากฏในคิว แนะนำให้พิจารณาการแสดงผลหรือจัดทำโหมดกรองสำหรับ My Actions ให้ถูกต้อง
+  > 2. **[Count Discrepancy] การ์ด \"Urgent Tickets\" ส่งผลให้ตัวเลขไม่ตรงกับตารางคิวงาน (`StaffDashboard.tsx:L348`):**
+  >    - Backend นับเฉพาะ Urgent ที่ยังไม่จบงาน (`notIn: RESOLVED, CLOSED, CANCELLED`) แต่การ์ดส่งเฉพาะ `{ itPriority: \"URGENT\" }` ทำให้คิวงานดึงตั๋ว Closed/Cancelled ขึ้นมาแสดงด้วย ส่งผลให้จำนวนตั๋วในคิวมากกว่าตัวเลขบนการ์ด ขัดต่อข้อกำหนด E2E-DASH-01 (\"landing on queue matching count\") แนะนำให้ปรับให้คิวงานแสดงเฉพาะตั๋ว Active เมื่อกดมาจาก Urgent Card
+  > 3. **[Navigation Flow] การกดย้อนกลับจากหน้ารายละเอียดตั๋ว (`App.tsx:L323`):**
+  >    - เมื่อคลิกดูตั๋วจาก Recent Queue Activity ในหน้า Dashboard เมื่อกด Back ใน `StaffTicketDetail` ระบบจะพาไปหน้า `staff-queue` แทนที่จะกลับมาที่ `staff-dashboard` แนะนำให้บันทึก View ต้นทางเพื่อพากลับมาหน้าเดิมได้อย่างถูกต้อง"
+- **Round 2 Reviewer Feedback Items & My Responses:**
+  1. **Comment on Drill-Down Mismatch for \"My Actions Recorded\" Card (`StaffDashboard.tsx`, `StaffTicketQueue.tsx`, `staff.routes.ts`, `api.ts`):**
+     - *Reviewer Feedback:* Card 3 counted actions logged by caller (`performedById = caller.id`), but drill-down only queried tickets where caller is primary owner (`ownerFilter: \"me\"`). If staff assisted on others' tickets (BR-02), those tickets disappeared from the queue.
+     - *My Action:* Added `actionBy` query parameter to backend `GET /api/staff/tickets` querying `where.actionsTaken = { some: { performedById: req.user.id } }`. Added `actionBy?: string` to `FetchStaffTicketsParams` and `initialActionBy` prop to `StaffTicketQueue.tsx`. Added dedicated 4th ownership toggle button `My Actions` (`ownerFilter === \"my-actions\"`), and updated Dashboard Card 3 click handler to dispatch `onDrillDown?.({ ownerFilter: \"my-actions\", actionBy: \"me\" })`.
+  2. **Comment on Count Discrepancy for \"Urgent Tickets\" Card (`StaffDashboard.tsx`, `StaffTicketQueue.tsx`, `staff.routes.ts`):**
+     - *Reviewer Feedback:* Backend metric counts active urgent tickets (`notIn: RESOLVED, CLOSED, CANCELLED`), but drill-down sent only `{ itPriority: \"URGENT\" }`, causing closed/cancelled tickets to load into queue and creating count discrepancy violating E2E-DASH-01.
+     - *My Action:* Added `status === \"ACTIVE\"` support to backend `GET /api/staff/tickets` querying `where.currentStatus = { notIn: [RESOLVED, CLOSED, CANCELLED] }`. Added `<option value=\"ACTIVE\">Active (Non-terminal)</option>` to status select in `StaffTicketQueue.tsx`. Updated Dashboard Card 4 click handler to dispatch `onDrillDown?.({ itPriority: \"URGENT\", status: \"ACTIVE\" })`.
+  3. **Comment on Back Button Navigation Flow (`App.tsx`):**
+     - *Reviewer Feedback:* Navigating to ticket details from Recent Queue Activity on Dashboard and clicking Back navigated to `staff-queue` instead of returning to `staff-dashboard`.
+     - *My Action:* Added `previousStaffView` state tracking in `App.tsx`. Recorded `previousStaffView = \"staff-dashboard\"` on dashboard ticket click and `\"staff-queue\"` on queue ticket click. Restored exact originating view in `StaffTicketDetail.onBack`.
+- **Status:** Round 2 fixes committed, pushed, and awaiting reviewer re-inspection.
 ---
 
 ## 2. Pull Requests I Reviewed for Partner (@chanya06)
