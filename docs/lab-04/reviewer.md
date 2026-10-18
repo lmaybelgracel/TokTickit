@@ -20,7 +20,7 @@
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
-| [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Changes Requested (Round 1: Changes Requested) | Under Review | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
+| [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 
 ---
 
@@ -418,7 +418,22 @@
   3. **Comment on Back Button Navigation Flow (`App.tsx`):**
      - *Reviewer Feedback:* Navigating to ticket details from Recent Queue Activity on Dashboard and clicking Back navigated to `staff-queue` instead of returning to `staff-dashboard`.
      - *My Action:* Added `previousStaffView` state tracking in `App.tsx`. Recorded `previousStaffView = \"staff-dashboard\"` on dashboard ticket click and `\"staff-queue\"` on queue ticket click. Restored exact originating view in `StaffTicketDetail.onBack`.
-- **Status:** Round 2 fixes committed, pushed, and awaiting reviewer re-inspection.
+- **Round 3 / Final Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-18T19:00:49Z):
+  > "### ผลการตรวจประเมินรอบที่ 2 (Re-review Round 2)
+  > 
+  > ขอบคุณสำหรับการแก้ไขปัญหาเชิงลึกใน commit `7454aa6` อย่างยอดเยี่ยมและตรงประเด็น
+  > 
+  > ผลการ Re-review ในระดับโค้ดจริงและการตรวจสอบระบบ:
+  > 1. **Clean Build ผ่านสมบูรณ์ (AC-16):** การตัด `data.recentTickets` ออกจาก `StaffDashboard.tsx` และปรับปรุง Type Signature ใน `StaffDashboard.test.tsx` ทำให้ `npm run build` (`tsc && vite build`) สำเร็จ 100% ปราศจากข้อผิดพลาด
+  > 2. **ความถูกต้องของ Drill-Down Filter (AC-11, BR-02, BR-17):**
+  >    - การ์ด \"My Actions Recorded\" รองรับการกรอง `actionBy=me` ผ่านความสัมพันธ์ของ Actions Taken อย่างแท้จริง ไม่จำกัดเฉพาะตั๋วที่ตนเองเป็นเจ้าของ
+  >    - การ์ด \"Urgent Tickets\" ส่งตัวกรอง `status=ACTIVE` ทำให้จำนวนตั๋วในคิวงานตรงกับตัวเลขบนการ์ดตามเกณฑ์ E2E-DASH-01
+  > 3. **Navigation Flow สมบูรณ์:** ระบบจดจำ View ต้นทางทำให้การกดย้อนกลับจากหน้ารายละเอียดตั๋วกลับสู่ Dashboard ได้อย่างถูกต้อง
+  > 4. **ความเข้ากันได้ย้อนหลัง (Full Regression):** รันเทสต์ทั้งระบบผ่านครบถ้วนทั้ง 292 tests (Server 207 tests, Client 85 tests) ปราศจากข้อผิดพลาด 100%
+  > 
+  > **Verdict: Approve**"
+- **Final Verdict:** Approved
+- **Status:** Merged into `lab4-staging` by @phatthidawadi
 ---
 
 ## 2. Pull Requests I Reviewed for Partner (@chanya06)
