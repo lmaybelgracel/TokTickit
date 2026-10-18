@@ -56,7 +56,7 @@ Testing encompasses:
 | `API-WORK-05` | API | AC-10 | Requester toggles problem resolved indication | Returns 200 OK, ticket currentStatus remains OPEN/IN_PROGRESS | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
 | `API-WORK-06` | API | AC-08 | Mutate ticket status without providing knownUpdatedAt | Returns 422 Unprocessable Entity | `server/tests/lab-04/ticket-workflow.api.test.ts` | Passed |
 | `API-MIG-01` | API | AC-14 | Idempotent database seed execution | Safe repeat execution preserving all records | `server/tests/lab-04/database-schema-seed.test.ts` | Passed |
-| `UI-DASH-01` | UI | AC-04 | Requester Dashboard renders cards and recent list | Displays open count, action required, and tickets | `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` | Planned |
+| `UI-DASH-01` | UI | AC-04 | Requester Dashboard renders cards and recent list | Displays open count, action required, and tickets | `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` | Passed |
 | `UI-DASH-02` | UI | AC-05 | IT Staff Dashboard renders metric cards and queue | Displays operational cards and queue table | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Passed |
 | `UI-DASH-03` | UI | AC-11 | Clicking metric card navigates with filter | Navigates to queue with expected query param | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Passed |
 | `UI-DASH-04` | UI | AC-05 | Render My Actions Recorded metric card | Displays `myActionsTakenCount` and links to my-actions | `client/src/__tests__/lab-04/StaffDashboard.test.tsx` | Passed |

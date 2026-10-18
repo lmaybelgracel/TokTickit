@@ -1,0 +1,521 @@
+/* TokTickIT - Zen Green Requester Dashboard Styles */
+
+.requester-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 16px 40px;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1A2E23;
+}
+
+/* Welcome Banner */
+.requester-welcome-banner {
+  background: linear-gradient(135deg, #006B3C 0%, #0B7A46 100%);
+  color: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 4px 14px rgba(0, 107, 60, 0.15);
+}
+
+.requester-welcome-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.requester-welcome-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.requester-welcome-subtitle {
+  font-size: 14px;
+  opacity: 0.92;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.requester-welcome-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.requester-welcome-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.requester-btn-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.requester-btn-refresh:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.requester-btn-refresh:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Quick Action Bar */
+.requester-quick-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 20px;
+  background-color: #FFFFFF;
+  border: 1px solid #D6DFD9;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.requester-quick-actions__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1A2E23;
+  margin: 0;
+}
+
+.requester-quick-actions__btn-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.requester-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #006B3C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.requester-btn-primary:hover {
+  background-color: #00522E;
+}
+
+.requester-btn-primary:active {
+  transform: translateY(1px);
+}
+
+.requester-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #FFFFFF;
+  color: #006B3C;
+  border: 1px solid #006B3C;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.requester-btn-secondary:hover {
+  background-color: #EAF6EF;
+}
+
+/* Personal Metric Cards Grid (3 cards) */
+.requester-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.requester-metric-card {
+  background-color: #FFFFFF;
+  border: 1px solid #D6DFD9;
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.requester-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 107, 60, 0.1);
+  border-color: #006B3C;
+}
+
+.requester-metric-card:focus-visible {
+  outline: 2px solid #006B3C;
+  outline-offset: 2px;
+}
+
+/* Card variant styles */
+.requester-metric-card--open {
+  border-top: 4px solid #006B3C;
+}
+
+.requester-metric-card--action-required {
+  border-top: 4px solid #D97706;
+}
+
+.requester-metric-card--action-required.is-alert {
+  background-color: #FFFBEB;
+  border-color: #FCD34D;
+  border-top-color: #D97706;
+}
+
+.requester-metric-card--resolved {
+  border-top: 4px solid #0B7A46;
+}
+
+.requester-metric-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.requester-metric-card__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4A5E53;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.requester-metric-card--action-required.is-alert .requester-metric-card__label {
+  color: #92400E;
+}
+
+.requester-metric-card__icon-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EAF6EF;
+  color: #006B3C;
+}
+
+.requester-metric-card--action-required.is-alert .requester-metric-card__icon-badge {
+  background-color: #FEF3C7;
+  color: #B45309;
+}
+
+.requester-metric-card__body {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.requester-metric-card__value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  color: #1A2E23;
+}
+
+.requester-metric-card--action-required.is-alert .requester-metric-card__value {
+  color: #92400E;
+}
+
+.requester-metric-card__subtitle {
+  font-size: 13px;
+  color: #5A6E63;
+  margin: 0;
+}
+
+.requester-metric-card__footer {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 12px;
+  font-weight: 600;
+  color: #006B3C;
+  gap: 4px;
+}
+
+.requester-metric-card--action-required.is-alert .requester-metric-card__footer {
+  color: #B45309;
+}
+
+/* Recent Tickets Section */
+.requester-recent-section {
+  background-color: #FFFFFF;
+  border: 1px solid #D6DFD9;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.requester-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.requester-section-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.requester-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A2E23;
+  margin: 0;
+}
+
+.requester-section-subtitle {
+  font-size: 13px;
+  color: #5A6E63;
+  margin: 0;
+}
+
+.requester-tickets-table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #E5E9E7;
+}
+
+.requester-tickets-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.requester-tickets-table th {
+  background-color: #F8FAF9;
+  color: #4A5E53;
+  font-weight: 600;
+  padding: 12px 14px;
+  border-bottom: 1px solid #E5E9E7;
+  white-space: nowrap;
+}
+
+.requester-tickets-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #F1F4F2;
+  color: #1A2E23;
+  vertical-align: middle;
+}
+
+.requester-tickets-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.requester-tickets-table tbody tr:hover {
+  background-color: #EAF6EF;
+}
+
+.requester-ticket-number {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 600;
+  color: #006B3C;
+}
+
+.requester-ticket-summary {
+  font-weight: 500;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.requester-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.requester-badge-urgent-pulse {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #DC2626;
+  margin-right: 5px;
+  animation: pulse-dot 1.4s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.requester-btn-view-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #EAF6EF;
+  color: #006B3C;
+  border: 1px solid #B2DFDB;
+  border-radius: 6px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.requester-btn-view-detail:hover {
+  background-color: #006B3C;
+  color: #FFFFFF;
+  border-color: #006B3C;
+}
+
+/* Empty State (Zen Green Calming Box) */
+.requester-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  background-color: #FFFFFF;
+  border: 2px dashed #B2DFDB;
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.requester-empty-state__icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #EAF6EF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #006B3C;
+  margin-bottom: 18px;
+}
+
+.requester-empty-state__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A2E23;
+  margin: 0 0 8px 0;
+}
+
+.requester-empty-state__description {
+  font-size: 14px;
+  color: #4A5E53;
+  max-width: 460px;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+
+/* Loading & Error States */
+.requester-loading-box,
+.requester-error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background-color: #FFFFFF;
+  border: 1px solid #D6DFD9;
+  border-radius: 12px;
+  text-align: center;
+  gap: 16px;
+}
+
+.requester-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #EAF6EF;
+  border-top-color: #006B3C;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.requester-error-text {
+  color: #991B1B;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 900px) {
+  .requester-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .requester-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .requester-welcome-banner {
+    padding: 20px 18px;
+  }
+  .requester-quick-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .requester-quick-actions__btn-group {
+    flex-direction: column;
+  }
+  .requester-btn-primary,
+  .requester-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}

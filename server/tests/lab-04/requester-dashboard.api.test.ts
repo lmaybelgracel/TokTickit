@@ -223,4 +223,35 @@ describe("Sprint 4 Requester Dashboard API Suite (Issue 32, API-DASH-01, AC-04, 
       );
     });
   });
+
+  describe("Requester Ticket Drill-Down API Parity (AC-11, BR-16)", () => {
+    it("supports GET /api/tickets?status=RESOLVED_OR_CLOSED to query combined resolved and closed tickets matching dashboard count", async () => {
+      let capturedWhere: any = null;
+      mockPrisma.requesterUser = {
+        findUnique: vi.fn().mockResolvedValue({ id: 25, name: "Sarah", isActive: true }),
+      };
+      mockPrisma.ticket.count = vi.fn().mockImplementation(({ where }) => {
+        capturedWhere = where;
+        return Promise.resolve(2);
+      });
+      mockPrisma.ticket.findMany = vi.fn().mockImplementation(({ where }) => {
+        capturedWhere = where;
+        return Promise.resolve([
+          { id: 101, ticketNumber: "TKT-001", currentStatus: TicketStatus.RESOLVED },
+          { id: 102, ticketNumber: "TKT-002", currentStatus: TicketStatus.CLOSED },
+        ]);
+      });
+
+      const res = await request(app)
+        .get("/api/tickets?status=RESOLVED_OR_CLOSED")
+        .set("X-Development-Requester-Id", "25");
+
+      expect(res.status).toBe(200);
+      expect(capturedWhere).toBeDefined();
+      expect(capturedWhere.currentStatus).toEqual({
+        in: [TicketStatus.RESOLVED, TicketStatus.CLOSED],
+      });
+      expect(res.body.data).toHaveLength(2);
+    });
+  });
 });

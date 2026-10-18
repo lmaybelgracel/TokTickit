@@ -898,6 +898,7 @@ export interface RequesterDashboardData {
     resolutionSummary?: string | null;
     resolvedAt?: string;
     updatedAt?: string;
+    createdAt?: string;
   }>;
 }
 
