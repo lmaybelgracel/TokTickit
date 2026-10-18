@@ -39,7 +39,6 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
   const mockDashboardData: api.StaffDashboardData = {
     metrics: {
       unassignedTickets: 4,
-      myActiveTickets: 3,
       myAssignedTickets: 3,
       myActionsTakenCount: 7,
       urgentTickets: 2,
@@ -62,7 +61,7 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
       MEDIUM: 4,
       LOW: 0,
     },
-    recentTickets: [
+    recentQueueActivity: [
       {
         id: 101,
         ticketNumber: "TCK-2026-0001",
@@ -70,10 +69,9 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
         currentStatus: "OPEN",
         itPriority: "URGENT",
         requestedPriority: "HIGH",
+        updatedAt: "2026-10-18T08:35:00Z",
         createdAt: "2026-10-18T08:30:00Z",
-        category: { id: 1, name: "Network & Connectivity" },
-        requester: { id: 20, name: "Alice Requester", email: "alice@example.com" },
-        owner: { id: 10, name: "Somchai Staff", email: "somchai@toktickit.com" },
+        owner: { id: 10, name: "Somchai Staff" },
       },
       {
         id: 102,
@@ -82,9 +80,8 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
         currentStatus: "NEW",
         itPriority: "MEDIUM",
         requestedPriority: "NORMAL",
+        updatedAt: "2026-10-18T09:20:00Z",
         createdAt: "2026-10-18T09:15:00Z",
-        category: { id: 2, name: "Hardware & Devices" },
-        requester: { id: 21, name: "Bob Worker", email: "bob@example.com" },
         owner: null,
       },
     ],
@@ -108,7 +105,9 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
       login: vi.fn(),
       logout: vi.fn(),
       isLoading: false,
-      refreshUser: vi.fn(),
+      error: null,
+      updatePassword: vi.fn(),
+      clearError: vi.fn(),
     });
     vi.mocked(api.fetchStaffDashboard).mockResolvedValue(mockDashboardData);
   });
@@ -336,7 +335,9 @@ describe("Staff & Administrator Dashboard Component Tests (Sprint 4 - Issue 33)"
         login: vi.fn(),
         logout: vi.fn(),
         isLoading: false,
-        refreshUser: vi.fn(),
+        error: null,
+        updatePassword: vi.fn(),
+        clearError: vi.fn(),
       });
 
       render(<StaffDashboard />);

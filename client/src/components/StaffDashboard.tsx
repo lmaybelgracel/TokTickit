@@ -149,7 +149,7 @@ export const StaffDashboard: React.FC<StaffDashboardProps> = ({
   const statusDistribution = data.statusDistribution || data.statusCounts || {};
   const priorityDistribution = data.priorityDistribution || data.priorityCounts || {};
   const recentTickets: StaffDashboardTicket[] =
-    data.recentQueueActivity || data.recentQueueTickets || data.recentTickets || [];
+    data.recentQueueActivity || data.recentQueueTickets || [];
   const adminStats = data.adminStats;
 
   return (
