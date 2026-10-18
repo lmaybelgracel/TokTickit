@@ -16,12 +16,16 @@ export interface MyTicketsProps {
   initialStatus?: string;
 }
 
+// Maps query parameter or drill-down token into standardized TicketStatus filter.
+// Note: "resolved_or_closed" and "completed" represent the combined terminal status
+// used by Requester Dashboard Card 3 (AC-11), while "resolved" strictly maps to single status "RESOLVED".
 const mapStatusFilter = (status?: string): string => {
   if (!status) return "";
   const s = status.trim().toLowerCase();
   if (s === "open" || s === "active") return "ACTIVE";
   if (s === "waiting" || s === "waiting_for_requester") return "WAITING_FOR_REQUESTER";
-  if (s === "resolved" || s === "resolved_or_closed" || s === "completed") return "RESOLVED_OR_CLOSED";
+  if (s === "resolved_or_closed" || s === "completed") return "RESOLVED_OR_CLOSED";
+  if (s === "resolved") return "RESOLVED";
   return status.trim().toUpperCase();
 };
 

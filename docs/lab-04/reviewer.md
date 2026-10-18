@@ -21,7 +21,7 @@
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
-| [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Changes Requested (Round 1: Changes Requested) | Under Review | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
+| [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Changes Requested (Round 1: Changes Requested, Round 2: Changes Requested) | Under Review | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
 
 ---
 
@@ -474,7 +474,46 @@
   3. **Comment on Reviewer Tracking Record:**
      - *Reviewer Feedback:* Record Round 1 Changes Requested review and response in `docs/lab-04/reviewer.md`.
      - *My Action:* Recorded Round 1 Changes Requested verdict, verbatim quotes, and detailed responses in `docs/lab-04/reviewer.md`.
-- **Status:** Round 1 fixes committed, pushed, and awaiting reviewer re-inspection.
+- **Status:** Round 1 fixes committed, pushed, and re-reviewed.
+- **Round 2 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-18T20:20:42Z):
+  > "### ผลการตรวจประเมินรอบที่ 2 (Re-review Round 2) — Issue 34 / PR #76
+  > 
+  > ขอบคุณสำหรับการแก้ไขโค้ดและชุดทดสอบอย่างรวดเร็วใน commit `f090d53` ได้ดำเนินการ Re-review ในระดับโค้ดจริงและรัน Full Regression Test Suite เรียบร้อยแล้ว มีผลการตรวจดังนี้:
+  > 
+  > 1. **การ Drill-Down การ์ด \"Resolved / Closed\" ครอบคลุมทั้ง `RESOLVED` และ `CLOSED` แล้ว (F-01):**
+  >    - ใน `client/src/components/RequesterDashboard.tsx` บรรทัด 297 และ 302 ได้เปลี่ยน `onNavigateMyTickets?.(\"resolved\")` เป็น `onNavigateMyTickets?.(\"resolved_or_closed\")` ครบทั้ง `onClick` และ `onKeyDown` แล้ว
+  >    - ใน `client/src/components/MyTickets.tsx` บรรทัด 24 ฟังก์ชัน `mapStatusFilter` แมปค่า `\"resolved_or_closed\"` ไปเป็น `\"RESOLVED_OR_CLOSED\"` อย่างถูกต้อง พร้อมเพิ่ม `<option value=\"RESOLVED_OR_CLOSED\">Resolved / Closed</option>` ใน Dropdown แล้ว
+  >    - ชุดทดสอบ `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` บรรทัด 218 อัปเดต assertion เป็น `expect(handleNavigate).toHaveBeenCalledWith(\"resolved_or_closed\")` ตรงกับการแก้ไข ✓
+  > 
+  > 2. **การรองรับ `RESOLVED_OR_CLOSED` ใน Backend API (F-02):**
+  >    - ใน `server/src/app.ts` บรรทัด 380–383 เพิ่ม branch `else if (upperStatus === \"RESOLVED_OR_CLOSED\" || upperStatus === \"COMPLETED\")` พร้อม Prisma filter `{ in: [TicketStatus.RESOLVED, TicketStatus.CLOSED] }` ตรงกับ logic ของ `dashboard.routes.ts` (L25–27) ✓
+  >    - **อย่างไรก็ตาม ยังไม่มี Server-side Integration Test ครอบคลุม branch ใหม่นี้เลย** ตรวจ `server/tests/` ทั้งหมดด้วย pattern `RESOLVED_OR_CLOSED` — ไม่พบผลลัพธ์ใด Test ที่มีอยู่ใน `RequesterDashboard.test.tsx` เป็นเพียง Client-side Mock ไม่ได้ยิง HTTP จริง หาก Prisma query มีข้อผิดพลาดในอนาคตจะไม่มี Test ตรวจจับได้ ขัดต่อ AC-11
+  > 
+  > 3. **บันทึกการรีวิวรอบที่ 1 ใน `reviewer.md` (F-03):**
+  >    - `docs/lab-04/reviewer.md` บันทึกคำวิจารณ์รอบที่ 1 แบบ verbatim พร้อม Response ของ author ครบ 3 ข้อเรียบร้อยแล้ว ✓
+  > 
+  > 4. **ประเด็นใหม่ที่พบจากการแก้ไข — alias \"resolved\" ขยายเป็น `RESOLVED_OR_CLOSED` โดยเงียบ:**
+  >    - `MyTickets.tsx` L24: `if (s === \"resolved\" || s === \"resolved_or_closed\" || s === \"completed\") return \"RESOLVED_OR_CLOSED\";`
+  >    - สตริง `\"resolved\"` ตัวเล็กตอนนี้ map ไปรวม `CLOSED` ด้วย Dropdown option ยังทำงานปกติ (ผ่าน `else` → `toUpperCase()`) จึงไม่มี Regression แต่ Deep-link URL `?status=resolved` หรือโค้ดในอนาคตที่ส่ง `\"resolved\"` อาจได้รับตั๋วมากกว่าที่คาดโดยไม่รู้ตัว รบกวนเพิ่ม comment อธิบาย intent หรือแยก alias ออกให้ชัดเจน
+  > 
+  > 5. **ชุดการทดสอบอัตโนมัติและความเข้ากันได้ย้อนหลัง (Regression Suite):**
+  >    - ตรวจสอบแล้วไม่มี `.skip`, `.only`, `xtest`, หรือ `xdescribe` ในทุกไฟล์ที่แก้ไข ✓
+  >    - รัน Full Test Suite ทั้งระบบ: Client ผ่าน 16 ไฟล์ (101/101 เทสต์) และ Server ผ่าน 22 ไฟล์ (207/207 เทสต์) รวมทั้งสิ้น **308 เทสต์ผ่าน 100%** Lab 1–3 Regression ผ่านครบ Zero Regression ✓
+  > 
+  > ---
+  > 
+  > **คำตัดสิน: Request Changes** — F-01 และ F-03 แก้ไขสมบูรณ์มีหลักฐานยืนยัน F-02 โค้ด Logic ถูกต้องแต่ขาด Server-side Integration Test (ข้อ 2) และพบ alias collision เล็กน้อย (ข้อ 4) รบกวนเพิ่ม Test 1 รายการและชี้แจง alias แล้วพุชคอมมิตใหม่"
+- **Round 2 Reviewer Feedback Items & My Responses:**
+  1. **Server-side Integration Test for `RESOLVED_OR_CLOSED` in `GET /api/tickets` (F-02):**
+     - *Reviewer Feedback:* Logic in `app.ts` is correct, but lacked server-side integration tests in `server/tests/` to guarantee Prisma query correctness over HTTP against AC-11.
+     - *My Action:* Added comprehensive server-side integration tests in `server/tests/lab-02/my-tickets.api.test.ts` and `server/tests/lab-04/requester-dashboard.api.test.ts` verifying that `GET /api/tickets?status=RESOLVED_OR_CLOSED` (and alias `COMPLETED`) queries Prisma with `{ in: [TicketStatus.RESOLVED, TicketStatus.CLOSED] }` and returns only resolved/closed tickets.
+  2. **Alias Collision Clarification in `MyTickets.tsx` (F-04):**
+     - *Reviewer Feedback:* In `MyTickets.tsx`, `s === "resolved"` was mapped together with `resolved_or_closed`, which could cause unexpected closed ticket returns if a deep-link passes lowercase `?status=resolved`.
+     - *My Action:* Decoupled `s === "resolved"` so it strictly maps to single status `"RESOLVED"`, while `"resolved_or_closed"` and `"completed"` map to combined status `"RESOLVED_OR_CLOSED"`. Added explicit intent comments documenting the mapping behavior.
+  3. **Regression Suite:**
+     - *Reviewer Feedback:* Zero skipped tests, full regression pass required.
+     - *My Action:* Ran full regression suite across client (101 tests, 16 files) and server (209 tests, 22 files) totaling 310 tests passing 100% with clean production build.
+- **Status:** Round 2 fixes committed, pushed, and awaiting reviewer re-inspection.
 
 ---
 

@@ -112,6 +112,49 @@ describe("GET /api/tickets — My Tickets API Tests (Issue 11)", () => {
     expect(res.body.error.code).toBe("INACTIVE_REQUESTER");
   });
 
+  it("API-05 / AC-11: should support status=RESOLVED_OR_CLOSED (and COMPLETED) filter combining RESOLVED and CLOSED tickets", async () => {
+    let capturedWhere: any = null;
+    const mockPrisma = {
+      requesterUser: {
+        findUnique: vi.fn().mockResolvedValue(activeUser1),
+      },
+      ticket: {
+        count: vi.fn().mockImplementation(({ where }) => {
+          capturedWhere = where;
+          return Promise.resolve(2);
+        }),
+        findMany: vi.fn().mockImplementation(({ where }) => {
+          capturedWhere = where;
+          return Promise.resolve([
+            { ...mockTickets[0], currentStatus: "RESOLVED" },
+            { ...mockTickets[1], currentStatus: "CLOSED" },
+          ]);
+        }),
+      },
+    };
+    vi.spyOn(prismaModule, "getPrisma").mockReturnValue(mockPrisma as any);
+
+    const res = await request(app)
+      .get("/api/tickets?status=RESOLVED_OR_CLOSED")
+      .set("X-Development-Requester-Id", "1");
+
+    expect(res.status).toBe(200);
+    expect(capturedWhere).toBeDefined();
+    expect(capturedWhere.currentStatus).toEqual({
+      in: ["RESOLVED", "CLOSED"],
+    });
+    expect(res.body.data.length).toBe(2);
+
+    // Also verify alias COMPLETED
+    const resAlias = await request(app)
+      .get("/api/tickets?status=COMPLETED")
+      .set("X-Development-Requester-Id", "1");
+    expect(resAlias.status).toBe(200);
+    expect(capturedWhere.currentStatus).toEqual({
+      in: ["RESOLVED", "CLOSED"],
+    });
+  });
+
   it.each([
     "category=abc",
     "priority=URGENT",
