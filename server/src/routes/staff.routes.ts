@@ -20,6 +20,7 @@ staffRouter.get("/tickets", async (req: Request, res: Response) => {
       priority,
       itPriority,
       ownerId,
+      actionBy,
       sort = "createdAt",
       order = "desc",
       page = "1",
@@ -52,7 +53,11 @@ staffRouter.get("/tickets", async (req: Request, res: Response) => {
     // Status filter
     if (status && typeof status === "string" && status.trim() !== "") {
       const upperStatus = status.trim().toUpperCase();
-      if (Object.values(TicketStatus).includes(upperStatus as TicketStatus)) {
+      if (upperStatus === "ACTIVE") {
+        where.currentStatus = {
+          notIn: [TicketStatus.RESOLVED, TicketStatus.CLOSED, TicketStatus.CANCELLED],
+        };
+      } else if (Object.values(TicketStatus).includes(upperStatus as TicketStatus)) {
         where.currentStatus = upperStatus as TicketStatus;
       }
     }
@@ -84,6 +89,27 @@ staffRouter.get("/tickets", async (req: Request, res: Response) => {
         const parsedId = parseInt(ownerStr, 10);
         if (!isNaN(parsedId)) {
           where.ownerId = parsedId;
+        }
+      }
+    }
+
+    // Action Taken performer filter
+    if (actionBy !== undefined && actionBy !== null && String(actionBy).trim() !== "") {
+      const actionByStr = String(actionBy).trim().toLowerCase();
+      if (actionByStr === "me" && req.user) {
+        where.actionsTaken = {
+          some: {
+            performedById: req.user.id,
+          },
+        };
+      } else {
+        const parsedActionUserId = parseInt(actionByStr, 10);
+        if (!isNaN(parsedActionUserId)) {
+          where.actionsTaken = {
+            some: {
+              performedById: parsedActionUserId,
+            },
+          };
         }
       }
     }

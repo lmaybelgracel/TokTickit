@@ -4,9 +4,21 @@ import "./StaffTicketQueue.css";
 
 export interface StaffTicketQueueProps {
   onSelectTicket?: (ticket: Ticket) => void;
+  initialOwnerFilter?: string;
+  initialStatus?: string;
+  initialItPriority?: string;
+  initialSearch?: string;
+  initialActionBy?: string;
 }
 
-export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTicket }) => {
+export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({
+  onSelectTicket,
+  initialOwnerFilter,
+  initialStatus,
+  initialItPriority,
+  initialSearch,
+  initialActionBy,
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [pagination, setPagination] = useState({
@@ -16,12 +28,13 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
     totalPages: 1,
   });
 
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>(initialSearch || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>(initialStatus || "");
   const [selectedPriority, setSelectedPriority] = useState<string>("");
-  const [selectedItPriority, setSelectedItPriority] = useState<string>("");
-  const [ownerFilter, setOwnerFilter] = useState<string>("all"); // "all" | "unassigned" | "me"
+  const [selectedItPriority, setSelectedItPriority] = useState<string>(initialItPriority || "");
+  const [ownerFilter, setOwnerFilter] = useState<string>(initialOwnerFilter || "all"); // "all" | "unassigned" | "me" | "my-actions"
+  const [actionBy, setActionBy] = useState<string>(initialActionBy || (initialOwnerFilter === "my-actions" ? "me" : ""));
   const [sortField, setSortField] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -29,6 +42,19 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync incoming drill-down filter props
+  useEffect(() => {
+    if (initialOwnerFilter !== undefined) {
+      setOwnerFilter(initialOwnerFilter || "all");
+      if (initialOwnerFilter === "my-actions") setActionBy("me");
+    }
+    if (initialStatus !== undefined) setSelectedStatus(initialStatus || "");
+    if (initialItPriority !== undefined) setSelectedItPriority(initialItPriority || "");
+    if (initialSearch !== undefined) setSearch(initialSearch || "");
+    if (initialActionBy !== undefined) setActionBy(initialActionBy || "");
+    setCurrentPage(1);
+  }, [initialOwnerFilter, initialStatus, initialItPriority, initialSearch, initialActionBy]);
 
   // Load Categories on mount
   useEffect(() => {
@@ -58,6 +84,11 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
             ? "me"
             : undefined;
 
+        const actionByParam =
+          ownerFilter === "my-actions" || actionBy === "me"
+            ? "me"
+            : actionBy || undefined;
+
         const res = await fetchStaffTickets({
           search: search.trim() || undefined,
           category: selectedCategory || undefined,
@@ -65,6 +96,7 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
           priority: selectedPriority || undefined,
           itPriority: selectedItPriority || undefined,
           ownerId: ownerParam,
+          actionBy: actionByParam,
           sort: sortField,
           order: sortOrder,
           page: currentPage,
@@ -111,6 +143,7 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
     setSelectedPriority("");
     setSelectedItPriority("");
     setOwnerFilter("all");
+    setActionBy("");
     setSortField("createdAt");
     setSortOrder("desc");
     setCurrentPage(1);
@@ -132,7 +165,8 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
     selectedStatus !== "" ||
     selectedPriority !== "" ||
     selectedItPriority !== "" ||
-    ownerFilter !== "all";
+    ownerFilter !== "all" ||
+    actionBy !== "";
 
   const renderPriorityBadge = (priority?: string) => {
     if (!priority) return null;
@@ -253,6 +287,7 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
             aria-label="Filter by status"
           >
             <option value="">All Statuses</option>
+            <option value="ACTIVE">Active (Non-terminal)</option>
             <option value="NEW">New</option>
             <option value="OPEN">Open</option>
             <option value="IN_PROGRESS">In Progress</option>
@@ -304,6 +339,7 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
               className={`staff-queue__toggle-btn ${ownerFilter === "all" ? "staff-queue__toggle-btn--active" : ""}`}
               onClick={() => {
                 setOwnerFilter("all");
+                setActionBy("");
                 setCurrentPage(1);
               }}
             >
@@ -314,6 +350,7 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
               className={`staff-queue__toggle-btn ${ownerFilter === "unassigned" ? "staff-queue__toggle-btn--active" : ""}`}
               onClick={() => {
                 setOwnerFilter("unassigned");
+                setActionBy("");
                 setCurrentPage(1);
               }}
             >
@@ -324,10 +361,22 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
               className={`staff-queue__toggle-btn ${ownerFilter === "me" ? "staff-queue__toggle-btn--active" : ""}`}
               onClick={() => {
                 setOwnerFilter("me");
+                setActionBy("");
                 setCurrentPage(1);
               }}
             >
               Assigned to Me
+            </button>
+            <button
+              type="button"
+              className={`staff-queue__toggle-btn ${ownerFilter === "my-actions" ? "staff-queue__toggle-btn--active" : ""}`}
+              onClick={() => {
+                setOwnerFilter("my-actions");
+                setActionBy("me");
+                setCurrentPage(1);
+              }}
+            >
+              My Actions
             </button>
           </div>
 

@@ -9,19 +9,20 @@ import { ChangePassword } from "./components/ChangePassword";
 import { StaffTicketQueue } from "./components/StaffTicketQueue";
 import { StaffTicketDetail } from "./components/StaffTicketDetail";
 import { AdminUserManagement } from "./components/AdminUserManagement";
+import { StaffDashboard, DrillDownFilter } from "./components/StaffDashboard";
 
-export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users";
+export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users" | "staff-dashboard";
 
 const getDefaultViewForRole = (role?: string): CurrentView => {
-  if (role === "ADMINISTRATOR") return "admin-users";
-  if (role === "IT_STAFF") return "staff-queue";
+  if (role === "ADMINISTRATOR") return "staff-dashboard";
+  if (role === "IT_STAFF") return "staff-dashboard";
   return "my-tickets";
 };
 
 const isViewAllowedForRole = (view: CurrentView, role?: string): boolean => {
   if (!role) return false;
   if (view === "admin-users") return role === "ADMINISTRATOR";
-  if (view === "staff-queue") return role === "IT_STAFF" || role === "ADMINISTRATOR";
+  if (view === "staff-queue" || view === "staff-dashboard") return role === "IT_STAFF" || role === "ADMINISTRATOR";
   return true;
 };
 
@@ -31,6 +32,8 @@ function AppContent() {
   const isAdmin = user?.role === "ADMINISTRATOR";
   const isStaffOrAdmin = user?.role === "IT_STAFF" || isAdmin;
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
+  const [queueFilter, setQueueFilter] = useState<DrillDownFilter | null>(null);
+  const [previousStaffView, setPreviousStaffView] = useState<CurrentView>("staff-queue");
 
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(() => {
     try {
@@ -181,9 +184,24 @@ function AppContent() {
               <button
                 style={{
                   ...styles.navItem,
+                  ...(currentView === "staff-dashboard" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("staff-dashboard")}
+              >
+                Dashboard
+              </button>
+            )}
+
+            {isStaffOrAdmin && (
+              <button
+                style={{
+                  ...styles.navItem,
                   ...(currentView === "staff-queue" ? styles.navItemActive : {}),
                 }}
-                onClick={() => setCurrentView("staff-queue")}
+                onClick={() => {
+                  setQueueFilter(null);
+                  setCurrentView("staff-queue");
+                }}
               >
                 Staff Queue
               </button>
@@ -242,12 +260,31 @@ function AppContent() {
 
       {/* Main Content Area */}
       <main className="app-main" style={styles.mainContent}>
-        {currentView === "admin-users" ? (
+        {currentView === "staff-dashboard" ? (
+          <StaffDashboard
+            onDrillDown={(filter) => {
+              setQueueFilter(filter);
+              setCurrentView("staff-queue");
+            }}
+            onSelectTicket={(ticketId) => {
+              setPreviousStaffView("staff-dashboard");
+              setSelectedTicketId(ticketId);
+              setCurrentView("ticket-detail");
+            }}
+            onCreateTicket={() => setCurrentView("create-ticket")}
+          />
+        ) : currentView === "admin-users" ? (
           isAdmin ? (
             <AdminUserManagement />
           ) : (
             <StaffTicketQueue
+              initialOwnerFilter={queueFilter?.ownerFilter}
+              initialStatus={queueFilter?.status}
+              initialItPriority={queueFilter?.itPriority}
+              initialSearch={queueFilter?.search}
+              initialActionBy={queueFilter?.actionBy}
               onSelectTicket={(ticket) => {
+                setPreviousStaffView("staff-queue");
                 setSelectedTicketId(ticket.id);
                 setCurrentView("ticket-detail");
               }}
@@ -255,7 +292,13 @@ function AppContent() {
           )
         ) : currentView === "staff-queue" ? (
           <StaffTicketQueue
+            initialOwnerFilter={queueFilter?.ownerFilter}
+            initialStatus={queueFilter?.status}
+            initialItPriority={queueFilter?.itPriority}
+            initialSearch={queueFilter?.search}
+            initialActionBy={queueFilter?.actionBy}
             onSelectTicket={(ticket) => {
+              setPreviousStaffView("staff-queue");
               setSelectedTicketId(ticket.id);
               setCurrentView("ticket-detail");
             }}
@@ -283,7 +326,7 @@ function AppContent() {
           isStaffOrAdmin ? (
             <StaffTicketDetail
               ticketId={selectedTicketId}
-              onBack={() => setCurrentView("staff-queue")}
+              onBack={() => setCurrentView(previousStaffView || "staff-queue")}
             />
           ) : (
             <TicketDetail

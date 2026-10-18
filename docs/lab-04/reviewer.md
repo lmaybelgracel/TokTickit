@@ -20,6 +20,7 @@
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
+| [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Changes Requested (Round 1: Changes Requested) | Under Review | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 
 ---
 
@@ -351,6 +352,73 @@
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
 
+---
+
+### Issue 33 - IT Staff & Administrator Dashboard Frontend UI
+
+- **Pull Request:** [#75](https://github.com/lmaybelgracel/TokTickit/pull/75)
+- **Branch:** `feature/33-staff-dashboard-ui`
+- **Summary:** Implemented IT Staff & Administrator Dashboard frontend UI in `client/src/components/StaffDashboard.tsx`, `StaffDashboard.css`, and integrated into `client/src/App.tsx` and `StaffTicketQueue.tsx`. Features welcome overview banner with staff name, role badge, formatted date, and refresh button; quick actions toolbar; 5 operational metric cards (`unassignedTickets`, `myAssignedTickets`, `myActionsTakenCount` for AC-05/BR-17, `urgentTickets` with critical pulse, `waitingForRequester` attention badge) with 1-click drill-down navigation into ticket queue; queue breakdown matrix with interactive status and priority pills; recent queue activity table (up to 5 tickets) with ticket number, summary, priority badge, status badge, owner, formatted timestamp, and row click navigation to ticket details; administrator user statistics grid (`totalUsers`, `activeUsers`, `inactiveUsers`, role counts) shown conditionally for `ADMINISTRATOR` role. Added Vitest component test suite `client/src/__tests__/lab-04/StaffDashboard.test.tsx` (18/18 tests passing covering UI-DASH-02, UI-DASH-03, UI-DASH-04), preserving 100% full regression pass rate across 292 tests (Server: 207, Client: 85).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-18T17:59:17Z):
+  > "### ผลการตรวจประเมิน Issue 33 - Sprint 4 IT Staff & Administrator Dashboard UI
+  > 
+  > จากการตรวจสอบโค้ดและชุดทดสอบอย่างละเอียดใน PR #75 (Commit `dcd5138`) ยังมีจุดบกพร่องที่ทำให้การบิลด์ระบบล้มเหลว จึงต้องขอให้แก้ไขเพิ่มเติมก่อนที่จะสามารถอนุมัติได้ ดังนี้:
+  > 
+  > 1. **[client/src/components/StaffDashboard.tsx] TypeScript Compile Error จากการอ้างอิงฟิลด์ `recentTickets` (บรรทัด 152):**
+  >    - ใน `StaffDashboard.tsx` บรรทัด 152 มีการเขียน fallback:
+  >      ```typescript
+  >      const recentTickets: StaffDashboardTicket[] =
+  >        data.recentQueueActivity || data.recentQueueTickets || data.recentTickets || [];
+  >      ```
+  >    - ฟิลด์ `recentTickets` ไม่ได้ถูกประกาศไว้ใน Interface `StaffDashboardData` ใน `client/src/api.ts`
+  >    - ส่งผลให้คำสั่ง `npm --prefix client run build` ล้มเหลวทันที (`error TS2339: Property 'recentTickets' does not exist on type 'StaffDashboardData'`) ซึ่งขัดต่อเกณฑ์ Clean Build ตาม **AC-16**
+  >    - **สิ่งที่ต้องแก้:** นำ `|| data.recentTickets` ออกจากบรรทัด 152 ให้เหลือเฉพาะ `data.recentQueueActivity || data.recentQueueTickets || []` ให้ตรงตาม Type Signature ของ `StaffDashboardData` ครับ
+  > 
+  > 2. **[client/src/__tests__/lab-04/StaffDashboard.test.tsx] Type Signature Mismatch ในไฟล์ชุดทดสอบ (บรรทัด 42, 111, 339):**
+  >    - ใน `StaffDashboard.test.tsx` มีการระบุฟิลด์ที่ผิดจาก Interface 3 ตำแหน่ง:
+  >      - **บรรทัด 42:** มีการใส่ฟิลด์ `myActiveTickets: 3` ใน Object `mockDashboardData.metrics` ซึ่งไม่มีใน Type `StaffDashboardMetrics` (`api.ts` ใช้ชื่อ `myAssignedTickets`)
+  >      - **บรรทัด 111 และ 339:** มีการ Mock ฟังก์ชัน `refreshUser: vi.fn()` ใน `authContext.useAuth` ซึ่งไม่มีอยู่ใน Interface `AuthContextType` (`client/src/context/AuthContext.tsx`)
+  >    - ส่งผลให้เกิดข้อผิดพลาด `error TS2353: Object literal may only specify known properties` ทำให้ `tsc` คอมไพล์ไม่ผ่าน
+  >    - **สิ่งที่ต้องแก้:** ตัดฟิลด์ `myActiveTickets` ออกจาก `mockDashboardData.metrics` ในบรรทัด 42 และปรับ Mock Object ของ `useAuth` ในบรรทัด 111 และ 339 ให้ตรงตาม `AuthContextType` ครับ
+  > 
+  > 3. **[docs/lab-04/reviewer.md] สถานะการรีวิว:**
+  >    - อัปเดตบันทึกข้อเสนอแนะและสถานะใน `docs/lab-04/reviewer.md` ให้สะท้อนผลการตรวจประเมินรอบที่ 1 ของ PR #75
+  > 
+  > ---
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนแก้ไข 3 จุดนี้และพุชคอมมิตใหม่"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Invalid `recentTickets` Property Causing TypeScript Build Failure:**
+     - *Reviewer Feedback:* In `client/src/components/StaffDashboard.tsx` line 152, fallback chain referenced `data.recentTickets` which was not defined on `StaffDashboardData` in `api.ts`, causing `tsc` compilation to fail during `npm run build` and violating clean build criteria (`AC-16`).
+     - *My Action:* Removed `|| data.recentTickets` from line 152, strictly retaining `data.recentQueueActivity || data.recentQueueTickets || []`. Clean build now compiles with 0 errors in under 1 second.
+  2. **Comment on Type Signature Mismatch in Test File (`StaffDashboard.test.tsx`):**
+     - *Reviewer Feedback:* In `client/src/__tests__/lab-04/StaffDashboard.test.tsx`, `mockDashboardData.metrics` contained invalid property `myActiveTickets`, and `useAuth` mock contained non-existent `refreshUser`, triggering TS2353 errors.
+     - *My Action:* Removed `myActiveTickets` from `mockDashboardData.metrics`, ensured `recentQueueActivity` mock tickets strictly conform to `StaffDashboardTicket`, and updated `useAuth` mock to implement the complete `AuthContextType` interface (`error`, `updatePassword`, `clearError`).
+  3. **Comment on Reviewer Tracking Record:**
+     - *Reviewer Feedback:* Update review records for Issue 33 / PR #75 to reflect Round 1 Changes Requested verdict and response actions.
+     - *My Action:* Recorded Round 1 Changes Requested verdict, verbatim quotes, and detailed responses in `docs/lab-04/reviewer.md`.
+
+- **Round 2 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-18T18:29:46Z):
+  > "### Second Reviewer Feedback — Request Changes
+  > 
+  > จากการ Re-review เชิงลึกใน PR #75 พบประเด็นด้าน Data Semantic และ Drill-Down Consistency ที่ต้องขอให้ปรับปรุงเพิ่มเติมก่อนอนุมัติ ดังนี้:
+  > 1. **[Drill-Down Mismatch] การเชื่อมโยงการ์ด \"My Actions Recorded\" (`StaffDashboard.tsx:L318`):**
+  >    - ตัวเลข `myActionsTakenCount` นับการกระทำที่ผู้ใช้เป็นผู้บันทึก (`performedById = caller.id`) แต่ Handler กลับส่ง `ownerFilter: \"me\"` ซึ่งไปกรองตั๋วที่ผู้ใช้เป็นเจ้าของตั๋วหลัก หากผู้ใช้ไปช่วยทำ Action บนตั๋วของคนอื่น (ตาม BR-02) ตั๋วเหล่านั้นจะไม่ปรากฏในคิว แนะนำให้พิจารณาการแสดงผลหรือจัดทำโหมดกรองสำหรับ My Actions ให้ถูกต้อง
+  > 2. **[Count Discrepancy] การ์ด \"Urgent Tickets\" ส่งผลให้ตัวเลขไม่ตรงกับตารางคิวงาน (`StaffDashboard.tsx:L348`):**
+  >    - Backend นับเฉพาะ Urgent ที่ยังไม่จบงาน (`notIn: RESOLVED, CLOSED, CANCELLED`) แต่การ์ดส่งเฉพาะ `{ itPriority: \"URGENT\" }` ทำให้คิวงานดึงตั๋ว Closed/Cancelled ขึ้นมาแสดงด้วย ส่งผลให้จำนวนตั๋วในคิวมากกว่าตัวเลขบนการ์ด ขัดต่อข้อกำหนด E2E-DASH-01 (\"landing on queue matching count\") แนะนำให้ปรับให้คิวงานแสดงเฉพาะตั๋ว Active เมื่อกดมาจาก Urgent Card
+  > 3. **[Navigation Flow] การกดย้อนกลับจากหน้ารายละเอียดตั๋ว (`App.tsx:L323`):**
+  >    - เมื่อคลิกดูตั๋วจาก Recent Queue Activity ในหน้า Dashboard เมื่อกด Back ใน `StaffTicketDetail` ระบบจะพาไปหน้า `staff-queue` แทนที่จะกลับมาที่ `staff-dashboard` แนะนำให้บันทึก View ต้นทางเพื่อพากลับมาหน้าเดิมได้อย่างถูกต้อง"
+- **Round 2 Reviewer Feedback Items & My Responses:**
+  1. **Comment on Drill-Down Mismatch for \"My Actions Recorded\" Card (`StaffDashboard.tsx`, `StaffTicketQueue.tsx`, `staff.routes.ts`, `api.ts`):**
+     - *Reviewer Feedback:* Card 3 counted actions logged by caller (`performedById = caller.id`), but drill-down only queried tickets where caller is primary owner (`ownerFilter: \"me\"`). If staff assisted on others' tickets (BR-02), those tickets disappeared from the queue.
+     - *My Action:* Added `actionBy` query parameter to backend `GET /api/staff/tickets` querying `where.actionsTaken = { some: { performedById: req.user.id } }`. Added `actionBy?: string` to `FetchStaffTicketsParams` and `initialActionBy` prop to `StaffTicketQueue.tsx`. Added dedicated 4th ownership toggle button `My Actions` (`ownerFilter === \"my-actions\"`), and updated Dashboard Card 3 click handler to dispatch `onDrillDown?.({ ownerFilter: \"my-actions\", actionBy: \"me\" })`.
+  2. **Comment on Count Discrepancy for \"Urgent Tickets\" Card (`StaffDashboard.tsx`, `StaffTicketQueue.tsx`, `staff.routes.ts`):**
+     - *Reviewer Feedback:* Backend metric counts active urgent tickets (`notIn: RESOLVED, CLOSED, CANCELLED`), but drill-down sent only `{ itPriority: \"URGENT\" }`, causing closed/cancelled tickets to load into queue and creating count discrepancy violating E2E-DASH-01.
+     - *My Action:* Added `status === \"ACTIVE\"` support to backend `GET /api/staff/tickets` querying `where.currentStatus = { notIn: [RESOLVED, CLOSED, CANCELLED] }`. Added `<option value=\"ACTIVE\">Active (Non-terminal)</option>` to status select in `StaffTicketQueue.tsx`. Updated Dashboard Card 4 click handler to dispatch `onDrillDown?.({ itPriority: \"URGENT\", status: \"ACTIVE\" })`.
+  3. **Comment on Back Button Navigation Flow (`App.tsx`):**
+     - *Reviewer Feedback:* Navigating to ticket details from Recent Queue Activity on Dashboard and clicking Back navigated to `staff-queue` instead of returning to `staff-dashboard`.
+     - *My Action:* Added `previousStaffView` state tracking in `App.tsx`. Recorded `previousStaffView = \"staff-dashboard\"` on dashboard ticket click and `\"staff-queue\"` on queue ticket click. Restored exact originating view in `StaffTicketDetail.onBack`.
+- **Status:** Round 2 fixes committed, pushed, and awaiting reviewer re-inspection.
 ---
 
 ## 2. Pull Requests I Reviewed for Partner (@chanya06)

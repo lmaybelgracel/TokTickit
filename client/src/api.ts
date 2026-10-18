@@ -320,6 +320,7 @@ export interface FetchStaffTicketsParams {
   priority?: string;
   itPriority?: string;
   ownerId?: string | number;
+  actionBy?: string;
   sort?: string;
   order?: "asc" | "desc";
   page?: number;
@@ -350,6 +351,7 @@ export async function fetchStaffTickets(
   if (params.ownerId !== undefined && params.ownerId !== null && String(params.ownerId) !== "") {
     query.set("ownerId", String(params.ownerId));
   }
+  if (params.actionBy) query.set("actionBy", params.actionBy);
   if (params.sort) query.set("sort", params.sort);
   if (params.order) query.set("order", params.order);
   if (params.page) query.set("page", params.page.toString());
@@ -812,6 +814,105 @@ export async function updateTicketAction(
     throw err;
   }
   return data;
+}
+
+export interface StaffDashboardMetrics {
+  unassignedTickets: number;
+  myAssignedTickets: number;
+  myActionsTakenCount: number;
+  urgentTickets: number;
+  urgentOpenTickets?: number;
+  waitingForRequester: number;
+  totalActiveTickets: number;
+}
+
+export interface AdminStats {
+  totalUsers: number;
+  activeUsers: number;
+  inactiveUsers: number;
+  roleCounts: {
+    ADMINISTRATOR: number;
+    IT_STAFF: number;
+    REQUESTER: number;
+  };
+}
+
+export interface StaffDashboardTicket {
+  id: number;
+  ticketNumber: string;
+  summary: string;
+  currentStatus: string;
+  itPriority: string;
+  requestedPriority?: string;
+  owner?: { id: number; name: string } | null;
+  updatedAt: string;
+  createdAt?: string;
+}
+
+export interface StaffDashboardData {
+  metrics: StaffDashboardMetrics;
+  statusDistribution: Record<string, number>;
+  statusCounts?: Record<string, number>;
+  priorityDistribution: Record<string, number>;
+  priorityCounts?: Record<string, number>;
+  recentQueueActivity: StaffDashboardTicket[];
+  recentQueueTickets?: StaffDashboardTicket[];
+  adminStats?: AdminStats | null;
+}
+
+export async function fetchStaffDashboard(token?: string | null): Promise<StaffDashboardData> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const headers: Record<string, string> = {};
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  }
+  const res = await fetch(`${BASE_URL}/api/dashboard/staff`, { headers });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load staff dashboard");
+  }
+  return res.json();
+}
+
+export interface RequesterDashboardData {
+  metrics: {
+    totalOpenTickets: number;
+    waitingForRequester: number;
+    resolvedOrClosed: number;
+  };
+  recentTickets: Array<{
+    id: number;
+    ticketNumber: string;
+    summary: string;
+    currentStatus: string;
+    requestedPriority: string;
+    updatedAt: string;
+    createdAt?: string;
+  }>;
+  recentlyUpdated?: RequesterDashboardData["recentTickets"];
+  recentlyResolved: Array<{
+    id: number;
+    ticketNumber: string;
+    summary: string;
+    currentStatus: string;
+    resolutionSummary?: string | null;
+    resolvedAt?: string;
+    updatedAt?: string;
+  }>;
+}
+
+export async function fetchRequesterDashboard(token?: string | null): Promise<RequesterDashboardData> {
+  const authToken = token || localStorage.getItem("toktickit_auth_token");
+  const headers: Record<string, string> = {};
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  }
+  const res = await fetch(`${BASE_URL}/api/dashboard/requester`, { headers });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Failed to load requester dashboard");
+  }
+  return res.json();
 }
 
 
