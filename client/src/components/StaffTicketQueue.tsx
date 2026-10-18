@@ -4,9 +4,19 @@ import "./StaffTicketQueue.css";
 
 export interface StaffTicketQueueProps {
   onSelectTicket?: (ticket: Ticket) => void;
+  initialOwnerFilter?: string;
+  initialStatus?: string;
+  initialItPriority?: string;
+  initialSearch?: string;
 }
 
-export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTicket }) => {
+export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({
+  onSelectTicket,
+  initialOwnerFilter,
+  initialStatus,
+  initialItPriority,
+  initialSearch,
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [pagination, setPagination] = useState({
@@ -16,12 +26,12 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
     totalPages: 1,
   });
 
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>(initialSearch || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>(initialStatus || "");
   const [selectedPriority, setSelectedPriority] = useState<string>("");
-  const [selectedItPriority, setSelectedItPriority] = useState<string>("");
-  const [ownerFilter, setOwnerFilter] = useState<string>("all"); // "all" | "unassigned" | "me"
+  const [selectedItPriority, setSelectedItPriority] = useState<string>(initialItPriority || "");
+  const [ownerFilter, setOwnerFilter] = useState<string>(initialOwnerFilter || "all"); // "all" | "unassigned" | "me"
   const [sortField, setSortField] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -29,6 +39,15 @@ export const StaffTicketQueue: React.FC<StaffTicketQueueProps> = ({ onSelectTick
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync incoming drill-down filter props
+  useEffect(() => {
+    if (initialOwnerFilter !== undefined) setOwnerFilter(initialOwnerFilter || "all");
+    if (initialStatus !== undefined) setSelectedStatus(initialStatus || "");
+    if (initialItPriority !== undefined) setSelectedItPriority(initialItPriority || "");
+    if (initialSearch !== undefined) setSearch(initialSearch || "");
+    setCurrentPage(1);
+  }, [initialOwnerFilter, initialStatus, initialItPriority, initialSearch]);
 
   // Load Categories on mount
   useEffect(() => {

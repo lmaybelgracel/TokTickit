@@ -20,6 +20,7 @@
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
+| [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Pending Review | Under Review | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 
 ---
 
@@ -350,6 +351,15 @@
   > **Verdict: Approve** — งาน Role Dashboards Backend API & Authoritative Query Engine ของ Issue 32 มีคุณภาพสมบูรณ์ ถูกต้องตามข้อกำหนด"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 33 - IT Staff & Administrator Dashboard Frontend UI
+
+- **Pull Request:** [#75](https://github.com/lmaybelgracel/TokTickit/pull/75)
+- **Branch:** `feature/33-staff-dashboard-ui`
+- **Summary:** Implemented IT Staff & Administrator Dashboard frontend UI in `client/src/components/StaffDashboard.tsx`, `StaffDashboard.css`, and integrated into `client/src/App.tsx` and `StaffTicketQueue.tsx`. Features welcome overview banner with staff name, role badge, formatted date, and refresh button; quick actions toolbar; 5 operational metric cards (`unassignedTickets`, `myAssignedTickets`, `myActionsTakenCount` for AC-05/BR-17, `urgentTickets` with critical pulse, `waitingForRequester` attention badge) with 1-click drill-down navigation into ticket queue; queue breakdown matrix with interactive status and priority pills; recent queue activity table (up to 5 tickets) with ticket number, summary, priority badge, status badge, owner, formatted timestamp, and row click navigation to ticket details; administrator user statistics grid (`totalUsers`, `activeUsers`, `inactiveUsers`, role counts) shown conditionally for `ADMINISTRATOR` role. Added Vitest component test suite `client/src/__tests__/lab-04/StaffDashboard.test.tsx` (18/18 tests passing covering UI-DASH-02, UI-DASH-03, UI-DASH-04), preserving 100% full regression pass rate across 292 tests (Server: 207, Client: 85).
+- **Round 1 Reviewer Verdict & Summary:** Pending Review by @phatthidawadi
 
 ---
 
