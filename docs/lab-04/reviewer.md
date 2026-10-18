@@ -19,6 +19,7 @@
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
+| [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 
 ---
 
@@ -296,6 +297,46 @@
   > **คำตัดสิน: Approve** — งาน Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling ของ Issue 31 มีคุณภาพ สมบูรณ์ ถูกต้องตามข้อกำหนด"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+
+---
+
+### Issue 32 - Role Dashboards Backend API & Authoritative Query Engine
+
+- **Pull Request:** [#74](https://github.com/lmaybelgracel/TokTickit/pull/74)
+- **Branch:** `feature/32-dashboards-api`
+- **Summary:** Implemented authoritative backend dashboard calculation endpoints for Requesters, IT Staff, and Administrators in `server/src/routes/dashboard.routes.ts` with direct route aliases in `server/src/app.ts`. Computed dynamic metrics directly from the database without client-side aggregation (BR-15). Enforced strict data isolation for Requesters (`requesterId = caller.id`) providing `totalOpenTickets`, `waitingForRequester`, `resolvedOrClosed`, `recentTickets`, and `recentlyResolved` (BR-16, AC-04, API-DASH-01). Provided IT Staff and Admin metrics including `unassignedTickets`, `myAssignedTickets`, `myActionsTakenCount`, `urgentTickets`, `waitingForRequester`, `totalActiveTickets`, complete 8-state `statusDistribution`, 4-level `priorityDistribution`, and `recentQueueActivity` (BR-17, AC-05, API-DASH-02, API-DASH-04). Populated `adminStats` with user counts (`totalUsers`, `activeUsers`, `inactiveUsers`) and role breakdown for Administrators while omitting for IT Staff (BR-18, AC-05, API-DASH-03). Enforced authentication, role authorization, and mustChangePassword guards. Added automated Vitest suites `server/tests/lab-04/requester-dashboard.api.test.ts` (6/6 tests passing) and `server/tests/lab-04/staff-dashboard.api.test.ts` (8/8 tests passing), maintaining 100% zero regression across all 273 project tests (Server 206, Client 67).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-18T06:40:49Z):
+  > "### ผลการตรวจประเมิน Issue 32 - Sprint 4 Role Dashboards Backend API & Authoritative Query Engine
+  > 
+  > จากการตรวจสอบโค้ดและชุดทดสอบอย่างละเอียดใน PR #74 (Commit `b62dde4`) ยังมีจุดบกพร่องที่ต้องขอให้แก้ไขเพิ่มเติมก่อนจึงจะสามารถอนุมัติได้ ดังนี้:
+  > 
+  > 1. **[server/src/routes/dashboard.routes.ts] การคำนวณ Priority Distribution ไม่กรองเฉพาะ Active Tickets ตามข้อกำหนด BR-17 (บรรทัด 221–232):**
+  >    - ใน `docs/lab-04/specification.md` ข้อกำหนด **BR-17** ระบุชัดเจนว่า `priorityCounts` ต้องเป็น *"Aggregate counts grouped by itPriority for all active tickets"*
+  >    - ในโค้ดปัจจุบันใช้ `prisma.ticket.groupBy` โดยไม่มีเงื่อนไข `where` ทำให้ตั๋วสถานะ Terminal (`CLOSED` และ `CANCELLED`) ถูกดึงมารวมด้วย ส่งผลให้สถิติตามลำดับความสำคัญของคิวงาน IT Staff คลาดเคลื่อนจากความเป็นจริง
+  >    - **สิ่งที่ต้องแก้:** เพิ่มเงื่อนไข `where: { currentStatus: { notIn: TERMINAL_STATUSES } }` ในการ query `priorityDistribution` เพื่อให้นับเฉพาะตั๋วที่ยังดำเนินการอยู่ (Active Tickets) ตรงตามข้อกำหนด BR-17 
+  > 
+  > 2. **[server/src/routes/dashboard.routes.ts & server/src/app.ts] การทำ Recursive Router Dispatching และการ Mutate `req.url` (บรรทัด 326–332):**
+  >    - ใน Endpoint `/admin` มีการเขียน `req.url = "/staff"` แล้วเรียก `dashboardRouter(req, res, next)` ซ้ำซ้อน ซึ่งทำให้ Middleware การยืนยันตัวตน (`requireAuth` และ `enforcePasswordChange`) ถูกเรียกทำงานซ้ำ 2 รอบ และเสี่ยงต่อการทำ Query Parameters สูญหาย
+  >    - **สิ่งที่ต้องแก้:** แยกการประมวลผลของ Staff Dashboard ออกมาเป็นฟังก์ชันอิสระ เช่น `handleStaffDashboard(req, res)` แล้วเรียกใช้ฟังก์ชันดังกล่าวโดยตรงจากทั้ง Route `/staff` และ `/admin` แทนการเขียนทับ `req.url` และวนเรียก Router ซ้ำ
+  > 
+  > 3. **[server/tests/lab-04/requester-dashboard.api.test.ts] ขาดชุดทดสอบ Security กรณี Requester ต้องเปลี่ยนรหัสผ่าน (`mustChangePassword`):**
+  >    - ใน `staff-dashboard.api.test.ts` (บรรทัด 73–85) มีการทดสอบกรณีผู้ใช้ติดสถานะ `mustChangePassword: true` แล้วถูกปฏิเสธด้วย `403 Forbidden` ไว้อย่างชัดเจน
+  >    - แต่ใน `requester-dashboard.api.test.ts` ยังไม่มี Test Case ตรวจสอบกรณี Requester ที่มีแฟล็ก `mustChangePassword: true`
+  >    - **สิ่งที่ต้องแก้:** เพิ่ม Test Case ใน `requester-dashboard.api.test.ts` เพื่อยืนยันว่า Requester ที่มีแฟล็ก `mustChangePassword: true` จะถูกปฏิเสธด้วย `403 Forbidden` เช่นเดียวกัน เพื่อให้ครอบคลุมเงื่อนไขความปลอดภัยตามมาตรฐานของระบบ
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนแก้ไข 3 จุดนี้และพุชคอมมิตใหม่"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Priority Distribution Query Missing Active Tickets Filter (BR-17):**
+     - *Reviewer Feedback:* In `server/src/routes/dashboard.routes.ts`, `prisma.ticket.groupBy` for `itPriority` lacked a `where` filter, incorrectly including terminal tickets (`CLOSED`, `CANCELLED`).
+     - *My Action:* Added `where: { currentStatus: { notIn: TERMINAL_STATUSES } }` to the `itPriority` aggregation query in `handleStaffDashboard`, strictly limiting the distribution to active tickets per `BR-17`. Added automated assertion in `server/tests/lab-04/staff-dashboard.api.test.ts`.
+  2. **Comment on Recursive Router Dispatching and `req.url` Mutation:**
+     - *Reviewer Feedback:* In `/admin` route and alias mounts, `req.url = "/staff"` was used with `dashboardRouter(req, res, next)`, causing middleware to execute twice and mutating request URLs.
+     - *My Action:* Extracted `handleRequesterDashboard` and `handleStaffDashboard` as clean standalone handler functions. Mounted them directly on both primary routes and root aliases (`/api/requester/dashboard`, `/api/staff/dashboard`, `/api/admin/dashboard`) in `server/src/app.ts` with explicit middleware chain and zero URL mutations.
+  3. **Comment on Explicit Password Change Security Tests for Requester Dashboard:**
+     - *Reviewer Feedback:* Vitest suite in `requester-dashboard.api.test.ts` lacked explicit security verification for requesters with `mustChangePassword: true`.
+     - *My Action:* Added dedicated test cases in `server/tests/lab-04/requester-dashboard.api.test.ts` verifying that requesters with `mustChangePassword: true` are rejected with HTTP 403 Forbidden on both `/api/dashboard/requester` and `/api/requester/dashboard`.
+- **Round 1 Verdict:** Changes Requested
+- **Round 2 Status:** Addressed & Submitted for Verification
 
 ---
 
