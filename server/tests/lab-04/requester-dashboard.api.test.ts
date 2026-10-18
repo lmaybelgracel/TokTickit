@@ -62,7 +62,7 @@ describe("Sprint 4 Requester Dashboard API Suite (Issue 32, API-DASH-01, AC-04, 
       expect(res.body.error).toMatch(/insufficient permissions/i);
     });
 
-    it("rejects user who must change password with 403", async () => {
+    it("rejects requester requiring password change (mustChangePassword: true) with 403 Forbidden on /api/dashboard/requester", async () => {
       const unverifiedToken = generateToken({
         ...requesterUser,
         mustChangePassword: true,
@@ -74,6 +74,22 @@ describe("Sprint 4 Requester Dashboard API Suite (Issue 32, API-DASH-01, AC-04, 
 
       expect(res.status).toBe(403);
       expect(res.body.mustChangePassword).toBe(true);
+      expect(res.body.error).toMatch(/password change required/i);
+    });
+
+    it("rejects requester requiring password change (mustChangePassword: true) with 403 Forbidden on /api/requester/dashboard", async () => {
+      const unverifiedToken = generateToken({
+        ...requesterUser,
+        mustChangePassword: true,
+      });
+
+      const res = await request(app)
+        .get("/api/requester/dashboard")
+        .set("Authorization", `Bearer ${unverifiedToken}`);
+
+      expect(res.status).toBe(403);
+      expect(res.body.mustChangePassword).toBe(true);
+      expect(res.body.error).toMatch(/password change required/i);
     });
   });
 

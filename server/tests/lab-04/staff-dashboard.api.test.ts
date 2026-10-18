@@ -175,6 +175,16 @@ describe("Sprint 4 IT Staff & Administrator Dashboard API Suite (Issue 32, API-D
         URGENT: 2,
       });
 
+      // Verify priority distribution was queried with active tickets filter (BR-17)
+      expect(mockPrisma.ticket.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          by: ["itPriority"],
+          where: {
+            currentStatus: { notIn: [TicketStatus.CLOSED, TicketStatus.CANCELLED] },
+          },
+        })
+      );
+
       // Verify recent activity
       expect(res.body.recentQueueActivity).toHaveLength(1);
       expect(res.body.recentQueueActivity[0].ticketNumber).toBe("TKT-2026-000145");
