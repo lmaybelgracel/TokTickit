@@ -21,6 +21,7 @@
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
+| Pending | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Pending Review | PR Ready | Pending |
 
 ---
 
@@ -434,6 +435,18 @@
   > **Verdict: Approve**"
 - **Final Verdict:** Approved
 - **Status:** Merged into `lab4-staging` by @phatthidawadi
+---
+
+### Issue 34 - Requester Dashboard Frontend UI & Regression Verification
+
+- **Pull Request:** Pending
+- **Branch:** `feature/34-requester-dashboard-ui`
+- **Summary:** Implemented Requester Dashboard frontend UI in `client/src/components/RequesterDashboard.tsx`, `RequesterDashboard.css`, and integrated into `client/src/App.tsx` and `MyTickets.tsx`. Features welcome overview banner with requester name, caption, email, and refresh button; quick actions toolbar (+ Create New Ticket, View All My Tickets); 3 personal metric cards (`totalOpenTickets`, `waitingForRequester` with dynamic amber alert when > 0, `resolvedOrClosed`) with 1-click drill-down navigation into `MyTickets`; recent ticket progress list table with ticket number, summary, priority badge (including urgent pulse indicator), status badge, formatted timestamp, and direct \"View Details\" row action; calming Zen Green empty state illustration and CTA when user has zero tickets; updated application shell navigation with persistent active indicators and view history preservation for seamless Back button navigation. Added Vitest component test suite `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` (16/16 tests passing covering UI-DASH-01, AC-04), preserving 100% full regression pass rate across 308 tests (Server: 207, Client: 101).
+- **Reviewer Verdict & Summary:** Pending review by @phatthidawadi.
+- **Reviewer Feedback Items & My Responses:**
+  - *(To be populated upon peer review)*
+- **Status:** PR Ready, awaiting reviewer inspection.
+
 ---
 
 ## 2. Pull Requests I Reviewed for Partner (@chanya06)
