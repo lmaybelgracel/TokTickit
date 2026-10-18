@@ -19,7 +19,7 @@
 | [#71](https://github.com/lmaybelgracel/TokTickit/pull/71) | Issue 29: Actions Taken Backend REST API & Authorization Guards / `feature/29-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #71](https://github.com/lmaybelgracel/TokTickit/pull/71) |
 | [#72](https://github.com/lmaybelgracel/TokTickit/pull/72) | Issue 30: Actions Taken Frontend UI & Ticket Detail Integration / `feature/30-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/lmaybelgracel/TokTickit/pull/72) |
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
-| [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Changes Requested (Round 1: Changes Requested, Round 2: Pending) | Under Review | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
+| [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 
 ---
 
@@ -336,7 +336,20 @@
      - *Reviewer Feedback:* Vitest suite in `requester-dashboard.api.test.ts` lacked explicit security verification for requesters with `mustChangePassword: true`.
      - *My Action:* Added dedicated test cases in `server/tests/lab-04/requester-dashboard.api.test.ts` verifying that requesters with `mustChangePassword: true` are rejected with HTTP 403 Forbidden on both `/api/dashboard/requester` and `/api/requester/dashboard`.
 - **Round 1 Verdict:** Changes Requested
-- **Round 2 Status:** Addressed & Submitted for Verification
+- **Round 2 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-18T16:20:52Z):
+  > "### ผลการตรวจประเมินรอบที่ 2 (Re-review Round 2)
+  > 
+  > ขอบคุณสำหรับการแก้ไขโค้ดและชุดทดสอบอย่างรวดเร็วและตรงประเด็นใน commit `e46cee0`
+  > 
+  > ผลการ Re-review ในระดับโค้ดจริงและการรันชุดทดสอบยืนยันดังนี้:
+  > 1. **การกรอง Active Tickets ใน Priority Distribution (BR-17):** ได้รับการแก้ไขที่รากเหง้าโดยเพิ่มเงื่อนไข `where: { currentStatus: { notIn: TERMINAL_STATUSES } }` ใน `server/src/routes/dashboard.routes.ts` พร้อม assertion ตรวจสอบใน `staff-dashboard.api.test.ts` ครบถ้วน
+  > 2. **การแยก Dashboard Handlers และยกเลิก `req.url` Mutation:** สถาปัตยกรรมการ Routing ใน `app.ts` และ `dashboard.routes.ts` ได้รับการปรับปรุงเป็น Clean Handlers และเชื่อมต่อกับ Middleware Chain โดยตรง ปราศจากการเรียก Dispatch ซ้ำซ้อน
+  > 3. **ชุดทดสอบ Security สำหรับ Requester Password Change:** เพิ่ม Test Cases ใน `requester-dashboard.api.test.ts` ยืนยันการปฏิเสธด้วย HTTP 403 Forbidden ครอบคลุมทั้งเส้นทางหลักและ Alias
+  > 4. **ความเข้ากันได้ย้อนหลัง (Full Regression):** รันเทสต์ทั้งระบบผ่านครบ 274/274 tests (Server 207, Client 67) ปราศจากข้อผิดพลาด 100%
+  > 
+  > **Verdict: Approve** — งาน Role Dashboards Backend API & Authoritative Query Engine ของ Issue 32 มีคุณภาพสมบูรณ์ ถูกต้องตามข้อกำหนด"
+- **Final Verdict:** Approved
+- **Status:** Merged into `lab4-staging` by @phatthidawadi
 
 ---
 
