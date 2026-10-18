@@ -21,7 +21,7 @@
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
-| [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Pending Review | Under Review | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
+| [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Changes Requested (Round 1: Changes Requested) | Under Review | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
 
 ---
 
@@ -442,10 +442,39 @@
 - **Pull Request:** [#76](https://github.com/lmaybelgracel/TokTickit/pull/76)
 - **Branch:** `feature/34-requester-dashboard-ui`
 - **Summary:** Implemented Requester Dashboard frontend UI in `client/src/components/RequesterDashboard.tsx`, `RequesterDashboard.css`, and integrated into `client/src/App.tsx` and `MyTickets.tsx`. Features welcome overview banner with requester name, caption, email, and refresh button; quick actions toolbar (+ Create New Ticket, View All My Tickets); 3 personal metric cards (`totalOpenTickets`, `waitingForRequester` with dynamic amber alert when > 0, `resolvedOrClosed`) with 1-click drill-down navigation into `MyTickets`; recent ticket progress list table with ticket number, summary, priority badge (including urgent pulse indicator), status badge, formatted timestamp, and direct \"View Details\" row action; calming Zen Green empty state illustration and CTA when user has zero tickets; updated application shell navigation with persistent active indicators and view history preservation for seamless Back button navigation. Added Vitest component test suite `client/src/__tests__/lab-04/RequesterDashboard.test.tsx` (16/16 tests passing covering UI-DASH-01, AC-04), preserving 100% full regression pass rate across 308 tests (Server: 207, Client: 101).
-- **Reviewer Verdict & Summary:** Pending review by @phatthidawadi.
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-18T19:54:01Z):
+  > "### ผลการตรวจประเมิน Issue 34 - Sprint 4 Requester Dashboard Frontend UI
+  > 
+  > จากการตรวจสอบโค้ดและชุดทดสอบอย่างละเอียดใน PR #76 (Commit `9486edb`) พบว่าภาพรวมการออกแบบ UI, State Handling (Loading, Error, Empty State), Accessibility, และการเรียกใช้งาน API ตาม BR-16 ทำได้ดีมาก อย่างไรก็ตาม ยังมีจุดบกพร่องเรื่อง Drill-Down Navigation และตัวกรองสถานะที่ทำให้ตัวเลขบน Dashboard ไม่ตรงกับตารางรายการตั๋ว ซึ่งต้องขอให้แก้ไขเพิ่มเติมก่อนจึงจะสามารถอนุมัติได้ ดังนี้:
+  > 
+  > 1. **[client/src/components/RequesterDashboard.tsx & MyTickets.tsx] การ Drill-Down การ์ด \"Resolved / Closed\" ไม่แสดงตั๋วสถานะ CLOSED (AC-04, AC-11, BR-16):**
+  >    - **ปัญหา:** การ์ดสถิติที่ 3 คำนวณและแสดงผลตัวเลขรวมของตั๋วที่เสร็จสิ้น `metrics.resolvedOrClosed` (Backend รวมทั้ง `RESOLVED` และ `CLOSED`) แต่เมื่อผู้ใช้คลิกการ์ดนี้ ฟังก์ชัน `handleCardClick` ใน `RequesterDashboard.tsx` (บรรทัด 297) ส่งค่า `onNavigateMyTickets?.(\"resolved\")` ไปยัง `MyTickets.tsx` ซึ่งฟังก์ชัน `mapStatusFilter` (บรรทัด 23) แปลงค่านั้นเป็น `selectedStatus = \"RESOLVED\"` เพียงสถานะเดียว
+  >    - **ผลกระทบ:** ตาราง `MyTickets` จะยิงคำขอ `GET /api/tickets?status=RESOLVED` และแสดงเฉพาะตั๋ว `RESOLVED` โดยไม่แสดงตั๋ว `CLOSED` ทำให้จำนวนรายการที่แสดงในตารางน้อยกว่าตัวเลขรวมบนการ์ด Dashboard (เช่น ถ้ามี Resolved 1 ใบ และ Closed 4 ใบ การ์ดจะแสดงเลข 5 แต่คลิกเข้ามาเห็นตั๋วเพียง 1 ใบ) ซึ่งขัดต่อข้อกำหนด **AC-11** (\"landing on filtered queue matching count\")
+  >    - **สิ่งที่ต้องแก้:**
+  >      - ปรับให้ `onNavigateMyTickets` ส่งพารามิเตอร์สถานะที่สื่อถึงทั้งสองสถานะ เช่น `\"resolved_or_closed\"` หรือรองรับการกรองแบบรวม
+  >      - ปรับ `mapStatusFilter` และตัวกรองใน `MyTickets.tsx` ให้สามารถเลือกแสดงผลกลุ่มตั๋วที่เสร็จสิ้นแล้วทั้งหมด (`RESOLVED` และ `CLOSED`) ได้อย่างถูกต้อง
+  > 
+  > 2. **[server/src/app.ts] ขยาย Endpoint `GET /api/tickets` ให้รองรับการกรองสถานะคู่ (`RESOLVED_OR_CLOSED`):**
+  >    - **ปัญหา:** ใน `server/src/app.ts` (บรรทัด 371–385) พารามิเตอร์ `status` ของ `GET /api/tickets` รองรับเพียงค่า `ACTIVE` หรือค่าเดี่ยวของ `TicketStatus` เท่านั้น หากส่งค่าอื่นเข้ามาจะติด `400 INVALID_QUERY`
+  >    - **สิ่งที่ต้องแก้:** เพิ่มการรองรับ query parameter เช่น `status=RESOLVED_OR_CLOSED` (หรือ `COMPLETED`) ใน `server/src/app.ts` โดยให้ query Prisma ด้วย `where.currentStatus = { in: [TicketStatus.RESOLVED, TicketStatus.CLOSED] }` เพื่อให้ Client ฝั่ง Requester สามารถ Drill-down ดูรายการตั๋วที่ตรงกับยอดรวมของการ์ดได้อย่างสมบูรณ์
+  > 
+  > 3. **[docs/lab-04/reviewer.md] สถานะการรีวิว:**
+  >    - บันทึกข้อเสนอแนะและอัปเดตผลการประเมินรอบที่ 1 สำหรับ Issue 34 / PR #76 ลงในตาราง Review History ใน `docs/lab-04/reviewer.md`
+  > 
+  > ---
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนแก้ไข 3 จุดนี้และพุชคอมมิตใหม่"
 - **Reviewer Feedback Items & My Responses:**
-  - *(To be populated upon peer review)*
-- **Status:** PR #76 submitted, awaiting peer review by @phatthidawadi.
+  1. **Comment on Drill-Down on \"Resolved / Closed\" Card Mismatch (`RequesterDashboard.tsx` & `MyTickets.tsx`):**
+     - *Reviewer Feedback:* Card 3 aggregates both `RESOLVED` and `CLOSED` tickets (`metrics.resolvedOrClosed`), but drill-down only queried `RESOLVED`, hiding `CLOSED` tickets and violating AC-11 count parity.
+     - *My Action:* Updated Card 3 click handler in `RequesterDashboard.tsx` to dispatch `onNavigateMyTickets?.(\"resolved_or_closed\")`. Updated `mapStatusFilter` in `MyTickets.tsx` to map `\"resolved_or_closed\"` (as well as `\"resolved\"` and `\"completed\"`) to `\"RESOLVED_OR_CLOSED\"`. Added `<option value=\"RESOLVED_OR_CLOSED\">Resolved / Closed</option>` to the status select dropdown in `MyTickets.tsx`.
+  2. **Comment on Backend `GET /api/tickets` Support for Combined Status (`RESOLVED_OR_CLOSED`):**
+     - *Reviewer Feedback:* `GET /api/tickets` in `server/src/app.ts` rejected non-enum queries, preventing combined status queries.
+     - *My Action:* Added support for `status === \"RESOLVED_OR_CLOSED\"` (and alias `\"COMPLETED\"`) in `server/src/app.ts`, querying Prisma with `where.currentStatus = { in: [TicketStatus.RESOLVED, TicketStatus.CLOSED] }`.
+  3. **Comment on Reviewer Tracking Record:**
+     - *Reviewer Feedback:* Record Round 1 Changes Requested review and response in `docs/lab-04/reviewer.md`.
+     - *My Action:* Recorded Round 1 Changes Requested verdict, verbatim quotes, and detailed responses in `docs/lab-04/reviewer.md`.
+- **Status:** Round 1 fixes committed, pushed, and awaiting reviewer re-inspection.
 
 ---
 

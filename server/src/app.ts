@@ -377,6 +377,10 @@ app.get("/api/tickets", async (req: Request, res: Response) => {
         where.currentStatus = {
           notIn: [TicketStatus.RESOLVED, TicketStatus.CLOSED, TicketStatus.CANCELLED],
         };
+      } else if (upperStatus === "RESOLVED_OR_CLOSED" || upperStatus === "COMPLETED") {
+        where.currentStatus = {
+          in: [TicketStatus.RESOLVED, TicketStatus.CLOSED],
+        };
       } else if (Object.values(TicketStatus).includes(upperStatus as TicketStatus)) {
         where.currentStatus = upperStatus as TicketStatus;
       } else {

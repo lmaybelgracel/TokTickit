@@ -215,7 +215,7 @@ describe("Requester Dashboard Component Tests (Sprint 4 - Issue 34, UI-DASH-01, 
       });
 
       fireEvent.click(screen.getByTestId("metric-resolved-tickets"));
-      expect(handleNavigate).toHaveBeenCalledWith("resolved");
+      expect(handleNavigate).toHaveBeenCalledWith("resolved_or_closed");
     });
 
     it("supports keyboard Enter and Space navigation on metric cards", async () => {

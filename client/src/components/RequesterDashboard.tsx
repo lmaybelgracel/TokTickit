@@ -294,11 +294,11 @@ export const RequesterDashboard: React.FC<RequesterDashboardProps> = ({
           data-testid="metric-resolved-tickets"
           role="button"
           tabIndex={0}
-          onClick={() => onNavigateMyTickets?.("resolved")}
+          onClick={() => onNavigateMyTickets?.("resolved_or_closed")}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              onNavigateMyTickets?.("resolved");
+              onNavigateMyTickets?.("resolved_or_closed");
             }
           }}
           aria-label={`Resolved or Closed Tickets: ${metrics.resolvedOrClosed}`}
