@@ -21,7 +21,7 @@
 | [#73](https://github.com/lmaybelgracel/TokTickit/pull/73) | Issue 31: Ticket Status Workflow, Resolution Gate & Concurrency Conflict Handling / `feature/31-status-workflow-and-resolution` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #73](https://github.com/lmaybelgracel/TokTickit/pull/73) |
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
-| [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Changes Requested (Round 1: Changes Requested, Round 2: Changes Requested) | Under Review | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
+| [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
 
 ---
 
@@ -513,7 +513,34 @@
   3. **Regression Suite:**
      - *Reviewer Feedback:* Zero skipped tests, full regression pass required.
      - *My Action:* Ran full regression suite across client (101 tests, 16 files) and server (209 tests, 22 files) totaling 310 tests passing 100% with clean production build.
-- **Status:** Round 2 fixes committed, pushed, and awaiting reviewer re-inspection.
+- **Status:** Round 2 fixes committed, pushed, and re-reviewed.
+- **Round 3 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-18T20:34:30Z):
+  > "### ผลการตรวจประเมินรอบที่ 3 (Re-review Round 3) — Issue 34 / PR #76 (Commit `8f79375`)
+  > 
+  > ขอบคุณสำหรับการแก้ไขอย่างครบถ้วนและตรงประเด็นใน commit `8f79375` ได้ดำเนินการ Re-review ในระดับโค้ดจริงและรัน Full Regression Test Suite เรียบร้อยแล้ว มีผลการตรวจดังนี้:
+  > 
+  > 1. **เพิ่ม Server-side Integration Test สำหรับ `RESOLVED_OR_CLOSED` (NI-01 จากรอบที่ 2):**
+  >    - เพิ่ม Test case `API-05 / AC-11` ใน `server/tests/lab-02/my-tickets.api.test.ts` และ Test describe `"Requester Ticket Drill-Down API Parity (AC-11, BR-16)"` ใน `server/tests/lab-04/requester-dashboard.api.test.ts` ครบถ้วนแล้ว
+  >    - ทั้งสองชุดทดสอบใช้ Supertest ยิง HTTP จริงไปยัง `GET /api/tickets?status=RESOLVED_OR_CLOSED` และตรวจสอบ `capturedWhere.currentStatus` ว่าเท่ากับ `{ in: [TicketStatus.RESOLVED, TicketStatus.CLOSED] }` อย่างถูกต้อง
+  >    - ไม่มี `.skip`, `.only`, `xtest` หรือ `xdescribe` ในไฟล์ทดสอบใหม่ ✓
+  >    - หมายเหตุ: Test ยังไม่ได้ assert ว่าสถานะ `CANCELLED` ถูกตัดออก (ไม่อยู่ใน `in` list) อย่างชัดเจน แต่การตรวจสอบโค้ด `server/src/app.ts` L380–383 ยืนยันว่า `CANCELLED` ไม่ถูกรวมอยู่จริง เพียงแต่ถ้าต้องการ Test ที่สมบูรณ์ขึ้นในอนาคต อาจเพิ่ม negative assertion นี้ได้
+  > 
+  > 2. **แยก alias `"resolved"` ออกจากกลุ่ม `RESOLVED_OR_CLOSED` (NI-02 จากรอบที่ 2):**
+  >    - ฟังก์ชัน `mapStatusFilter` ใน `client/src/components/MyTickets.tsx` (L22–29) แก้ไขแล้ว โดยแยก `s === "resolved"` ออกเป็น branch ของตัวเอง → map ไปยัง `"RESOLVED"` เดี่ยว ๆ
+  >    - สงวน `"resolved_or_closed"` และ `"completed"` ไว้สำหรับ `"RESOLVED_OR_CLOSED"` เท่านั้น ป้องกันปัญหา Alias Collision สมบูรณ์
+  >    - เพิ่ม JSDoc comment ที่ L18–21 อธิบาย Intent ชัดเจนว่า `"resolved_or_closed"` ใช้สำหรับ Dashboard Card 3 (AC-11) โดยเฉพาะ ✓
+  > 
+  > 3. **ชุดการทดสอบอัตโนมัติและความเข้ากันได้ย้อนหลัง (Regression Suite):**
+  >    - ตรวจสอบแล้วไม่มี `.skip`, `.only`, `xtest`, หรือ `xdescribe` ในทุกไฟล์ที่แก้ไข ✓
+  >    - รัน Full Test Suite ทั้งระบบ: Client ผ่าน 16 ไฟล์ (101/101 เทสต์) และ Server ผ่าน 22 ไฟล์ (209/209 เทสต์) รวมทั้งสิ้น **310 เทสต์ผ่าน 100%** Lab 1–3 Regression ผ่านครบ Zero Regression ✓
+  > 
+  > ---
+  > 
+  > **คำตัดสิน: Approve** — ข้อค้นพบทั้งหมดจากรอบที่ 1 และรอบที่ 2 ได้รับการแก้ไขสมบูรณ์มีหลักฐานยืนยันในโค้ดจริง งาน Requester Dashboard Frontend UI ของ Issue 34 มีคุณภาพ ถูกต้องตามข้อกำหนด AC-11 และ BR-16 ครบถ้วน"
+- **Round 3 Reviewer Feedback Items & My Responses:**
+  - *Reviewer Feedback:* All findings from Rounds 1 and 2 verified complete in code and tests. Full regression suite passed (310 tests, 0 skipped). Approved and merged.
+  - *My Action:* Merged by @phatthidawadi into `lab4-staging` via PR #76. Closed Issue #66 on GitHub.
+- **Status:** Approved and merged into `lab4-staging` by @phatthidawadi (2026-10-18T20:34:41Z).
 
 ---
 
