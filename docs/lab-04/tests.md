@@ -64,9 +64,10 @@ Testing encompasses:
 | `UI-ACT-02` | UI | AC-12 | Actions Taken table renders chronological items | Displays date, performer, description, result | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
 | `UI-ACT-03` | UI | AC-02 | Requester view hides action creation controls | Button "+ Record Action Taken" is not in DOM | `client/src/__tests__/lab-04/ActionsTaken.test.tsx` | Passed |
 | `UI-WORK-01` | UI | AC-10 | Advisory resolved banner displayed for staff | Shows banner without changing status badge | `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` | Passed |
-| `E2E-ACT-01` | E2E | AC-01 | Full flow: Login as Staff, record action, verify on detail | Action appears in list with correct performer | `e2e/lab-04/actions-taken-flow.spec.ts` | Planned |
-| `E2E-RES-01` | E2E | AC-06 | Full flow: Resolve ticket with modal summary | Status updates to RESOLVED, summary displayed | `e2e/lab-04/ticket-resolution.spec.ts` | Planned |
-| `E2E-DASH-01`| E2E | AC-11 | Staff Dashboard metric card drill-down flow | Click card, land on filtered queue matching count | `e2e/lab-04/dashboards.spec.ts` | Planned |
-| `E2E-RESP-01`| E2E | AC-13 | Viewport 375px mobile responsiveness test | Zero horizontal scroll, all text visible | `e2e/lab-04/dashboards.spec.ts` | Planned |
-| `E2E-ALL-01` | E2E | AC-16 | Clean build and E2E automation pass on main | All Playwright specs pass on staging and main | `e2e/lab-04/*.spec.ts` | Planned |
-| `REG-ALL-01` | Suite | AC-15 | Labs 1–3 regression suites pass 100% | All 42+ test suites pass without failure | Server & Client Vitest execution | Planned |
+| `E2E-ACT-01` | E2E | AC-01 | Full flow: Login as Staff, record action, verify on detail | Action appears in list with correct performer | `e2e/lab-04/actions-taken-flow.spec.ts` | Passed |
+| `E2E-RES-01` | E2E | AC-06 | Full flow: Resolve ticket with modal summary | Status updates to RESOLVED, summary displayed | `e2e/lab-04/ticket-resolution.spec.ts` | Passed |
+| `E2E-DASH-01`| E2E | AC-11 | Staff Dashboard metric card drill-down flow | Click card, land on filtered queue matching count | `e2e/lab-04/dashboards.spec.ts` | Passed |
+| `E2E-RESP-01`| E2E | AC-13 | Viewport 375px mobile responsiveness test | Zero horizontal scroll, all text visible | `e2e/lab-04/dashboards.spec.ts` | Passed |
+| `E2E-ALL-01` | E2E | AC-16 | Clean build and E2E automation pass on main | All Playwright specs pass on staging and main | `e2e/lab-04/*.spec.ts` | Passed |
+| `REG-ALL-01` | Suite | AC-15 | Labs 1–3 regression suites pass 100% | All 42+ test suites pass without failure | Server & Client Vitest execution | Passed |
+

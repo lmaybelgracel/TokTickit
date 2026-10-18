@@ -94,6 +94,18 @@ test.describe("E2E-ADMIN: Administrator User Management & Safety Guards Flow", (
         }
       }
 
+      if (url.pathname === "/api/dashboard/staff") {
+        return json({
+          unassignedCount: 0,
+          myAssignedCount: 0,
+          myActionsTakenCount: 0,
+          statusDistribution: { NEW: 0, OPEN: 0, IN_PROGRESS: 0, WAITING_FOR_REQUESTER: 0, RESOLVED: 0, CLOSED: 0, REOPENED: 0 },
+          priorityDistribution: { URGENT: 0, HIGH: 0, MEDIUM: 0, LOW: 0 },
+          queueSummary: { totalCount: 0, urgentOpenCount: 0, waitingRequesterCount: 0, resolvedTodayCount: 0 },
+          recentQueueActivity: [],
+        });
+      }
+
       return json({ error: "Not found" }, 404);
     });
 
@@ -103,7 +115,13 @@ test.describe("E2E-ADMIN: Administrator User Management & Safety Guards Flow", (
     await page.locator("#login-password").fill("AdminPassword123!");
     await page.getByRole("button", { name: /Sign In/i }).click();
 
-    // 2. User Management view is displayed
+    // 2. Navigate to User Management view if on dashboard
+    const userMgmtNav = page.getByRole("button", { name: "User Management" });
+    if (await userMgmtNav.isVisible()) {
+      await userMgmtNav.click();
+    }
+
+    // User Management view is displayed
     await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
     await expect(page.getByLabel("Users List").getByText("Suda Administrator")).toBeVisible();
     await expect(page.getByLabel("Users List").getByText("Somchai Staff")).toBeVisible();

@@ -22,6 +22,7 @@
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 | [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
+| [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Pending Review | Open | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
 
 ---
 
@@ -541,10 +542,19 @@
   - *Reviewer Feedback:* All findings from Rounds 1 and 2 verified complete in code and tests. Full regression suite passed (310 tests, 0 skipped). Approved and merged.
   - *My Action:* Merged by @phatthidawadi into `lab4-staging` via PR #76. Closed Issue #66 on GitHub.
 - **Status:** Approved and merged into `lab4-staging` by @phatthidawadi (2026-10-18T20:34:41Z).
-
----
-
-## 2. Pull Requests I Reviewed for Partner (@chanya06)
+ 
+ ---
+ 
++### Issue 35 - End-to-End Automation, Responsive Visual Evidence & Accessibility Audit
++
++- **Pull Request:** [#77](https://github.com/lmaybelgracel/TokTickit/pull/77)
++- **Branch:** `feature/35-e2e-automation-and-audit`
++- **Summary:** Delivers comprehensive automated Playwright E2E suites for Sprint 4 covering Actions Taken recording and authorization (`actions-taken-flow.spec.ts`), formal ticket resolution gate and concurrency conflicts (`ticket-resolution.spec.ts`), operational and personal dashboard drill-down navigation and mobile responsive layout audits (`dashboards.spec.ts`), multi-viewport screenshot evidence across Desktop (1280px), Tablet (768px), Mobile (375px), and Small Mobile (320px) under `artifacts/lab-04/screenshots/`, and WCAG 2.1 AA accessibility checks (`visual-evidence.spec.ts`).
++- **Status:** Pending Review by @phatthidawadi (DO NOT merge autonomously).
++
++---
++
+ ## 2. Pull Requests I Reviewed for Partner (@chanya06)
 
 **Partner author:** Chanya Poolketkij 67070501058 — GitHub: [@chanya06](https://github.com/chanya06)
 

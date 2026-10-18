@@ -289,6 +289,11 @@ test.describe("Sprint 3 Visual Evidence & Responsive Style Audit (Issue 24)", ()
     await page.locator("#login-password").fill("StaffPass123!");
     await page.getByRole("button", { name: "Sign In" }).click();
 
+    const staffQueueNav = page.getByRole("button", { name: "Staff Queue" });
+    if (await staffQueueNav.isVisible()) {
+      await staffQueueNav.click();
+    }
+
     await expect(page.getByRole("heading", { name: "IT Staff Ticket Queue" })).toBeVisible();
 
     // 2.1 Desktop Viewport (1280px)
@@ -319,7 +324,7 @@ test.describe("Sprint 3 Visual Evidence & Responsive Style Audit (Issue 24)", ()
     // 2.6 Empty State View
     currentTickets = [];
     await page.getByLabel(/Search tickets/i).fill("NonExistentQueryXYZ");
-    await expect(page.getByText(/No tickets found/i)).toBeVisible();
+    await expect(page.getByText(/No tickets match your filters/i).first()).toBeVisible();
     await page.screenshot({ path: "artifacts/lab-03/screenshots/staff-queue/queue-empty-state.png", fullPage: true });
   });
 
@@ -384,6 +389,11 @@ test.describe("Sprint 3 Visual Evidence & Responsive Style Audit (Issue 24)", ()
     await page.getByLabel(/Email Address/i).fill(staffUser.email);
     await page.locator("#login-password").fill("StaffPass123!");
     await page.getByRole("button", { name: "Sign In" }).click();
+
+    const staffQueueNav = page.getByRole("button", { name: "Staff Queue" });
+    if (await staffQueueNav.isVisible()) {
+      await staffQueueNav.click();
+    }
 
     await expect(page.getByRole("heading", { name: "IT Staff Ticket Queue" })).toBeVisible();
     await page.getByRole("button", { name: ticket.ticketNumber }).click();
@@ -456,6 +466,11 @@ test.describe("Sprint 3 Visual Evidence & Responsive Style Audit (Issue 24)", ()
     await page.getByLabel(/Email Address/i).fill(adminUser.email);
     await page.locator("#login-password").fill("AdminPass123!");
     await page.getByRole("button", { name: "Sign In" }).click();
+
+    const userMgmtNav = page.getByRole("button", { name: "User Management" });
+    if (await userMgmtNav.isVisible()) {
+      await userMgmtNav.click();
+    }
 
     await expect(page.getByRole("heading", { name: "User Management" })).toBeVisible();
 

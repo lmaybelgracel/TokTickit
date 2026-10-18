@@ -56,8 +56,16 @@ test.describe("E2E-AUTH: Authentication & Password Lifecycle Flow", () => {
         return json([]);
       }
 
-      if (url.pathname === "/api/staff/tickets") {
-        return json({ tickets: [], pagination: { total: 0, totalPages: 1, page: 1, limit: 10 } });
+      if (url.pathname === "/api/dashboard/staff") {
+        return json({
+          unassignedCount: 0,
+          myAssignedCount: 0,
+          myActionsTakenCount: 0,
+          statusDistribution: { NEW: 0, OPEN: 0, IN_PROGRESS: 0, WAITING_FOR_REQUESTER: 0, RESOLVED: 0, CLOSED: 0, REOPENED: 0 },
+          priorityDistribution: { URGENT: 0, HIGH: 0, MEDIUM: 0, LOW: 0 },
+          queueSummary: { totalCount: 0, urgentOpenCount: 0, waitingRequesterCount: 0, resolvedTodayCount: 0 },
+          recentQueueActivity: [],
+        });
       }
 
       return json({ error: "Not found" }, 404);
@@ -105,8 +113,8 @@ test.describe("E2E-AUTH: Authentication & Password Lifecycle Flow", () => {
     await submitBtn.click();
 
     // 6. Enters application and displays IT Staff view
-    await expect(page.getByRole("heading", { name: "IT Staff Ticket Queue" })).toBeVisible();
-    await expect(page.getByText("New Staff")).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Welcome back|IT Staff Ticket Queue/ })).toBeVisible();
+    await expect(page.getByText("New Staff").first()).toBeVisible();
 
     // 7. Test Logout action
     await page.getByRole("button", { name: /Sign Out/i }).click();
