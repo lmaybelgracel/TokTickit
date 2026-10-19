@@ -136,7 +136,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await expect(page.getByRole("heading", { name: /Welcome, Alice Requester!/i })).toBeVisible();
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/requester-dashboard-desktop-1280.png",
+      path: "artifacts/lab-04/screenshots/requester-dashboard/requester-dashboard-desktop-1280.png",
       fullPage: true,
     });
 
@@ -144,7 +144,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 768, height: 1024 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/requester-dashboard-tablet-768.png",
+      path: "artifacts/lab-04/screenshots/requester-dashboard/requester-dashboard-tablet-768.png",
       fullPage: true,
     });
 
@@ -152,7 +152,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 375, height: 667 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/requester-dashboard-mobile-375.png",
+      path: "artifacts/lab-04/screenshots/requester-dashboard/requester-dashboard-mobile-375.png",
       fullPage: true,
     });
 
@@ -160,7 +160,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 320, height: 568 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/requester-dashboard-mobile-320.png",
+      path: "artifacts/lab-04/screenshots/requester-dashboard/requester-dashboard-mobile-320.png",
       fullPage: true,
     });
   });
@@ -230,7 +230,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await expect(page.getByRole("heading", { name: /Welcome back, Somchai Staff/i })).toBeVisible();
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/staff-dashboard-desktop-1280.png",
+      path: "artifacts/lab-04/screenshots/staff-dashboard/staff-dashboard-desktop-1280.png",
       fullPage: true,
     });
 
@@ -238,7 +238,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 768, height: 1024 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/staff-dashboard-tablet-768.png",
+      path: "artifacts/lab-04/screenshots/staff-dashboard/staff-dashboard-tablet-768.png",
       fullPage: true,
     });
 
@@ -246,7 +246,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 375, height: 667 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/staff-dashboard-mobile-375.png",
+      path: "artifacts/lab-04/screenshots/staff-dashboard/staff-dashboard-mobile-375.png",
       fullPage: true,
     });
 
@@ -254,7 +254,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 320, height: 568 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/dashboards/staff-dashboard-mobile-320.png",
+      path: "artifacts/lab-04/screenshots/staff-dashboard/staff-dashboard-mobile-320.png",
       fullPage: true,
     });
   });
@@ -322,7 +322,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await expect(page.getByText(/Inspected pickup roller assembly/i)).toBeVisible();
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/actions/actions-taken-desktop-1280.png",
+      path: "artifacts/lab-04/screenshots/actions-taken/actions-taken-desktop-1280.png",
       fullPage: true,
     });
 
@@ -330,7 +330,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     await page.setViewportSize({ width: 375, height: 667 });
     await assertNoHorizontalOverflow(page);
     await page.screenshot({
-      path: "artifacts/lab-04/screenshots/actions/actions-taken-mobile-375.png",
+      path: "artifacts/lab-04/screenshots/actions-taken/actions-taken-mobile-375.png",
       fullPage: true,
     });
 

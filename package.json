@@ -1,9 +1,13 @@
 {
-  "name": "toktickit-lab-02",
+  "name": "toktickit-lab-04",
   "private": true,
   "scripts": {
+    "test:server": "npm --prefix server test",
+    "test:client": "npm --prefix client test",
+    "test:full": "npm --prefix server test && npm --prefix client test",
     "install:e2e": "playwright install chromium",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build": "npm --prefix client run build"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0"

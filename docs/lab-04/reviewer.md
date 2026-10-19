@@ -22,7 +22,7 @@
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 | [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
-| [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Pending Review | Open | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
+| [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Changes Requested (Round 1: Changes Requested, Awaiting Re-review) | Open | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
 
 ---
 
@@ -545,13 +545,44 @@
  
  ---
  
-+### Issue 35 - End-to-End Automation, Responsive Visual Evidence & Accessibility Audit
-+
-+- **Pull Request:** [#77](https://github.com/lmaybelgracel/TokTickit/pull/77)
-+- **Branch:** `feature/35-e2e-automation-and-audit`
-+- **Summary:** Delivers comprehensive automated Playwright E2E suites for Sprint 4 covering Actions Taken recording and authorization (`actions-taken-flow.spec.ts`), formal ticket resolution gate and concurrency conflicts (`ticket-resolution.spec.ts`), operational and personal dashboard drill-down navigation and mobile responsive layout audits (`dashboards.spec.ts`), multi-viewport screenshot evidence across Desktop (1280px), Tablet (768px), Mobile (375px), and Small Mobile (320px) under `artifacts/lab-04/screenshots/`, and WCAG 2.1 AA accessibility checks (`visual-evidence.spec.ts`).
-+- **Status:** Pending Review by @phatthidawadi (DO NOT merge autonomously).
-+
+### Issue 35 - End-to-End Automation, Responsive Visual Evidence & Accessibility Audit
+
+- **Pull Request:** [#77](https://github.com/lmaybelgracel/TokTickit/pull/77)
+- **Branch:** `feature/35-e2e-automation-and-audit`
+- **Summary:** Delivers comprehensive automated Playwright E2E suites for Sprint 4 covering Actions Taken recording and authorization (`actions-taken-flow.spec.ts`), formal ticket resolution gate and concurrency conflicts (`ticket-resolution.spec.ts`), operational and personal dashboard drill-down navigation and mobile responsive layout audits (`dashboards.spec.ts`), multi-viewport screenshot evidence across Desktop (1280px), Tablet (768px), Mobile (375px), and Small Mobile (320px) under `artifacts/lab-04/screenshots/`, and WCAG 2.1 AA accessibility checks (`visual-evidence.spec.ts`).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-19T13:53:36Z):
+  > "### ผลการตรวจประเมิน Issue 35 - Sprint 4 End-to-End Automation, Responsive Visual Evidence & Accessibility Audit
+  > 
+  > จากการตรวจสอบโค้ดและผลการทดสอบอย่างละเอียดใน PR #77 (Commit `ab0bb01`) ครอบคลุมชุดทดสอบ Playwright E2E, การตรวจสอบ WCAG 2.1 AA Accessibility, Responsive Zero Horizontal Scrollbar Audit และการอัปเดต README.md พบว่าระบบทำงานได้อย่างถูกต้อง มีคุณภาพสูงมาก และรันชุดทดสอบผ่าน 100% ทั้งหมด อย่างไรก็ตาม ยังมีจุดบกพร่องด้าน Script และพาธการบันทึกภาพหลักฐานอัตโนมัติที่ต้องขอให้ปรับปรุงเพิ่มเติมก่อนจึงจะสามารถอนุมัติได้ ดังนี้:
+  > 
+  > 1. **[README.md:บรรทัด 188 & package.json] คำสั่ง `npm run test:full` ไม่มีอยู่ใน `package.json`:**
+  >    - ใน `README.md` หัวข้อ 3. Full Regression Suite (310 Tests Passing) ระบุให้รันคำสั่ง `npm run test:full` เพื่อรันทั้ง server และ client พร้อมกัน
+  >    - แต่ใน `package.json` (Root) มีเพียงคำสั่ง `"install:e2e"` และ `"test:e2e"` รวมถึงใน `client/package.json` และ `server/package.json` ก็ไม่มีสคริปต์ชื่อ `test:full`
+  >    - หากผู้ตรวจประเมินหรืออาจารย์ clone โค้ดมาแล้วรันคำสั่งตาม README จะเกิดข้อผิดพลาด `npm ERR! Missing script: "test:full"`
+  >    - **สิ่งที่ต้องแก้:** เพิ่ม script ใน Root `package.json` เช่น `"test:full": "npm --prefix server test && npm --prefix client test"` หรือปรับคำแนะนำใน `README.md` ให้ตรงกับคำสั่งที่ใช้งานได้จริง
+  > 
+  > 2. **[e2e/lab-04/visual-evidence.spec.ts] พาธบันทึกภาพหน้าจอของ Playwright ไม่ตรงกับโครงสร้างโฟลเดอร์ใน README และ Handout:**
+  >    - ใน `visual-evidence.spec.ts` (บรรทัด 139–163, 233–257, 325–333) กำหนดพาธเซฟภาพหน้าจอไปยัง `artifacts/lab-04/screenshots/dashboards/` และ `artifacts/lab-04/screenshots/actions/`
+  >    - แต่ตามโครงสร้างเอกสารใน `README.md` (บรรทัด 79–83) และที่ mirror เพิ่มเติมใน commit `19c5927` กำหนดให้จัดเก็บในโฟลเดอร์แยกตามหัวข้อ ได้แก่ `staff-dashboard/`, `requester-dashboard/`, และ `actions-taken/`
+  >    - ส่งผลให้เมื่อรันคำสั่ง `npx playwright test e2e/lab-04/visual-evidence.spec.ts` ในรอบถัดไป ภาพหน้าจอในโฟลเดอร์หลักจะไม่ได้รับการอัปเดตอัตโนมัติ และยังต้องคอยย้ายไฟล์ด้วยตนเอง
+  >    - **สิ่งที่ต้องแก้:** ปรับพาธเอาต์พุตใน `e2e/lab-04/visual-evidence.spec.ts` ให้บันทึกลงโฟลเดอร์ปลายทางที่ถูกต้องโดยตรง (`staff-dashboard/`, `requester-dashboard/`, และ `actions-taken/`) เพื่อให้เป็น Automated Pipeline สมบูรณ์
+  > 
+  > 3. **[docs/lab-04/reviewer.md] สถานะการรีวิว:**
+  >    - บันทึกข้อเสนอแนะและอัปเดตสถานะการประเมินของ Issue 35 / PR #77 ลงในตารางประวัติการรีวิวของ `docs/lab-04/reviewer.md`
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนแก้ไข 3 จุดนี้และพุชคอมมิตใหม่"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Missing `test:full` Script in Root `package.json`:**
+     - *Reviewer Feedback:* In `README.md`, instructions specified running `npm run test:full` for full regression testing, but the script was missing from root `package.json`, causing an error for evaluators.
+     - *My Action:* Added `"test:server"`, `"test:client"`, `"test:full": "npm --prefix server test && npm --prefix client test"`, and `"build": "npm --prefix client run build"` into root `package.json`. Verified command runs both suites successfully (310/310 passing tests in 7.1s).
+  2. **Comment on Screenshot Save Paths in Playwright Spec:**
+     - *Reviewer Feedback:* In `e2e/lab-04/visual-evidence.spec.ts`, screenshots were saved to `dashboards/` and `actions/` rather than the canonical directories specified in README and Handout Section 12 (`staff-dashboard/`, `requester-dashboard/`, `actions-taken/`).
+     - *My Action:* Updated all output screenshot paths in `e2e/lab-04/visual-evidence.spec.ts` to save directly into `artifacts/lab-04/screenshots/staff-dashboard/`, `artifacts/lab-04/screenshots/requester-dashboard/`, and `artifacts/lab-04/screenshots/actions-taken/` automatically during test execution.
+  3. **Comment on Reviewer Tracking Record:**
+     - *Reviewer Feedback:* Record Round 1 Changes Requested review and response actions in `docs/lab-04/reviewer.md`.
+     - *My Action:* Recorded Round 1 review comments verbatim, updated summary table to `Changes Requested`, and detailed response actions in `docs/lab-04/reviewer.md`.
+- **Round 1 Verdict:** Changes Requested
+- **Status:** Round 1 fixes implemented and pushed, awaiting Round 2 re-review from @phatthidawadi.
 +---
 +
  ## 2. Pull Requests I Reviewed for Partner (@chanya06)
