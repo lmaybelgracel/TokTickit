@@ -582,9 +582,37 @@
      - *Reviewer Feedback:* Record Round 1 Changes Requested review and response actions in `docs/lab-04/reviewer.md`.
      - *My Action:* Recorded Round 1 review comments verbatim, updated summary table to `Changes Requested`, and detailed response actions in `docs/lab-04/reviewer.md`.
 - **Round 1 Verdict:** Changes Requested
-- **Status:** Round 1 fixes implemented and pushed, awaiting Round 2 re-review from @phatthidawadi.
-+---
-+
+- **Round 2 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-19T15:09:24Z):
+  > "### ข้อเสนอแนะเพิ่มเติม
+  > 
+  > จากการตรวจสอบความสมบูรณ์ของชุดทดสอบ E2E อย่างละเอียด พบจุดที่ต้องขอให้ปรับปรุงเพิ่มเติมก่อนอนุมัติ ดังนี้:
+  > 
+  > 1. **[False Positive Assertion ใน `dashboards.spec.ts`]:**
+  >    - ในบรรทัด 154–157 มีการเขียน `if (await ownerFilterSelect.isVisible())` โดยค้นหาจาก `<select>` แต่เนื่องจากใน `StaffTicketQueue.tsx` ตัวกรอง Ownership เป็นปุ่ม `<button>` ไม่ใช่ `<select>` ทำให้เงื่อนไขนี้เป็น `false` เสมอ และข้ามการ Assert ไปโดยสิ้นเชิง
+  >    - **สิ่งที่ต้องแก้:** ลบ `if` ออก และเปลี่ยนไปตรวจสอบปุ่ม Toggle เช่น:
+  >      `await expect(page.getByRole("button", { name: "Unassigned" })).toHaveClass(/staff-queue__toggle-btn--active/);`
+  > 
+  > 2. **[ขาดการ Assert Matching Count ใน `dashboards.spec.ts`]:**
+  >    - ตามสเปก `E2E-DASH-01` และ AC-11 กำหนดให้ทดสอบว่าคลิกการ์ดแล้วต้อง *"land on filtered queue matching count"* แต่ตัวเทสต์ยังไม่ได้ Assert ตรวจสอบจำนวนรายการในตารางคิวงานเลย
+  >    - **สิ่งที่ต้องแก้:** ปรับ Mock ตั๋วให้มี 2 ใบตรงกับตัวเลขบนการ์ด และเพิ่ม Assertion นับจำนวนแถวในตาราง
+  > 
+  > 3. **[README ระบุการทดสอบ 409 Conflict เกินจริงใน `ticket-resolution.spec.ts`]:**
+  >    - ใน `README.md` (บรรทัด 203) ระบุว่า `ticket-resolution.spec.ts` ครอบคลุม "409 Conflict handling on stale updates" แต่ในตัวเทสต์จริงมีเพียง Happy Path ของการ Resolve เท่านั้น
+  >    - **สิ่งที่ต้องแก้:** เพิ่มขั้นตอนการทดสอบกรณี 409 หรือปรับข้อความใน README ให้ตรงกับพฤติกรรมจริงของเทสต์
+  > 
+  > รบกวนปรับปรุง 3 จุดนี้เพื่อให้ Test Suite มีความน่าเชื่อถือสมบูรณ์ 100%"
+- **Reviewer Feedback Items & My Responses (Round 2):**
+  1. **Comment on False-Positive Toggle Button Assertion (`dashboards.spec.ts`):**
+     - *Reviewer Feedback:* Ownership filter was checked using conditional `select` check which always evaluated to false because `StaffTicketQueue.tsx` uses button toggles.
+     - *My Action:* Removed conditional wrapper and asserted directly against button role: `await expect(page.getByRole("button", { name: "Unassigned" })).toHaveClass(/staff-queue__toggle-btn--active/)`.
+  2. **Comment on Missing Matching Count Parity Assertion (`dashboards.spec.ts`):**
+     - *Reviewer Feedback:* Spec required verifying landing on filtered queue matching count, but row count assertion was missing.
+     - *My Action:* Updated mock to return 2 unassigned tickets when `ownerId=unassigned` and asserted `expect(page.locator(".staff-queue__table tbody tr")).toHaveCount(2)`, proving exact count parity with the unassigned metric card (`AC-11`).
+  3. **Comment on 409 Conflict Handling Test in `ticket-resolution.spec.ts`:**
+     - *Reviewer Feedback:* README claimed 409 conflict testing on stale updates, but spec only tested happy path resolution.
+     - *My Action:* Added dedicated automated test case `E2E-RES-02` in `ticket-resolution.spec.ts` simulating concurrent stale update, verifying that HTTP 409 Conflict triggers the conflict alert banner in the resolution modal dialog and requests fresh ticket data (`AC-08`).
+- **Round 2 Verdict:** Changes Requested
+- **Status:** Round 2 fixes implemented, tested (9/9 E2E passing, 310/310 regression passing), and pushed, awaiting Round 3 final review from @phatthidawadi.
  ## 2. Pull Requests I Reviewed for Partner (@chanya06)
 
 **Partner author:** Chanya Poolketkij 67070501058 — GitHub: [@chanya06](https://github.com/chanya06)

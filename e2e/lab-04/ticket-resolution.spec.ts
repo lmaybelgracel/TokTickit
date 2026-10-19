@@ -212,4 +212,110 @@ test.describe("E2E-RES: Ticket Status Workflow, Formal Resolution Gate & Advisor
     // 9. Resolution summary is visible on the ticket detail
     await expect(page.getByText("Replaced worn pickup roller assembly and cleaned optical paper sensors.")).toBeVisible();
   });
+
+  test("E2E-RES-02 (AC-08): Displays conflict alert banner and refreshes ticket data when 409 Conflict occurs during resolution", async ({ page }) => {
+    let currentTicket: any = {
+      id: 202,
+      ticketNumber: "TKT-2026-000202",
+      summary: "Laser printer repeatedly jams on tray 2 paper pickup",
+      description: "Roller slips during paper feed cycle.",
+      requestedPriority: "MEDIUM",
+      itPriority: "HIGH",
+      currentStatus: "IN_PROGRESS",
+      requesterId: 10,
+      ownerId: 20,
+      createdAt: "2026-10-16T10:00:00Z",
+      updatedAt: "2026-10-16T11:00:00Z",
+      category,
+      relatedSystem: system,
+      requester: requesterUser,
+      owner: staffUser,
+      attachments: [],
+      requesterResolvedIndication: false,
+      resolutionSummary: null,
+      resolvedAt: null,
+    };
+
+    let conflictReturned = false;
+
+    await page.route("**/api/**", async (route) => {
+      const req = route.request();
+      const url = new URL(req.url());
+      const json = (body: unknown, status = 200) =>
+        route.fulfill({ status, contentType: "application/json", body: JSON.stringify(body) });
+
+      if (url.pathname === "/api/auth/login" && req.method() === "POST") {
+        return json({ token: "token-staff", user: staffUser });
+      }
+      if (url.pathname === "/api/auth/me") {
+        return json(staffUser);
+      }
+      if (url.pathname === "/api/dashboard/staff") {
+        return json({
+          unassignedTickets: 0,
+          myAssignedTickets: 1,
+          myActionsTakenCount: 1,
+          urgentTickets: 0,
+          waitingForRequester: 0,
+          totalActiveTickets: 1,
+          statusDistribution: { IN_PROGRESS: 1 },
+          priorityDistribution: { HIGH: 1 },
+          recentQueueActivity: [],
+        });
+      }
+      if (url.pathname === "/api/staff/tickets") {
+        return json({
+          tickets: [currentTicket],
+          pagination: { total: 1, totalPages: 1, page: 1, limit: 10 },
+        });
+      }
+      if (url.pathname === "/api/tickets/202" || url.pathname === "/api/staff/tickets/202") {
+        return json(currentTicket);
+      }
+      if (url.pathname === "/api/staff/users") {
+        return json([staffUser]);
+      }
+      if (url.pathname === "/api/tickets/202/actions") {
+        return json([]);
+      }
+      if (url.pathname === "/api/tickets/202/comments") {
+        return json([]);
+      }
+      if (url.pathname === "/api/staff/tickets/202/notes") {
+        return json([]);
+      }
+      if (url.pathname === "/api/categories") {
+        return json([category]);
+      }
+      if (url.pathname === "/api/staff/tickets/202/resolve" && req.method() === "PATCH") {
+        if (!conflictReturned) {
+          conflictReturned = true;
+          // Stale update returns 409 Conflict per BR-13 & AC-08
+          return json({
+            error: "Conflict: This ticket was modified by another user.",
+            currentUpdatedAt: "2026-10-16T11:45:00Z",
+          }, 409);
+        }
+      }
+      return json({}, 200);
+    });
+
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    await page.getByLabel(/Email Address/i).fill(staffUser.email);
+    await page.locator("#login-password").fill("Password123!");
+    await page.getByRole("button", { name: /Sign In/i }).click();
+
+    await page.getByRole("button", { name: "Staff Queue" }).click();
+    await page.getByRole("button", { name: "TKT-2026-000202" }).click();
+
+    // Open resolution modal
+    await page.getByRole("button", { name: "Resolve Ticket" }).click();
+    await page.locator("#resolution-summary-input").fill("Valid resolution summary exceeding minimum length.");
+    await page.getByRole("button", { name: "Confirm & Resolve" }).click();
+
+    // Verify 409 Conflict error banner appears in the modal dialog per AC-08 & BR-13
+    await expect(page.getByText(/Conflict: This ticket was modified by another user/i)).toBeVisible();
+  });
 });
+

@@ -103,9 +103,18 @@ test.describe("E2E-DASH: Operational & Requester Dashboards Drill-down & Respons
       }
 
       if (url.pathname === "/api/staff/tickets") {
+        const ownerParam = url.searchParams.get("ownerId") || url.searchParams.get("owner");
+        const tickets =
+          ownerParam === "unassigned"
+            ? [
+                { ...sampleTicket, id: 201, ticketNumber: "TKT-2026-000201", ownerId: null, owner: null },
+                { ...sampleTicket, id: 202, ticketNumber: "TKT-2026-000202", ownerId: null, owner: null },
+              ]
+            : [sampleTicket];
+
         return json({
-          tickets: [sampleTicket],
-          pagination: { total: 1, totalPages: 1, page: 1, limit: 10 },
+          tickets,
+          pagination: { total: tickets.length, totalPages: 1, page: 1, limit: 10 },
         });
       }
 
@@ -146,15 +155,18 @@ test.describe("E2E-DASH: Operational & Requester Dashboards Drill-down & Respons
     await expect(urgentCard).toBeVisible();
     await expect(urgentCard.locator(".metric-card-value")).toHaveText("1");
 
-    // 3. Drill-down: Click Unassigned metric card -> navigates to Staff Queue
+    // 3. Drill-down: Click Unassigned metric card -> navigates to Staff Queue matching count (AC-11, E2E-DASH-01)
     await unassignedCard.click();
     await expect(page.getByRole("heading", { name: "IT Staff Ticket Queue" })).toBeVisible();
 
-    // Verify queue filter indicates unassigned
-    const ownerFilterSelect = page.locator("select").filter({ hasText: /Unassigned/i });
-    if (await ownerFilterSelect.isVisible()) {
-      await expect(ownerFilterSelect).toHaveValue("unassigned");
-    }
+    // Verify queue filter indicates unassigned via active toggle button
+    const unassignedBtn = page.getByRole("button", { name: "Unassigned" });
+    await expect(unassignedBtn).toBeVisible();
+    await expect(unassignedBtn).toHaveClass(/staff-queue__toggle-btn--active/);
+
+    // Verify filtered queue table contains exactly 2 matching rows (matching count parity per AC-11)
+    const ticketRows = page.locator(".staff-queue__table tbody tr");
+    await expect(ticketRows).toHaveCount(2);
 
     // 4. Return to Staff Dashboard via Navigation Bar
     const staffDashNav = page.getByRole("button", { name: /^Dashboard$/i });
