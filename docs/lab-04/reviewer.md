@@ -22,6 +22,7 @@
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 | [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
+| [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Changes Requested (Round 1: Changes Requested, Awaiting Re-review) | Open | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
 
 ---
 
@@ -541,10 +542,78 @@
   - *Reviewer Feedback:* All findings from Rounds 1 and 2 verified complete in code and tests. Full regression suite passed (310 tests, 0 skipped). Approved and merged.
   - *My Action:* Merged by @phatthidawadi into `lab4-staging` via PR #76. Closed Issue #66 on GitHub.
 - **Status:** Approved and merged into `lab4-staging` by @phatthidawadi (2026-10-18T20:34:41Z).
+ 
+ ---
+ 
+### Issue 35 - End-to-End Automation, Responsive Visual Evidence & Accessibility Audit
 
----
-
-## 2. Pull Requests I Reviewed for Partner (@chanya06)
+- **Pull Request:** [#77](https://github.com/lmaybelgracel/TokTickit/pull/77)
+- **Branch:** `feature/35-e2e-automation-and-audit`
+- **Summary:** Delivers comprehensive automated Playwright E2E suites for Sprint 4 covering Actions Taken recording and authorization (`actions-taken-flow.spec.ts`), formal ticket resolution gate and concurrency conflicts (`ticket-resolution.spec.ts`), operational and personal dashboard drill-down navigation and mobile responsive layout audits (`dashboards.spec.ts`), multi-viewport screenshot evidence across Desktop (1280px), Tablet (768px), Mobile (375px), and Small Mobile (320px) under `artifacts/lab-04/screenshots/`, and WCAG 2.1 AA accessibility checks (`visual-evidence.spec.ts`).
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-19T13:53:36Z):
+  > "### ผลการตรวจประเมิน Issue 35 - Sprint 4 End-to-End Automation, Responsive Visual Evidence & Accessibility Audit
+  > 
+  > จากการตรวจสอบโค้ดและผลการทดสอบอย่างละเอียดใน PR #77 (Commit `ab0bb01`) ครอบคลุมชุดทดสอบ Playwright E2E, การตรวจสอบ WCAG 2.1 AA Accessibility, Responsive Zero Horizontal Scrollbar Audit และการอัปเดต README.md พบว่าระบบทำงานได้อย่างถูกต้อง มีคุณภาพสูงมาก และรันชุดทดสอบผ่าน 100% ทั้งหมด อย่างไรก็ตาม ยังมีจุดบกพร่องด้าน Script และพาธการบันทึกภาพหลักฐานอัตโนมัติที่ต้องขอให้ปรับปรุงเพิ่มเติมก่อนจึงจะสามารถอนุมัติได้ ดังนี้:
+  > 
+  > 1. **[README.md:บรรทัด 188 & package.json] คำสั่ง `npm run test:full` ไม่มีอยู่ใน `package.json`:**
+  >    - ใน `README.md` หัวข้อ 3. Full Regression Suite (310 Tests Passing) ระบุให้รันคำสั่ง `npm run test:full` เพื่อรันทั้ง server และ client พร้อมกัน
+  >    - แต่ใน `package.json` (Root) มีเพียงคำสั่ง `"install:e2e"` และ `"test:e2e"` รวมถึงใน `client/package.json` และ `server/package.json` ก็ไม่มีสคริปต์ชื่อ `test:full`
+  >    - หากผู้ตรวจประเมินหรืออาจารย์ clone โค้ดมาแล้วรันคำสั่งตาม README จะเกิดข้อผิดพลาด `npm ERR! Missing script: "test:full"`
+  >    - **สิ่งที่ต้องแก้:** เพิ่ม script ใน Root `package.json` เช่น `"test:full": "npm --prefix server test && npm --prefix client test"` หรือปรับคำแนะนำใน `README.md` ให้ตรงกับคำสั่งที่ใช้งานได้จริง
+  > 
+  > 2. **[e2e/lab-04/visual-evidence.spec.ts] พาธบันทึกภาพหน้าจอของ Playwright ไม่ตรงกับโครงสร้างโฟลเดอร์ใน README และ Handout:**
+  >    - ใน `visual-evidence.spec.ts` (บรรทัด 139–163, 233–257, 325–333) กำหนดพาธเซฟภาพหน้าจอไปยัง `artifacts/lab-04/screenshots/dashboards/` และ `artifacts/lab-04/screenshots/actions/`
+  >    - แต่ตามโครงสร้างเอกสารใน `README.md` (บรรทัด 79–83) และที่ mirror เพิ่มเติมใน commit `19c5927` กำหนดให้จัดเก็บในโฟลเดอร์แยกตามหัวข้อ ได้แก่ `staff-dashboard/`, `requester-dashboard/`, และ `actions-taken/`
+  >    - ส่งผลให้เมื่อรันคำสั่ง `npx playwright test e2e/lab-04/visual-evidence.spec.ts` ในรอบถัดไป ภาพหน้าจอในโฟลเดอร์หลักจะไม่ได้รับการอัปเดตอัตโนมัติ และยังต้องคอยย้ายไฟล์ด้วยตนเอง
+  >    - **สิ่งที่ต้องแก้:** ปรับพาธเอาต์พุตใน `e2e/lab-04/visual-evidence.spec.ts` ให้บันทึกลงโฟลเดอร์ปลายทางที่ถูกต้องโดยตรง (`staff-dashboard/`, `requester-dashboard/`, และ `actions-taken/`) เพื่อให้เป็น Automated Pipeline สมบูรณ์
+  > 
+  > 3. **[docs/lab-04/reviewer.md] สถานะการรีวิว:**
+  >    - บันทึกข้อเสนอแนะและอัปเดตสถานะการประเมินของ Issue 35 / PR #77 ลงในตารางประวัติการรีวิวของ `docs/lab-04/reviewer.md`
+  > 
+  > **คำตัดสิน: Request Changes** — รบกวนแก้ไข 3 จุดนี้และพุชคอมมิตใหม่"
+- **Reviewer Feedback Items & My Responses:**
+  1. **Comment on Missing `test:full` Script in Root `package.json`:**
+     - *Reviewer Feedback:* In `README.md`, instructions specified running `npm run test:full` for full regression testing, but the script was missing from root `package.json`, causing an error for evaluators.
+     - *My Action:* Added `"test:server"`, `"test:client"`, `"test:full": "npm --prefix server test && npm --prefix client test"`, and `"build": "npm --prefix client run build"` into root `package.json`. Verified command runs both suites successfully (310/310 passing tests in 7.1s).
+  2. **Comment on Screenshot Save Paths in Playwright Spec:**
+     - *Reviewer Feedback:* In `e2e/lab-04/visual-evidence.spec.ts`, screenshots were saved to `dashboards/` and `actions/` rather than the canonical directories specified in README and Handout Section 12 (`staff-dashboard/`, `requester-dashboard/`, `actions-taken/`).
+     - *My Action:* Updated all output screenshot paths in `e2e/lab-04/visual-evidence.spec.ts` to save directly into `artifacts/lab-04/screenshots/staff-dashboard/`, `artifacts/lab-04/screenshots/requester-dashboard/`, and `artifacts/lab-04/screenshots/actions-taken/` automatically during test execution.
+  3. **Comment on Reviewer Tracking Record:**
+     - *Reviewer Feedback:* Record Round 1 Changes Requested review and response actions in `docs/lab-04/reviewer.md`.
+     - *My Action:* Recorded Round 1 review comments verbatim, updated summary table to `Changes Requested`, and detailed response actions in `docs/lab-04/reviewer.md`.
+- **Round 1 Verdict:** Changes Requested
+- **Round 2 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-19T15:09:24Z):
+  > "### ข้อเสนอแนะเพิ่มเติม
+  > 
+  > จากการตรวจสอบความสมบูรณ์ของชุดทดสอบ E2E อย่างละเอียด พบจุดที่ต้องขอให้ปรับปรุงเพิ่มเติมก่อนอนุมัติ ดังนี้:
+  > 
+  > 1. **[False Positive Assertion ใน `dashboards.spec.ts`]:**
+  >    - ในบรรทัด 154–157 มีการเขียน `if (await ownerFilterSelect.isVisible())` โดยค้นหาจาก `<select>` แต่เนื่องจากใน `StaffTicketQueue.tsx` ตัวกรอง Ownership เป็นปุ่ม `<button>` ไม่ใช่ `<select>` ทำให้เงื่อนไขนี้เป็น `false` เสมอ และข้ามการ Assert ไปโดยสิ้นเชิง
+  >    - **สิ่งที่ต้องแก้:** ลบ `if` ออก และเปลี่ยนไปตรวจสอบปุ่ม Toggle เช่น:
+  >      `await expect(page.getByRole("button", { name: "Unassigned" })).toHaveClass(/staff-queue__toggle-btn--active/);`
+  > 
+  > 2. **[ขาดการ Assert Matching Count ใน `dashboards.spec.ts`]:**
+  >    - ตามสเปก `E2E-DASH-01` และ AC-11 กำหนดให้ทดสอบว่าคลิกการ์ดแล้วต้อง *"land on filtered queue matching count"* แต่ตัวเทสต์ยังไม่ได้ Assert ตรวจสอบจำนวนรายการในตารางคิวงานเลย
+  >    - **สิ่งที่ต้องแก้:** ปรับ Mock ตั๋วให้มี 2 ใบตรงกับตัวเลขบนการ์ด และเพิ่ม Assertion นับจำนวนแถวในตาราง
+  > 
+  > 3. **[README ระบุการทดสอบ 409 Conflict เกินจริงใน `ticket-resolution.spec.ts`]:**
+  >    - ใน `README.md` (บรรทัด 203) ระบุว่า `ticket-resolution.spec.ts` ครอบคลุม "409 Conflict handling on stale updates" แต่ในตัวเทสต์จริงมีเพียง Happy Path ของการ Resolve เท่านั้น
+  >    - **สิ่งที่ต้องแก้:** เพิ่มขั้นตอนการทดสอบกรณี 409 หรือปรับข้อความใน README ให้ตรงกับพฤติกรรมจริงของเทสต์
+  > 
+  > รบกวนปรับปรุง 3 จุดนี้เพื่อให้ Test Suite มีความน่าเชื่อถือสมบูรณ์ 100%"
+- **Reviewer Feedback Items & My Responses (Round 2):**
+  1. **Comment on False-Positive Toggle Button Assertion (`dashboards.spec.ts`):**
+     - *Reviewer Feedback:* Ownership filter was checked using conditional `select` check which always evaluated to false because `StaffTicketQueue.tsx` uses button toggles.
+     - *My Action:* Removed conditional wrapper and asserted directly against button role: `await expect(page.getByRole("button", { name: "Unassigned" })).toHaveClass(/staff-queue__toggle-btn--active/)`.
+  2. **Comment on Missing Matching Count Parity Assertion (`dashboards.spec.ts`):**
+     - *Reviewer Feedback:* Spec required verifying landing on filtered queue matching count, but row count assertion was missing.
+     - *My Action:* Updated mock to return 2 unassigned tickets when `ownerId=unassigned` and asserted `expect(page.locator(".staff-queue__table tbody tr")).toHaveCount(2)`, proving exact count parity with the unassigned metric card (`AC-11`).
+  3. **Comment on 409 Conflict Handling Test in `ticket-resolution.spec.ts`:**
+     - *Reviewer Feedback:* README claimed 409 conflict testing on stale updates, but spec only tested happy path resolution.
+     - *My Action:* Added dedicated automated test case `E2E-RES-02` in `ticket-resolution.spec.ts` simulating concurrent stale update, verifying that HTTP 409 Conflict triggers the conflict alert banner in the resolution modal dialog and requests fresh ticket data (`AC-08`).
+- **Round 2 Verdict:** Changes Requested
+- **Status:** Round 2 fixes implemented, tested (9/9 E2E passing, 310/310 regression passing), and pushed, awaiting Round 3 final review from @phatthidawadi.
+ ## 2. Pull Requests I Reviewed for Partner (@chanya06)
 
 **Partner author:** Chanya Poolketkij 67070501058 — GitHub: [@chanya06](https://github.com/chanya06)
 
