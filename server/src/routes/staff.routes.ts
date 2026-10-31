@@ -543,6 +543,18 @@ staffRouter.patch("/tickets/:id/resolve", async (req: Request, res: Response) =>
       return;
     }
 
+    // Resolution Gate (BR-08): Ticket must have at least one Action Taken recorded before resolving
+    const actionCount = await prisma.actionTaken.count({
+      where: { ticketId },
+    });
+    if (actionCount === 0) {
+      res.status(422).json({
+        error: "Resolution Gate: Ticket must have at least one Action Taken recorded before it can be resolved.",
+        details: ["At least one Action Taken is required to resolve a ticket."],
+      });
+      return;
+    }
+
     if (
       !resolutionSummary ||
       typeof resolutionSummary !== "string" ||

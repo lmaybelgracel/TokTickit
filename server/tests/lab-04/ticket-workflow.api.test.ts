@@ -74,6 +74,9 @@ describe("Sprint 4 Ticket Workflow, Resolution Gate & Concurrency API Suite (Iss
       user: {
         findUnique: vi.fn(),
       },
+      actionTaken: {
+        count: vi.fn().mockResolvedValue(1),
+      },
     };
 
     vi.spyOn(prismaModule, "getPrisma").mockReturnValue(mockPrisma);
@@ -124,6 +127,26 @@ describe("Sprint 4 Ticket Workflow, Resolution Gate & Concurrency API Suite (Iss
 
       expect(res.status).toBe(422);
       expect(res.body.error).toContain("Resolution summary is required and must be between 3 and 500 characters");
+    });
+
+    it("rejects resolution with 422 Unprocessable Entity when ticket has 0 Actions Taken (Resolution Gate BR-08)", async () => {
+      mockPrisma.ticket.findUnique.mockResolvedValue({
+        ...mockTicket,
+        currentStatus: TicketStatus.IN_PROGRESS,
+        updatedAt: initialUpdatedAt,
+      });
+      mockPrisma.actionTaken.count.mockResolvedValue(0);
+
+      const res = await request(app)
+        .patch("/api/staff/tickets/142/resolve")
+        .set("Authorization", `Bearer ${staffToken}`)
+        .send({
+          resolutionSummary: "Adjusted transmit power on AP-301.",
+          knownUpdatedAt: initialUpdatedAt.toISOString(),
+        });
+
+      expect(res.status).toBe(422);
+      expect(res.body.error).toContain("Resolution Gate");
     });
   });
 

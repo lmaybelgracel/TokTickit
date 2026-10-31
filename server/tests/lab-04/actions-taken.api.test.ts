@@ -133,6 +133,7 @@ describe("Actions Taken API Suite (Sprint 4 - Issue 29)", () => {
           })
         ),
       },
+      $transaction: vi.fn().mockImplementation((arr: any[]) => Promise.all(arr)),
     };
 
     vi.spyOn(prismaModule, "getPrisma").mockReturnValue(mockPrisma);
@@ -410,6 +411,27 @@ describe("Actions Taken API Suite (Sprint 4 - Issue 29)", () => {
 
       expect(response.status).toBe(422);
       expect(response.body.error).toContain("Inactive users cannot record actions taken");
+    });
+
+    it("should return 422 when an inactive staff user attempts to update an action via PATCH", async () => {
+      const inactiveStaff = {
+        userId: 99,
+        email: "inactive@toktickit.com",
+        role: Role.IT_STAFF,
+        mustChangePassword: false,
+      };
+      const inactiveToken = generateToken(inactiveStaff);
+
+      const response = await request(app)
+        .patch("/api/actions/501")
+        .set("Authorization", `Bearer ${inactiveToken}`)
+        .send({
+          description: "Attempt update by inactive staff",
+          knownUpdatedAt: sampleAction.updatedAt.toISOString(),
+        });
+
+      expect(response.status).toBe(422);
+      expect(response.body.error).toContain("Inactive users cannot update actions taken");
     });
   });
 });

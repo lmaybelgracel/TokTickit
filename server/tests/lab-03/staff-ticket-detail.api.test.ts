@@ -73,6 +73,9 @@ describe("IT Staff Ticket Detail & Operations API Suite (Sprint 3 - Issue 21)", 
           { id: 1, name: "System Admin", email: "admin@toktickit.com", role: Role.ADMINISTRATOR },
         ]),
       },
+      actionTaken: {
+        count: vi.fn().mockResolvedValue(1),
+      },
     };
 
     vi.spyOn(prismaModule, "getPrisma").mockReturnValue(mockPrisma);

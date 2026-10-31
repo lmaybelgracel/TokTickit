@@ -205,35 +205,65 @@ ticketActionsRouter.post("/:id/actions", requireAuthenticatedUser, requireStaffO
       sanitizedAttachmentNotes = attachmentNotes.trim();
     }
 
-    // Create ActionTaken
-    const newAction = await prisma.actionTaken.create({
-      data: {
-        ticketId,
-        performedById: caller.id,
-        actionDateTime: parsedActionDateTime,
-        description: description.trim(),
-        result: result.trim(),
-        followUpRequired: isFollowUp,
-        followUpNote: sanitizedFollowUpNote,
-        attachmentNotes: sanitizedAttachmentNotes,
-      },
-      include: {
-        performedBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
+    // Create ActionTaken and touch ticket updatedAt atomically via $transaction
+    let newAction;
+    if (typeof prisma.$transaction === "function") {
+      [newAction] = await prisma.$transaction([
+        prisma.actionTaken.create({
+          data: {
+            ticketId,
+            performedById: caller.id,
+            actionDateTime: parsedActionDateTime,
+            description: description.trim(),
+            result: result.trim(),
+            followUpRequired: isFollowUp,
+            followUpNote: sanitizedFollowUpNote,
+            attachmentNotes: sanitizedAttachmentNotes,
+          },
+          include: {
+            performedBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+              },
+            },
+          },
+        }),
+        prisma.ticket.update({
+          where: { id: ticketId },
+          data: { updatedAt: new Date() },
+        }),
+      ]);
+    } else {
+      newAction = await prisma.actionTaken.create({
+        data: {
+          ticketId,
+          performedById: caller.id,
+          actionDateTime: parsedActionDateTime,
+          description: description.trim(),
+          result: result.trim(),
+          followUpRequired: isFollowUp,
+          followUpNote: sanitizedFollowUpNote,
+          attachmentNotes: sanitizedAttachmentNotes,
+        },
+        include: {
+          performedBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+            },
           },
         },
-      },
-    });
-
-    // Touch ticket updatedAt
-    await prisma.ticket.update({
-      where: { id: ticketId },
-      data: { updatedAt: new Date() },
-    });
+      });
+      await prisma.ticket.update({
+        where: { id: ticketId },
+        data: { updatedAt: new Date() },
+      });
+    }
 
     res.status(201).json(newAction);
   } catch (error) {
@@ -255,6 +285,16 @@ actionsRouter.patch("/:id", requireAuthenticatedUser, requireStaffOrAdmin, async
     const actionId = parseInt(req.params.id, 10);
     if (isNaN(actionId) || actionId <= 0) {
       res.status(400).json({ error: "Invalid action ID" });
+      return;
+    }
+
+    // Verify caller active status
+    const caller = await prisma.user.findUnique({
+      where: { id: req.user!.id },
+      select: { id: true, isActive: true },
+    });
+    if (!caller || !caller.isActive) {
+      res.status(422).json({ error: "Inactive users cannot update actions taken" });
       return;
     }
 

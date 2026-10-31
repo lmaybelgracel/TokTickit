@@ -23,7 +23,7 @@
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 | [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
 | [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
-| [#78](https://github.com/lmaybelgracel/TokTickit/pull/78) | Release Integration: Sprint 4 Final Release / `lab4-staging` -> `main` | Open (Awaiting Peer Review) | Open | [PR #78](https://github.com/lmaybelgracel/TokTickit/pull/78) |
+| [#78](https://github.com/lmaybelgracel/TokTickit/pull/78) | Release Integration: Sprint 4 Final Release / `lab4-staging` -> `main` | Changes Requested (Resolved, Awaiting Re-review) | Open | [PR #78](https://github.com/lmaybelgracel/TokTickit/pull/78) |
 
 ---
 
@@ -632,8 +632,21 @@
 
 - **Pull Request:** [#78](https://github.com/lmaybelgracel/TokTickit/pull/78)
 - **Branch:** `lab4-staging` -> `main`
-- **Summary:** Integrates all reviewed and approved Sprint 4 (Lab 4) increments (Issues 27–35, PRs #69–#77) from `lab4-staging` into `main`, including the complete Actions Taken parent-child model and API/UI, Ticket Status Workflow and Resolution Gate, Role Dashboards for Requesters and IT Staff/Administrators, 310 Vitest unit/integration tests, 15 Playwright E2E tests, multi-viewport screenshots, and engineering documentation.
-- **Status:** Open on `lmaybelgracel/TokTickit` for final release review by @phatthidawadi.
+- **Summary:** Integrates all reviewed and approved Sprint 4 (Lab 4) increments (Issues 27–35, PRs #69–#77) from `lab4-staging` into `main`, including the complete Actions Taken parent-child model and API/UI, Ticket Status Workflow and Resolution Gate, Role Dashboards for Requesters and IT Staff/Administrators, 312 Vitest unit/integration tests, 9 Playwright E2E tests, multi-viewport screenshots, and engineering documentation.
+- **Round 1 Reviewer Verdict & Summary:** Changes Requested by @phatthidawadi (2026-10-31T19:21:49Z):
+  > "จากการตรวจทานโค้ดใน PR #78 โดยรวมทำระบบ Dashboard, Concurrency และ UI ออกมาได้ดีมากและชุดเทสต์ผ่านครบ แต่พบข้อบกพร่องสำคัญที่ต้องปรับปรุงก่อนควบรวมเข้า main ดังนี้:
+  > 
+  > 1. Resolution Gate ไม่ได้เช็ค Action จริง: ใน PR เขียนไว้ว่าตั๋วจะ Resolve ได้ต้องมี Action Taken อย่างน้อย 1 รายการ แต่โค้ดใน /resolve ยังไม่ได้ใส่ตัวนับ actionTaken.count Staff เลยยัง Resolve ตั๋วที่มี 0 Action ได้อยู่ ต้องเพิ่มตัวตรวจจับนี้ลงไปใน Backend
+  > 2. สิทธิ์ของ Inactive User ในการแก้ไข Action: ในคำสั่ง PATCH /api/actions/:id ยังขาดการเช็ค isActive จากฐานข้อมูล (เช็คแต่ Token) ทำให้ User ที่ถูก Deactivate ไปแล้วยังเข้ามาแก้ไข Action เดิมได้ ต้องเพิ่มการตรวจ caller.isActive เหมือนในคำสั่ง POST
+  > 3. ความปลอดภัยของฐานข้อมูล (Atomicity): ตอนสร้าง Action ใหม่ ควรครอบ actionTaken.create และการ touch ticket.updatedAt ด้วย prisma.$transaction เพื่อป้องกัน Timestamp คลาดเคลื่อน
+  > 
+  > รบกวนช่วยแก้ 3 จุดนี้แล้ว push commit ขึ้นมาใหม่"
+- **Author Responses & Actions Taken:**
+  1. *Resolution Gate Check (BR-08):* Added `prisma.actionTaken.count({ where: { ticketId } })` guard in `PATCH /api/staff/tickets/:id/resolve`. Returns HTTP 422 with descriptive error if count is 0. Added unit/integration test in `ticket-workflow.api.test.ts`.
+  2. *Inactive User Guard on PATCH Action:* Added DB verification for `caller.isActive` in `PATCH /api/actions/:id`. Rejects inactive users with HTTP 422. Added test case in `actions-taken.api.test.ts`.
+  3. *Database Atomicity:* Wrapped `actionTaken.create` and `ticket.update` within `prisma.$transaction` in `POST /api/tickets/:id/actions` to ensure atomic creation and timestamp touch.
+- **Round 1 Verdict:** Changes Requested (Resolved, Awaiting Round 2 Review)
+- **Status:** Open on `lmaybelgracel/TokTickit` awaiting re-review and merge by @phatthidawadi.
 
 ---
 
