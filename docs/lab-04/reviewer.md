@@ -22,7 +22,7 @@
 | [#74](https://github.com/lmaybelgracel/TokTickit/pull/74) | Issue 32: Role Dashboards Backend API & Authoritative Query Engine / `feature/32-dashboards-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #74](https://github.com/lmaybelgracel/TokTickit/pull/74) |
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 | [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
-| [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Changes Requested (Round 1: Changes Requested, Awaiting Re-review) | Open | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
+| [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
 
 ---
 
@@ -612,17 +612,461 @@
      - *Reviewer Feedback:* README claimed 409 conflict testing on stale updates, but spec only tested happy path resolution.
      - *My Action:* Added dedicated automated test case `E2E-RES-02` in `ticket-resolution.spec.ts` simulating concurrent stale update, verifying that HTTP 409 Conflict triggers the conflict alert banner in the resolution modal dialog and requests fresh ticket data (`AC-08`).
 - **Round 2 Verdict:** Changes Requested
-- **Status:** Round 2 fixes implemented, tested (9/9 E2E passing, 310/310 regression passing), and pushed, awaiting Round 3 final review from @phatthidawadi.
- ## 2. Pull Requests I Reviewed for Partner (@chanya06)
+- **Round 3 Review Comments from @phatthidawadi (2026-10-19T15:30:27Z):**
+  > "### คำตัดสินสุดท้าย (Final Verdict)
+  > 
+  > **คำตัดสิน: Approve**
+  > 
+  > **เหตุผล:** ข้อค้นพบและข้อสงสัยทั้งหมดจากรอบที่ 2 (REV2-01, REV2-02, REV2-03) ได้รับการแก้ไขที่ต้นเหตุอย่างครบถ้วนและประจักษ์ชัดในโค้ด:
+  > - ตัวกรอง Unassigned ได้รับการตรวจสอบบน Active Toggle Button จริง ปราศจาก False Positive
+  > - มีการ Assert ยืนยัน Matching Count Parity ตามข้อกำหนด `E2E-DASH-01` และ AC-11 ครบถ้วน
+  > - เพิ่มชุดทดสอบ E2E สำหรับ HTTP 409 Stale Update Concurrency Guard (AC-08) ตรงตามที่ระบุใน README อย่างแท้จริง
+  > - ชุดทดสอบทั้งหมด 310 Vitest tests และ 9 Playwright E2E tests ผ่าน 100% โค้ดมีคุณภาพและความน่าเชื่อถือสูงสุด"
+- **Round 3 Verdict:** Approved
+- **Status:** Approved and Merged into `lab4-staging` by @phatthidawadi on 2026-10-19.
+
+---
+
+## 2. Pull Requests I Reviewed for Partner (@chanya06)
 
 **Partner author:** Chanya Poolketkij 67070501058 — GitHub: [@chanya06](https://github.com/chanya06)
 
-| Issue | PR | Partner Feature / Branch | My Review Verdict | Status | Link |
-|:---|:---|:-------------------------|:------------------|:-------|:-----|
-| *Pending* | *Pending* | Sprint 4 Engineering Contract & Specifications | Pending Review | Planned | [Partner Repo](https://github.com/chanya06/toktickit) |
+| PR | Issue / Branch | My Review Verdict | Status | Link |
+|:---|:---------------|:------------------|:-------|:-----|
+| [#72](https://github.com/chanya06/toktickit/pull/72) | docs(lab-04): establish Sprint 4 engineering contract and specifications / `feature/29-spec-and-tests` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #72](https://github.com/chanya06/toktickit/pull/72) |
+| [#81](https://github.com/chanya06/toktickit/pull/81) | feat(db): Actions Taken Foundation - Schema, Prisma Migration & Seed Data (Issue #74) / `feature/30-db-schema-actions-taken` | Approved | Merged | [PR #81](https://github.com/chanya06/toktickit/pull/81) |
+| [#82](https://github.com/chanya06/toktickit/pull/82) | feat(api): Actions Taken Backend REST APIs, Authorization & Concurrency (Issue #75) / `feature/31-actions-taken-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #82](https://github.com/chanya06/toktickit/pull/82) |
+| [#83](https://github.com/chanya06/toktickit/pull/83) | feat(ui): Actions Taken UI on Ticket Detail Screen & Responsive Cards (Issue #76) / `feature/32-actions-taken-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #83](https://github.com/chanya06/toktickit/pull/83) |
+| [#84](https://github.com/chanya06/toktickit/pull/84) | feat(api): Role Dashboards REST APIs (Requester & IT Staff Metrics) (Issue #77) / `feature/33-dashboard-api` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #84](https://github.com/chanya06/toktickit/pull/84) |
+| [#85](https://github.com/chanya06/toktickit/pull/85) | feat(ui): Role Dashboards UI: Metric Cards, Recent Activity & Drill-Down (Issue #78) / `feature/34-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #85](https://github.com/chanya06/toktickit/pull/85) |
+| [#86](https://github.com/chanya06/toktickit/pull/86) | feat(workflow): Ticket Workflow Hardening, Resolution Gate & Concurrency Control (Issue #79) / `feature/35-ticket-workflow-hardening` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #86](https://github.com/chanya06/toktickit/pull/86) |
 
 ---
 
 ### Partner PR Detailed Review Logs
 
-*(To be populated as partner opens Sprint 4 Pull Requests on chanya06/toktickit)*
+### docs(lab-04): establish Sprint 4 engineering contract and specifications
+
+- **Pull Request:** [#72](https://github.com/chanya06/toktickit/pull/72)
+- **Branch:** `feature/29-spec-and-tests`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-30T10:53:48Z
+
+#### Round 1 Review Verdict & Summary (2026-10-30T10:30:08Z)
+
+- **Verdict:** **Changes Requested**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการรีวิว Sprint 4 Engineering Contract (PR #72) - CHANGES REQUESTED
+  > 
+  > จากการตรวจสอบเอกสารสัญญาทางวิศวกรรมใน `docs/lab-04/` เทียบกับข้อกำ��นดในคู่มือปฏิบัติการ Lab 4 อย่างละเอียด พบข้อบกพร่องสำคัญ 4 จุดที่ขัดต่อเกณฑ์การประเมินของอาจารย์ เอกสารชุดนี้ยังไม่สามารถอนุมัติให้ผ่านได้ และต้องได้รับการแก้ไขในสาขา `feature/29-spec-and-tests` ให้ครบถ้วนก่อนการ Merge:
+  > 
+  > 1. **การขาดฟิลด์ผู้รับมอบหมายงาน (`assigneeId`) ในโมเดลและ API**
+  >    - เกณฑ์บังคับ: Handout Section 9.1 (AC-01) ระบุว่าต้องบันทึกทั้ง authenticated creator และ approved assignee และ Handout Section 14 (Answer Part 6) ระบุให้ทดสอบ assign งานและ inactive-assignee rejection
+  >    - ข้อผิดพลาด: ใน `specification.md` (หัวข้อ 7.1) และ `api-spec.md` (หัวข้อ 2) มีเฉพาะฟิลด์ `performedById String` ทำให้ไม่สามารถแยกผู้รับมอบหมายงาน และไม่สามารถทดสอ���กรณี Inactive Assignee Rejection ตามเกณฑ์ได้
+  >    - สิ่งที่ต้องแก้ไข: เพิ่มฟิลด์ `assigneeId: String?` เชื่อมโยงกับโมเดล `User` ควบคู่กับ `performedById: String` ทั้งใน Prisma Schema และ API Payloads
+  > 
+  > 2. **การขาดขั้นตอน Rollback และแผนการกู้คืนฐานข้อมูล**
+  >    - เกณฑ์บังคับ: Handout Section 5.2 กำหนดให้ต้องมีการระบุและทดสอบขั้นตอนการย้อนกลับสกีมา (Migration Rollback) และการกู้คืนข้อมูล (Recovery Approach)
+  >    - ข้อผิดพลาด: ใน `specification.md` หัวข้อ 7 มีเพียงการอธิบายเหตุผลเรื่อง Nullable Legacy Support แต่ไม่มีเนื้อหาขั้นตอนการทำ Rollback หรือ Disaster Recovery หากการ Migration ล้มเหลว
+  >    - สิ่งที่ต้องแก้ไข: เพิ่มหัวข้อย่อยใน Section 7 ของ `specification.md` ระบุคำสั่งและขั้นตอนการทำ Migration Rollback และแนวทางการกู้คืนฐานข้อมูล
+  > 
+  > 3. **การขาดเคสทดสอบบังคับในตาราง Traceability Matrix**
+  >    - เกณฑ์บังคับ: Handout Section 10 กำหนดให้แผนการทดสอบต้องครอบคลุม Unit, Integration, UI Component, UI Style, Responsive, Authorization, Workflow, Migration/Regression และ Performance-Smoke
+  >    - ข้อผิดพลาด: ตารางใน `tests.md` มีเฉพาะเคสฟังก์ชันทั่วไป แต่ขาดแถวการทดสอบเฉพาะทางที่อาจารย์ระบุ
+  >    - สิ่งที่ต้องแก้ไข: เพิ่มแถวการทดสอบใน `tests.md` ให้ครบถ้วน:
+  >      - UI Style & Responsive: การตรวจสอบ Zero Horizontal Overflow บนหน้าจอมือถือความกว้าง 375px
+  >      - Accessibility: การตรวจสอบ Visible Focus Rings และการนำทางด้วยคีย์บอร์ดตามเกณฑ์ WCAG AA
+  >      - Performance-Smoke: การตรวจสอบเวลาในการ Query และรวมข้อมูลของแดชบอร์ด
+  >      - Migration & Rollback: การตรวจสอบความถูกต้องของการ Migration และการย้อนกลับข้อมูล
+  > 
+  > 4. **การขาดพฤติกรรมกรณีไร้ข้อมูล (Empty Behavior) และเงื่อนไข Resolution Gate**
+  >    - เกณฑ์บังคับ: Handout Section 4.6 และ 6.2 ระบุว่าการ์ดแดชบอร์ดต้องระบุพฤติกรรมเมื่อไม่มีข้อมูล (Empty Behavior) และเป้าหมายการ Drill-down และ Section 4.5 ระบุว่าการเปลี่ยนสถานะตั๋วสู่ RESOLVED ต้องผ่านการตรวจสอบงานจริงของ IT Staff
+  >    - ข้อผิดพลาด: ยังไม่ได้ระบุการแสดงผลของการ์ดเมตริกเมื่อค่าเป็น 0 หรือตารางแดชบอร์ดเมื่อไม่มีตั๋ว และกฎ `BR-08` ยังไม่ได้ระบุเงื่อนไขความสัมพันธ์ระหว่างการ Resolve ตั���วกับสถานะของ Actions Taken
+  >    - สิ่งที่ต้องแก้ไข: ระบุ Empty State ของการ์ดและตารางแดชบอร์ดใน `specification.md` และ `ui-spec.md` และระบุเงื่อนไขในกฎ `BR-08` ให้ชัดเจนว่าการเปลี่ยนสถานะตั๋วเป็น `RESOLVED` จะต้องไม่มี Action Taken ค้างอยู่ในสถานะ `PENDING` หรือ `IN_PROGRESS`
+  > 
+  > ขอให้ดำเนินการแก้ไขเอกสารทั้ง 4 จุดนี้ให้เรียบร้อยแล้ว push commit อัปเดตเข้ามา เพื่อทำการตรวจทานซ้ำก่อนพิจารณาอนุมัติ
+
+#### Round 2 Review Verdict & Summary (2026-10-30T10:50:47Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > จากการตรวจสอบความเปลี่ยนแปลงในคอมมิต ed5e118 ตามข้อกำหนดของ Handout Lab 4 พบว่าได้ทำกา��ปรับปรุงและแก้ไขเอกสารสัญญาทางวิศวกรรมครบถ้วนทุกประเด็น:
+  > 
+  > 1. การเพิ่มฟิลด์ผู้รับมอบหมายงาน (assigneeId):
+  >    - เพิ่มฟิลด์ assigneeId: String? ควบคู่กับ performedById: String ใน Prisma Schema (specification.md หัวข้อ 7.1) พร้อมเชื่อมโยงความสัมพันธ์ @relation("ActionAssignee") กับโมเดล User และสร้าง Index ครบถ้วน
+  >    - สัญญา REST API ใน api-spec.md ระบุการรับและส่งคืน assigneeId พร้อมกฎ Inactive Assignee Rejection ปฏิเสธด้วย HTTP 422 หากมอบหมายให้ผู้ใช้ที่ isActive เป็น false หรือบทบาท Requester
+  >    - ส่วนติดต่อผู้ใช้ใน ui-spec.md มีการเพิ่มคอลัมน์ Assigned To และตัวเลือก Assignee ใน Create/Edit Modal
+  > 
+  > 2. ขั้นตอนการ Rollback และการกู้คืนฐานข้อมูล:
+  >    - เพิ่มหัวข้อ 7.3 ใน specification.md ระ���ุคำสั่ง DDL Reverse Migration ในการ Drop ตาราง ActionTaken และ Enum Type ได้อย่างปลอดภัย
+  >    - ระบุคำสั่ง npx prisma migrate resolve --rolled-back และแนวทาง Disaster Recovery ด้วย pg_dump / pg_restore พร้อมยืนยันการใช้ Outer Join ไม่กระทบตั๋วเดิมจาก Lab 1-3
+  > 
+  > 3. ตาราง Test Traceability Matrix และเคสทดสอบเฉพาะทาง:
+  >    - เพิ่มเคสทดสอบ STYLE-01 (Zero Horizontal Overflow บนหน้าจอ 375px)
+  >    - เพิ่มเคสทดสอบ A11Y-01 (Visible Focus Rings #006B3C และการนำทางด้วยคีย์บอร์ดตามเกณฑ์ WCAG AA)
+  >    - เพิ่มเคสทดสอบ PERF-01 (การตอบสนองของแดชบอร์ดต่ำกว่า 100ms)
+  >    - เพิ่มเคสทดสอบ MIGR-01 (การทดสอบ Migration และ Rollback โดยข้อมูลเดิมคงอยู่ครบถ้วน)
+  >    - ปรับเป้าหมายการทดสอบครอบคลุมมากกว่า 370 เคส พร้อมคง Regression เดิม 277 ��คส
+  > 
+  > 4. การกำหนด Empty Behavior และเงื่อนไข Resolution Gate:
+  >    - กำหนดพฤติกรรมเมื่อค่าของการ์ดเมตริกเป็น 0 และข้อความกล่อง Empty State เมื่อไม่มีตั๋วในคิวแดชบอร์ดอย่างชัดเจนใน specification.md (BR-09, BR-10) และ ui-spec.md
+  >    - ระบุเงื่อนไขในกฎ BR-08, AC-10 และ api-spec.md ว่าการเปลี่ยนสถานะตั๋วสู่ RESOLVED จะต้องไม่มี Action Taken ค้างอยู่ในสถานะ PENDING หรือ IN_PROGRESS มิฉะนั้นจะถูกปฏิเสธด้วย HTTP 422 ทันที
+  > 
+  > 5. เอกสารกระบวนการพัฒนา (reviewer.md และ ai-use.md):
+  >    - บันทึกข้อเสนอแนะจากการรีวิวและแผนการแก้ไขอย่างเป็นระบบ และบันทึก Prompt การใช้งาน AI ไว้อย่างสมบูรณ์
+  > 
+  > เอกสารสัญญาทางวิศวกรรมของ Lab 4 มีความครบถ้วน ถูกต้องตามข้อกำหนดทุกข้อ ขออนุมัติ (Approved) ให้ดำเนินการควบรวมเข้าสู่ lab4-staging เพื่อเริ่มงานขั้นตอนการพัฒนา (Implementation) ได้
+
+---
+
+### feat(db): Actions Taken Foundation - Schema, Prisma Migration & Seed Data (Issue #74)
+
+- **Pull Request:** [#81](https://github.com/chanya06/toktickit/pull/81)
+- **Branch:** `feature/30-db-schema-actions-taken`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-30T13:01:27Z
+
+#### Round 1 Review Verdict & Summary (2026-10-30T12:52:07Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการตรวจทานการแก้ไข (Review Round 2: Verification & Approval)
+  > 
+  > จากการตรวจทานการปรับปรุงโค้ดและเอกสารในคอมมิต `daf44b3` บนสาขา `feature/30-db-schema-actions-taken` ตามข้อกำหนดของ Handout Lab 4 (Sections 4.5, 5.1, 5.2, 5.3, 10 และ 14) พบว่าผู้พัฒนาได้ดำเนินการแก้ไขข้อบกพร่องครบถ้วนทั้ง 4 ประเด็นอย่างสมบูรณ์:
+  > 
+  > 1. **การปรับปรุงชุดทดสอบการย้อนกลับสกีมา (MIGR-01d Rollback DDL Verification):**
+  >    - มีการจำลองโครงสร้างสกีมาจริงอย่างสมบูรณ์ ประกอบด้���ยประเภทข้อมูล Enum `ActionTakenStatus_RollbackSim`, คอลัมน์ครบถ้วน, และข้อจำกัด Foreign Key Constraints ไปยังโมเดล `Ticket` (CASCADE) และ `User` (RESTRICT / SET NULL)
+  >    - มีการทดสอบการแทรกข้อมูลจริงเพื่อยืนยันว่าข้อจำกัด Referential Integrity ทำงานอย่างถูกต้องก่อนรันคำสั่ง Down-migration DDL
+  >    - คำสั่ง `DROP TABLE IF EXISTS "ActionTaken_RollbackSim" CASCADE;` และ `DROP TYPE IF EXISTS "ActionTakenStatus_RollbackSim";` ดำเนินการสำเร็จโดยสมบูรณ์ และได้รับการตรวจสอบยืนยันผ่านแคตตาล็อกระบบ `information_schema.tables` และ `pg_type` ว่าไม่มีอ็อบเจกต์หรือประเภทข้อมูลค้างอยู่ในระบบ
+  > 
+  > 2. **ความครอบคลุมของชุดข้อมูลตั้งต้น (Complete Ticket Lifecycle Seed Data):**
+  >    - มีการเพิ่มตั๋วตัวอย่าง `TKT-2026-000007` ในสถานะ `REOPENED` ���ละ `TKT-2026-000008` ในสถานะ `CANCELLED` พร้อมทั้งระบุ Actions Taken ที่สอดคล้องกับบริบทการทำงานจริง
+  >    - อัปเดตตัวแปร `seedTicketNumbers` ครอบคลุมตั๋วทั้ง 8 ใบ ทำให้ชุดข้อมูลตั้งต้นรองรับวงจรชีวิตของตั๋วครบทั้ง 8 สถานะตาม Handout Section 4.5 และยังคงรักษาคุณสมบัติความเป็น Idempotent สามารถรันซ้ำได้โดยไม่ก่อให้เกิดข้อมูลซ้ำซ้อน
+  > 
+  > 3. **การบันทึกเอกสารกระบวนการรีวิว (Review Evidence Tracking):**
+  >    - มีการเพิ่มหัวข้อ `Review Round 2: PR #81 (feature/30-db-schema-actions-taken)` ใน `docs/lab-04/reviewer.md` บันทึกรายละเอียดข้อเสนอแนะของผู้ตรวจและแผนการแก้ไขของผู้พัฒนาไว้อย่างเป็นระเบียบ เป็นไปตามเกณฑ์การประเมินของ Handout Section 14 (Part 1)
+  > 
+  > 4. **การบันทึกเหตุผลการตัดสินใจทางสถาปัตยกรรม (Architectural Decision Records):**
+  >    - มีการระบุข้อความชี้แจง "Decision 4: Application-Layer Enforcement of Conditional Follow-up Invariants over Database CHECK Constraints" ใน `docs/lab-04/specification.md` หัวข้อ 7.2 ไว้อย่างชัดเจน โดยให้เหตุผลเชิงวิศวกรรมเรื่องการส่งรหัสข้อผิดพลาดระดับ HTTP 400 ที่ระบุฟิลด์ได้เจาะจงเพื่อนำไปแสดงผลบน UI ควบคู่กับความยืดหยุ่นในการพกพาของ ORM Schema
+  > 
+  > **สรุปผลการประเมิน:**  
+  > การดำเนินงานในส่วนโครงสร้างฐานข้อมูล การย้ายข้อมูล ข้อมูลตั้งต้น และชุดทดสอบ ได้มาตรฐานตามสัญญาทางวิศวกรรมทุกประการ  
+  > **ผลการรีวิว:** อนุมัติ (Approved) ให้ควบ��วมสาขาเข้าสู่ `lab4-staging` เพื่อดำเนินงานพัฒนาในส่วน Actions Taken REST API ลำดับถัดไป
+
+---
+
+### feat(api): Actions Taken Backend REST APIs, Authorization & Concurrency (Issue #75)
+
+- **Pull Request:** [#82](https://github.com/chanya06/toktickit/pull/82)
+- **Branch:** `feature/31-actions-taken-api`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-30T13:40:52Z
+
+#### Round 1 Review Verdict & Summary (2026-10-30T13:27:29Z)
+
+- **Verdict:** **Changes Requested**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการตรวจทานสัญญาทางวิศวกรรมและการทำงานของระบบ (Review Round 3: Defect Inspection)
+  > 
+  > จากการตรวจทานโค้ดสถาปัตยกรร�� REST API การควบคุมการเข้าถึง และการจัดการความสอดคล้องของข้อมูลใน PR #82 (สาขา `feature/31-actions-taken-api`) เทียบกับเกณฑ์บังคับของอาจารย์ใน Handout Lab 4 (Sections 4.1, 4.2, 5.1, 6.1, 10 และ 14) พบข้อบกพร่องสำคัญ 4 จุดที่ต้องได้รับการแก้ไขก่อนการอนุมัติ:
+  > 
+  > 1. **การละเมิดกฎสถานะสิ้นสุดในคำสั่ง PUT (`PUT /api/tickets/:id/actions/:actionId`):**
+  >    - *เกณฑ์บังคับ:* Handout Section 4.2 และ Business Rule `BR-03` กำหนดว่าสถานะ `COMPLETED` และ `CANCELLED` เป็นสถานะสิ้นสุดของประวัติการดำเนินงาน (Final read-only audit trail) ไม่สามารถเปิดใหม่ แก้ไข หรือเปลี่ยนสถานะกลับได้
+  >    - *ข้อผิดพลาด:* โค้ดในเส้นทาง `actionsRouter.put` ไม่มีการตรวจสอบสถานะเดิมของ `existingAction.status` ทำ���ห้ไคลเอนต์สามารถส่งคำสั่ง `PUT` เพื่อแก้ไขเนื้อหาและเปลี่ยนสถานะของ Action ที่ `COMPLETED` หรือ `CANCELLED` ไปแล้วกลับมาเป็น `PENDING` หรือ `IN_PROGRESS` ได้ ซึ่งทำให้กลไกการป้องกันในคำสั่ง `PATCH` ถูกหลีกเลี่ยง
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเงื่อนไขตรวจสอบในคำสั่ง `PUT` ว่าหาก `existingAction.status` เป็น `COMPLETED` หรือ `CANCELLED` ให้ปฏิเสธคำขอด้วยรหัส HTTP 422 Unprocessable Entity ทันที
+  > 
+  > 2. **การบังคับใช้ Transition Matrix ของกฎ `BR-03` ในคำสั่ง PATCH ไม่ครบถ้วน:**
+  >    - *เกณฑ์บังคับ:* ข้อกำหนด `BR-03 (Action Taken Status Machine)` ใน `specification.md` กำหนดให้สถานะ `PENDING` สามารถเปลี่ยนผ่านได้เฉพาะ `IN_PROGRESS` หรือ `CANCELLED` เท่านั้น (ห้ามเปลี่ยนข้ามขั้นเ���็น `COMPLETED` โดยไม่ผ่านการลงมือปฏิบัติงาน)
+  >    - *ข้อผิดพลาด:* ใน `actionsRouter.patch` มีการดักจับเฉพาะกรณีสถานะเดิมเป็น `COMPLETED` หรือ `CANCELLED` แต่ยังขาดการตรวจสอบสถานะ `PENDING` ส่งผลให้สามารถส่งคำสั่งเปลี่ยนจาก `PENDING` ไปเป็น `COMPLETED` ได้โดยตรง
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเงื่อนไขตรวจสอบสถานะต้นทาง `PENDING` ไม่ให้อน��ญาตการเปลี่ยนสู่ `COMPLETED` โดยตรง และตอบกลับด้วย HTTP 422 เมื่อเกิดการเปลี่ยนผ่านที่ผิดกฎ
+  > 
+  > 3. **การขาดหัวข้อบันทึกการรีวิว PR #82 ในเอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md`):**
+  >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 1) กำหนดให้เอกสาร `reviewer.md` ต้องปรากฏหลักฐานการรีวิวของทุก Pull Request ประกอบด้วยลิงก์ PR, ข้อคิดเห็น/ข้อบกพร่องที่พบ (Comments), การตอบกลับ (Responses) และการอนุมัติ (Approvals)
+  >    - *ข้อผิดพลาด:* ใน `docs/lab-04/reviewer.md` มีเพียงการระบุสถานะในตารางสรุป แต่ยังไม่มีหัวข้อเนื้อหา `Review Round 3: PR #82 (feature/31-actions-taken-api)` ที่บันทึกรายละเอียดข้อคิดเห็นการตรวจทาน
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มหัวข้อ `Review Round 3: PR #82` ใน `reviewer.md` บันทึกข้อเสนอแนะในการปรับปรุง และเปิดพื้นที่ให้ผู้พัฒนาตอบกลับแผนการแก้ไข
+  > 
+  > 4. **การขาดเคสทดสอบอัตโนมัติสำหรับ Terminal State Protection ในคำสั่ง PUT:**
+  >    - *เกณฑ์บังคับ:* Handout Section 10 กำหนดให้การบังคับใช้กฎทางธุรกิจ (Business Rules) ต้องมีชุดทดสอบอัตโนมัติรองรับอย่างครอบคลุม
+  >    - *ข้อผิดพลาด:* ในไฟล์ `server/tests/lab-04/actions-taken.api.test.ts` มีเฉพาะเคสทดสอบการปฏิเสธในคำสั่ง `PATCH` (`API-04`) แต่ยังขาดการทดสอบยืนยันว่าคำสั่ง `PUT` จะต้องปฏิเสธการแก้ไข Action ที่อยู่ในสถานะ `COMPLETED` หรือ `CANCELLED`
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเคสทดสอบอัตโนมัติใน `actions-taken.api.test.ts` เพื่อยืนยันว่าการส่ง `PUT` ไปยัง Action ที่ปิดงานแล้วจะได้รับรหัส HTTP 422 เสมอ
+  > 
+  > ขอให้ดำเนินการแก้ไขทั้ง 4 จุดนี้ในสาขา `feature/31-actions-taken-api` และ push commit อัปเดตเข้ามาเพื่อทำการตรวจทานซ้ำ
+
+#### Round 2 Review Verdict & Summary (2026-10-30T13:39:54Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการตรวจทานการแก้ไข (Review Round 3: Verification & Approval)
+  > 
+  > จากการตรวจทานการปรับปรุงโค้ดและชุดทดสอบในคอมมิต `f473fc2` บนสาขา `feature/31-actions-taken-api` ตามข้อกำหนดของ Handout Lab 4 (Sections 4.1, 4.2, 5.1, 6.1, 10 และ 14) พบว่าผู้พัฒนาได้ดำเนินการแก้ไขข้อบกพร่องครบถ้วนทั้ง 4 ประเด็นอย่างสมบูรณ์:
+  > 
+  > 1. **การป้องกัน Terminal State ในคำสั่ง PUT (Audit Trail Integrity):**
+  >    - มีการเพิ่มกลไกตรวจสอบสถานะสิ้นสุดใน `actionsRouter.put` โดยปฏิเสธการแก้ไข Action ที่อยู่ในสถานะ `COMPLETED` หรือ `CANCELLED` ด้วยรหัส HTTP 422 Unprocessable Entity ช่วยคุ้มครองความถูกต้องของประวัติการดำเนินงาน (Audit Trail) และป้องกันการหลีกเลี่ยงกฎความปลอดภัยของระบบ
+  > 2. **การบังคับใช้ Status Transition Matrix (BR-03 Enforcement):**
+  >    - มีการเพิ่มเงื่อนไขตรวจสอบใน `actionsRouter.patch` ปฏิเสธการเปลี่ยนสถานะข้ามขั้นจาก `PENDING` ไปเป็น `COMPLETED` โดยตรงด้วยรหัส HTTP 422 ทำให้การไหลของสถานะงานเป็นไปตามลำดับขั้นตอนการปฏิบัติงานจริงอย่างเคร่งครัด
+  > 3. **ความครบถ้วนของชุดทดสอบอัตโนมัติ (Automated Test Verification):**
+  >    - เพิ่มเคสทดสอบใน `actions-taken.api.test.ts` ครอบคลุมการปฏิเสธคำสั่ง PUT บน Action ที่ปิดงานแล้วทั้งสองสถานะ และการปฏิเสธคำสั่ง PATCH ที่ข้ามขั้น โดยชุดทดสอบทั้ง 26 เคสผ่านการตรวจสอบทั้งหมด
+  > 4. **การบันทึกเอกสารกระบวนการพัฒนา (Review Evidence):**
+  >    - เอกสาร `docs/lab-04/reviewer.md` ได้รับการปรับปรุงบันทึกข้อเสนอแนะและผลการแก้ไขสำหรับ Review Round 3 ครบถ้วนตามเกณฑ์การประเมินของ Handout Section 14 (Part 1)
+  > 
+  > **สรุปผลการประเมิน:**  
+  > การทำงานของระบบ Actions Taken REST API มีความสมบูรณ์ ถูกต้องตามสัญญาวิศวกรรม และมีระบบควบคุมความปลอดภัยที่รัดกุม  
+  > **ผลการรี��ิว:** อนุมัติ (Approved) ให้ดำเนินการควบรวมสาขาเข้าสู่ `lab4-staging` เพื่อดำเนินงานพัฒนาในส่วนหน้าจอ Actions Taken UI ลำดับถัดไป
+
+---
+
+### feat(ui): Actions Taken UI on Ticket Detail Screen & Responsive Cards (Issue #76)
+
+- **Pull Request:** [#83](https://github.com/chanya06/toktickit/pull/83)
+- **Branch:** `feature/32-actions-taken-ui`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-30T14:31:30Z
+
+#### Round 1 Review Verdict & Summary (2026-10-30T14:16:26Z)
+
+- **Verdict:** **Changes Requested**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการตรวจทานสัญญาทางวิศวกรรมและส่วนติดต่อผู้ใช้ (Review Round 4: UI Defect Inspection)
+  > 
+  > จากการตรวจทานโค้ดส่วนติดต��อผู้ใช้ Actions Taken บนหน้าจอ Ticket Detail และชุดทดสอบใน PR #83 (สาขา `feature/32-actions-taken-ui`) เทียบกับเกณฑ์บังคับของอาจารย์ใน Handout Lab 4 (Sections 6, 8.3, 10 และ 14) พบข้อบกพร่องสำคัญ 4 จุดที่ต้องได้รับการแก้ไขก่อนการอนุมัติ:
+  > 
+  > 1. **ข้อจำกัดในการสาธิตและทดสอบการปฏิเสธผู้รับมอบหมายที่ถูกระงับสิทธิ์ (Inactive-Assignee Rejection):**
+  >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 6: Working Actions Taken UI) กำหนดให้ต้องสาธิตการทำงานของ "inactive-assignee rejection, role restrictions, safe failures" บนหน้าจอ UI
+  >    - *ข้อผิดพลาด:* ใน `ActionsTakenSection.tsx` ตัวเลือกใน Dropdown มอบหมายงาน (`#action-assignee`) มีการใส่แอตทริบิวต์ `disabled={assignee.isActive === false}` ทำให้ผู้ใช้ไม่สามารถคลิกเลือกผู้ใช้ที่ถูกปิดใช้งานเพื่อทดสอบการตอบสนองความผิดพลาด HTTP 422 ของระบบได้
+  >    - *สิ่งที่ต้องแก้ไข:* ปลดแอตทริบิวต์ `disabled` ออก และแสดงป้ายกำกับให้ชัดเจน เช่น `(Staff - Inactive)` เพื่อให้สามารถคลิกเลือกส่งคำขอไปยังระบบ และเปิดให้ระบบแสดงการปฏิเสธ HTTP 422 Unprocessable Entity ตามเกณฑ์การประเมิน Answer Part 6
+  > 
+  > 2. **การขาดการไฮไลต์ฟิลด์ที่เกิดข้อผิดพลาดแบบเฉพาะเจาะจง (Field-Level Inline Error Highlighting):**
+  >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 9) และ `ui-spec.md` กำหนดเรื่อง "validation placement, keyboard focus, and safe-failure feedback"
+  >    - *ข้อผิดพลาด:* เมื่อเกิด Validation Error หรือ API ส่งข้อผิดพลาดแบบระบุฟิลด์กลับมา (`field: "followUpNote"` หรือ `field: "actionDescription"`) ใน Modal มีเพียงการแสดงกล่อง Alert ด้านบนรวมกันจุดเดียว แต่ไม่มีการทำขอบสีแดงหรือคลาส `is-invalid` ที่ตัว Input หรือ Textarea ของฟิลด์นั้นโดยตรง
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มการผูกคลาส `is-invalid` หรือขอบสีแดงที่ฟิลด์ที่ระบุ เพื่อความชัดเจนในการแก้ไขข้อมูลและสอดคล้องกับเกณฑ์ Accessibility และ UI Polish
+  > 
+  > 3. **การขาดหัวข้อบันทึกการรีวิว PR #83 ในเอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md`):**
+  >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 1: Git Use with Engineering Workflow) กำหนดให้เอกสาร `reviewer.md` ต้องปรากฏหลักฐานการรีวิวของทุก PR ประกอบด้วย ตัวตนผู้ตรวจ ลิงก์ PR ข้อคิดเห็น/ข้อบกพร่องที่พบ (Comments) การตอบกลับของผู้พัฒนา (Responses) และผลการอนุมัติ (Approvals)
+  >    - *ข้อผิดพลาด:* ใน `docs/lab-04/reviewer.md` มีเพียงการอัปเดตบรรทัด PR #83 ในตารางสรุปด้านบน แต่ยังไม่มีหัวข้อเนื้อหา `Review Round 4: PR #83 (feature/32-actions-taken-ui)`
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มหัวข้อ Review Round 4 สำหรับ PR #83 ใน `reviewer.md` บันทึกข้อเสนอแนะและเปิดพื้นที่ให้ผู้พัฒนาตอบกลับแผนการดำเนินงาน
+  > 
+  > 4. **การขาดเคสทดสอบอัตโนมัติสำหรับ Inactive Assignee Rejection ในชุดทดสอบหน้าบ้าน (`ActionsTaken.test.tsx`):**
+  >    - *เกณฑ์บังคับ:* Handout Section 10 กำหนดให้ Acceptance Criteria และ Safe Failure ต้องได้รับการทดสอบอย่างครอบคลุม
+  >    - *ข้อผิดพลาด:* ใน `client/tests/lab-04/ActionsTaken.test.tsx` มีการจำลอง���ู้ใช้ `{ id: 99, fullName: "Inactive Staff", isActive: false }` ไว้ใน `mockAssignees` แล้ว แต่ยังไม่มีเคสทดสอบที่ยืนยันพฤติกรรมเมื่อเลือกผู้ใช้ที่ถูกปิดใช้งานหรือการจัดการกับข้อผิดพลาด 422 ของ Assignee
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเคสทดสอบอัตโนมัติใน `ActionsTaken.test.tsx` ยืนยันการแสดงผลแจ้งเตือนความผิดพลาดเมื่อเลือกผู้ใช้ที่ถูกระงับสิทธิ์
+  > 
+  > ขอให้ดำเนินการแก้ไขทั้ง 4 จุดนี้ในสาขา `feature/32-actions-taken-ui` และ push commit อัปเดตเข้ามาเพื่อทำการตรวจทานซ้ำ
+
+#### Round 2 Review Verdict & Summary (2026-10-30T14:29:01Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการตรวจทานการแก้ไข (Review Round 4: Verification & Approval)
+  > 
+  > จากการตรวจทานการปรับปรุงโค้ดและชุดทดสอบในคอมมิต `d63ae0d` บนสาขา `feature/32-actions-taken-ui` ตามข้อกำหนดของ Handout Lab 4 (Sections 6, 8.3, 10 และ 14) พบว่าผู้พัฒนาได้ดำเนินการแก้ไขข้อบกพร่องครบถ้วนทั้ง 4 ประเด็นอย่างสมบูรณ์:
+  > 
+  > 1. **การรองรับการสาธิต Inactive Assignee Safe Failure (Compliance with Answer Part 6):**
+  >    - มีการปลดล็อกแอตทริบิวต์ `disabled` ในตัวเลือก Assignee Dropdown พร้อมระบุป้ายกำกับสถานะ `(Staff - Inactive)` อย่างชัดเจน ทำให้สามารถเลือกส่งคำขอเพื่อทดสอบการตอบสนองข้อผิดพลาด HTTP 422 จากระบบหลังบ้านได้จริงตามข้อกำหนดการสาธิต Safe Failure
+  > 2. **การปรับปรุงระบบแจ้งเตือนข้อผิดพลาดระดับฟิลด์ (Field-Level Inline Validation & Accessibility):**
+  >    - มีการผูกคลาส `is-invalid` ขอบสีแดงเข้ากับ Form Control ที่เกิดปัญหาโดยตรง ควบคู่กับการแสดงผลบล็อก Invalid Feedback แบบระบุฟิลด์ ช่วย��กระดับความชัดเจนในการป้อนข้อมูลตามมาตรฐาน WCAG AA และ UI Polish
+  > 3. **ความครบถ้วนของชุดทดสอบหน้าบ้าน (Automated UI Test Verification):**
+  >    - เพิ่มเคสทดสอบการจัดการกับข้อผิดพลาด Inactive Assignee Rejection (HTTP 422) ใน `client/tests/lab-04/ActionsTaken.test.tsx` โดยชุดทดสอบทั้ง 16 เคสผ่านการทดสอบทั้งหมด (100% Pass)
+  > 4. **การบันทึกเอกสารกระบวนการพัฒนา (Review Evidence):**
+  >    - เอกสา�� `docs/lab-04/reviewer.md` ได้รับการปรับปรุงบันทึกข้อเสนอแนะและผลการแก้ไขสำหรับ Review Round 4 ครบถ้วนตามเกณฑ์การประเมินของ Handout Section 14 (Part 1)
+  > 
+  > **สรุปผลการประเมิน:**  
+  > ส่วนติดต่อผู้ใช้ Actions Taken บนหน้าจอ Ticket Detail มีความสมบูรณ์ สวยงามตามมาตรฐาน Zen Green และรองรับการจัดการข้อผิดพลาดอย่างปลอดภัย  
+  > **ผลการรีวิว:** อนุมัติ (Approved) ให้ดำเนินการควบรวมสาขาเข้าสู่ `lab4-staging` เพื่อดำเนินงานพัฒนาในส่วนระบบแดชบอร์ด (Role Dashboards REST API) ลำดับถัดไป
+
+---
+
+### feat(api): Role Dashboards REST APIs (Requester & IT Staff Metrics) (Issue #77)
+
+- **Pull Request:** [#84](https://github.com/chanya06/toktickit/pull/84)
+- **Branch:** `feature/33-dashboard-api`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-31T14:09:47Z
+
+#### Round 1 Review Verdict & Summary (2026-10-31T05:16:33Z)
+
+- **Verdict:** **Changes Requested**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### ผลการตรวจทานสัญญาทางวิศวกรรมและการคำนวณแดชบอร์ด (Review Round 5: Dashboard Defect Inspection)
+  > 
+  > จากการตรวจทานโค้ดระบบคำ���วณเมตริกแดชบอร์ด (Requester & IT Staff Dashboard REST APIs) และชุดทดสอบวัดประสิทธิภาพใน PR #84 (สาขา `feature/33-dashboard-api`) เทียบกับเกณฑ์บังคับของอาจารย์ใน Handout Lab 4 (Sections 4.6, 5.3, 10 และ 14) พบข้อบกพร่องสำคัญ 4 จุดที่ต้องได้รับการแก้ไขก่อนการอนุมัติ:
+  > 
+  > 1. **การนับรวมตั๋วสถานะสิ้นสุดในเมตริก Unassigned และ My Assigned Tickets (ขัดต่อกฎ BR-10):**
+  >    - *เกณฑ์บังคับ:* ข้อกำหนด Business Rule `BR-10 (IT Staff Dashboard Metric Boundaries)` ใน `specification.md` ระบุไว้อย่างชัดเจนว่า:
+  >      - `Unassigned Tickets`: ต้องนับเฉพาะตั๋วที่ยัง Active และ `ownerId IS NULL` โดย `status NOT IN ('RESOLVED', 'CLOSED', 'CANCELLED')`
+  >      - `My Assigned Tickets`: ต้องนับเฉพาะตั๋วที่ยัง Active และ `ownerId === authUserId` โดย `status NOT IN ('RESOLVED', 'CLOSED', 'CANCELLED')`
+  >    - *ข้อผิดพ���าด:* ในไฟล์ `server/src/routes/dashboard.ts` (ฟังก์ชัน `computeStaffOperationalMetrics`) การคิวรี `unassignedTickets` และ `myAssignedTickets` มีเฉพาะเงื่อนไขตรวจสอบ `ownerId` แต่ขาดการกรองสถานะตั๋ว ส่งผลให้ตั๋วที่ถูกยกเลิก (เช่น `TKT-2026-000008`) หรือตั๋วที่ปิดไปแล้วถูกนับรวมเข้าไปในยอดงานค้างปฏิบัติงาน
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเงื่อนไข `status: { notIn: [TicketStatus.RESOLVED, TicketStatus.CLOSED, TicketStatus.CANCELLED] }` ในทั้งสองคิวรีให้ถูกต้องตามกฎ `BR-10`
+  > 
+  > 2. **การขาดการกรองสถานะตั๋วที่ยัง Active ในการคำนวณสถิติความสำคัญ (Priority Distribution):**
+  >    - *เกณฑ์บังคับ:* กฎ `BR-10` กำหนดให้การแจกแจงสถิติตามความสำคัญ (`byPriority`) สะท้อนเฉพาะภาระงานปัจจุบันที่ต้องจัดการ (Active Operational Workload)
+  >    - *ข้อผิดพลาด:* คิวรี `prisma.ticket.groupBy` สำหรับ `itPriority` ไม่ได้ระบุตัวกรองสถานะ ส่งผลให้สถิตินำเอาตั๋วในประวัติศาสตร์ที่ปิดเสร็จสิ้นไปแล้วมาคำนวณรวมด้วย
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเงื่อนไข `where: { status: { notIn: [TicketStatus.RESOLVED, TicketStatus.CLOSED, TicketStatus.CANCELLED] } }` ในคำสั่ง `groupBy` ของ `itPriority`
+  > 
+  > 3. **การขาดหัวข้อบันทึกการรีวิว PR #84 ในเอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md`):**
+  >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 1: Git Use with Engineering Workflow) กำหนดให้เอกสาร `reviewer.md` ต้องปรากฏหลักฐานการรีวิวของทุก PR ประกอบด้วย ตัวตนผู้ตรวจ ลิงก์ PR ข้อคิดเห็น/ข้อบกพร่องที่พบ (Comments) การตอบ���ลับของผู้พัฒนา (Responses) และผลการอนุมัติ (Approvals)
+  >    - *ข้อผิดพลาด:* ใน `docs/lab-04/reviewer.md` มีเพียงการอัปเดตสถานะบรรทัด PR #84 ในตารางสรุปด้านบน แต่ยังไม่มีหัวข้อเนื้อหา `Review Round 5: PR #84 (feature/33-dashboard-api)`
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มหัวข้อ Review Round 5 สำหรับ PR #84 ใน `reviewer.md` บันทึกข้อเสนอแนะในการปรับปรุง และเปิดพื้นที่ให้ผู้พัฒนาตอบกลับแผนการแก้ไข
+  > 
+  > 4. **การขาดเคสทดสอบอัตโนมัติสำหรับ Terminal State Exclusion ใน `staff-dashboard.api.test.ts`:**
+  >    - *เกณฑ์บังคับ:* Handout Section 10 กำหนดให้การบังคับใช้ Business Rules ต้องมีชุดทดสอบอัตโนมัติรองรับอย่างครอบคลุม
+  >    - *ข้อผิดพลาด:* ในไฟล์ `server/tests/lab-04/staff-dashboard.api.test.ts` ยังไม่มีการทดสอบยืนยันว่าการสร้างตั๋วสถานะ `CLOSED`, `RESOLVED` หรือ `CANCELLED` จะต้องไม่ถูกนับเข้าไปเพิ่มในเมตริก `unassignedTickets`, `myAssignedTickets` และ `byPriority`
+  >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเคสทดสอบอัตโนมัติใน `staff-dashboard.api.test.ts` เพื่อยืนยันการคัดกรองตั๋วสถานะสิ้นสุดออกจากเมตริกการดำเนินงาน
+  > 
+  > ขอให้ดำเนินการแก้ไขทั้ง 4 จุดนี้ในสาขา `feature/33-dashboard-api` และ push commit อัปเดตเข้ามาเพื่อทำการตรวจทานซ้ำ
+
+#### Round 2 Review Verdict & Summary (2026-10-31T14:06:57Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ดำเนินการตรวจสอบการแก้ไขในคอมมิต `c356fd0` ซ้ำอย่างละเอียดเรียบร้อยแล้ว ทั้ง 4 ประเด็นได้รับการปรับปรุงครบถ้วนและถูกต้องตามข้อกำหนด:
+  > 
+  > 1. **การคัดกรองสถานะสิ้นสุดใน `unassignedTickets` และ `myAssignedTickets` (BR-10):**
+  >    - มีการเพิ่มเงื่อนไข `status: { notIn: [TicketStatus.RESOLVED, TicketStatus.CLOSED, TicketStatus.CANCELLED] }` ครบ��้วนทั้งสองคิวรีใน `server/src/routes/dashboard.ts`
+  > 
+  > 2. **การจำกัดสถิติความสำคัญ (`byPriority`) เฉพาะ Active Workload (BR-10):**
+  >    - เพิ่มตัวกรองคัดแยกสถานะสิ้นสุดออกจาก `groupBy` ของ `itPriority` ทำให้ตัวเลขสะท้อนภาระงานจริงที่ต้องจัดการในขณะนั้น โดย `byStatus` ยังคงเก็บสถิติครบถ้วนทุกสถานะ
+  > 
+  > 3. **เคสทดสอบอัตโนมัติ `API-08i`:**
+  >    - ชุดทดสอบใน `server/tests/lab-04/staff-dashboard.api.test.ts` ครอบคลุมการยืนยันว่าตั๋วสถานะสิ้นสุดจะไม่ถูกนับรวมในเมตริกการดำเนินงาน และยืนยันความถูกต้องของ `API-08b` เรียบร้อย
+  > 
+  > 4. **เอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md` และ `docs/lab-04/ai-use.md`):**
+  >    - มีการบันทึกการตรวจทานรอบที่ 5 และ Prompt การใ��้งาน AI ครบถ้วนตามเกณฑ์ข้อกำหนด
+  > 
+  > โค้ดและชุดทดสอบมีความสมบูรณ์พร้อมรวมเข้าสู่สาขา `lab4-staging` อนุมัติการตรวจทาน (APPROVE)
+
+---
+
+### feat(ui): Role Dashboards UI: Metric Cards, Recent Activity & Drill-Down (Issue #78)
+
+- **Pull Request:** [#85](https://github.com/chanya06/toktickit/pull/85)
+- **Branch:** `feature/34-dashboard-ui`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-31T15:35:15Z
+
+#### Round 1 Review Verdict & Summary (2026-10-31T14:54:55Z)
+
+- **Verdict:** **Changes Requested**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > > **Reviewer:** `@lmaybelgracel` — **Verdict:** CHANGES REQUESTED  
+  > > จากการตรวจทานการออกแบบส่วนต่อประสานผู้ใช้ของแดชบอร์ด (Role Dashboards UI) และก��ไก Drill-down ใน PR #85 (สาขา feature/34-dashboard-ui) เทียบกับเกณฑ์บังคับของอาจารย์ใน Handout Lab 4 (Sections 6, 8.3, 10 และ 14) และสัญญาข้อกำหนด ui-spec.md พบข้อบกพร่องสำคัญ 4 จุดที่ต้องได้รับการปรับปรุงแก้ไขก่อนการอนุมัติ:  
+  > > 
+  > > 1. **การขาดตัวเลือกสถานะ WAITING_FOR_REQUESTER, REOPENED, และ CANCELLED ในฟิลเตอร์ของ MyTicketsView:**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 4.5, 6.2 และ ui-spec.md กำหนดว่าเมื่อคลิก Drill-down จากการ์ด "Waiting for Input" ใน Requester Dashboard ระบบต้องนำทางไปยังหน้ารายการตั๋วพร้อมคัดกรองสถานะ WAITING_FOR_REQUESTER ให้โดยอัตโนมัติ  
+  > >    - *ข้อผิดพลาด:* ในไฟล์ `client/src/components/MyTicketsView.tsx` ตัวแปร `STATUSES` (บรรทัดที่ 21) มีเพียง 6 สถานะเดิม (`NEW`, `OPEN`, `IN_PROGRESS`, `PENDING`, `RESOLVED`, `CLOSED`) ขาด `WAITING_FOR_REQUESTER`, `REOPENED`, และ `CANCELLED` ส่งผลให้เมื่อรับค่า `initialStatusFilter: ["WAITING_FOR_REQUESTER"]` เข้ามา ตัวเลือกใน Dropdown ไม่สามารถจับคู่ป้ายกำกับได้ และผู้ใช้ไม่สามารถเลือกหรือยกเลิกตัวเลือกสถานะดังกล่าวบน UI ได้  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มสถานะ `WAITING_FOR_REQUESTER`, `REOPENED`, และ `CANCELLED` ในอาเรย์ `STATUSES` ของ `MyTicketsView.tsx` ให้ครอบคลุมครบทั้ง 9 สถานะของระบบ  
+  > > 
+  > > 2. **การขาดการซิงค์ State เมื่อค่า Props ฟิลเตอร์เริ่มต้นเปลี่ยนแปลง (Filter State Synchronization):**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 6.2 กำหนดให้การ์ดแดชบอร์ดทุกใบสามารถคลิก Drill-down สลับเงื่อนไขการกรองได้ตลอดเวลา  
+  > >    - *ข้อผิดพลาด:* ใน `MyTicketsView.tsx` และ `StaffTicketQueue.tsx` มีการตั้งค่าเริ่มต้นของฟิลเตอร์ผ่าน `useState(initialStatusFilter || [])` และ `useState(initialFilters?.status || "")` เพียงครั้งเดียวขณะ Mount โดยไม่มี `useEffect` ดักจับการเปลี่ยนแปลงของ Props ส่งผลให้เมื่อผู้ใช้นำทางสลับไปมาระหว่างการ์ดต่าง ๆ บนแดชบอร์ด (เช่น จาก My Open Tickets ไปยัง Recently Resolved) ค่าฟิลเตอร์ใหม่จะไม่ถูกซิงค์ลงใน State ภายในของคอมโพเนนต์  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่ม `useEffect` ใน `MyTicketsView.tsx` และ `StaffTicketQueue.tsx` เพื่อตรวจสอบและอัปเดต State ภายในเมื่อ `initialStatusFilter` หรือ `initialFilters` มีการเปลี่ยนแปลง  
+  > > 
+  > > 3. **การขาดหัวข้อบันทึกการรีวิว PR #85 ในเอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md`):**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 1: Git Use with Engineering Workflow) กำหนดให้เอกสาร reviewer.md ต้องปรากฏหลักฐานการรีวิวของทุก PR ประกอบด้วย ตัวตนผู้ตรวจ ลิงก์ PR ข้อคิดเห็น/ข้อบกพร่องที่พบ (Comments) การตอบกลับของผู้พัฒนา (Responses) และผลการอนุมัติ (Approvals)  
+  > >    - *ข้อผิดพลาด:* ใน `docs/lab-04/reviewer.md` มีเพียงการอัปเดตบรรทัด PR #85 ในตารางสรุปด้านบน แต่ยังไม่มีหัวข้อเนื้อหา Review Round 6 สำหรับ PR #85 ที่บันทึกข้อคิดเห็นการตรวจทาน  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มหัวข้อ Review Round 6: PR #85 ใน `docs/lab-04/reviewer.md` บันทึกรายละเอียดข้อเสนอแนะและเปิดพื้นที่ให้ผู้พัฒนาตอบกลับแผนการดำเนินงาน  
+  > > 
+  > > 4. **การขาดเคสทดสอบอัตโนมัติสำหรับการ Drill-Down สถานะ WAITING_FOR_REQUESTER ใน MyTicketsView:**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 10 กำหนดให้การบูรณาการระบบนำทางและการ Drill-down ต้องได้รับการทดสอบอย่างครอบคลุม  
+  > >    - *ข้อผิดพลาด:* ในชุดทดสอบหน้าบ้าน มีเพียงการทดสอบปุ่มในระดับคอมโพเนนต์ `RequesterDashboard.test.tsx` แต่ยังขาดเคสทดสอบใน `MyTicketsView.test.tsx` ที่ยืนยันว่าการส่ง `initialStatusFilter: ["WAITING_FOR_REQUESTER"]` สามารถกรองและแสดงผลตั๋วสถานะดังกล่าวได้อย่างถูกต้อง  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเคสทดสอบอัตโนมัติในชุดทดสอบฝั่งหน้าบ้านเพื่อยืนยันพฤติกรรมการกรองสถานะ `WAITING_FOR_REQUESTER` ผ่าน `initialStatusFilter`
+
+#### Round 2 Review Verdict & Summary (2026-10-31T15:33:33Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ดำเนินการตรวจสอบการแก้ไขในคอมมิต `dea8951` ครบถ้วนทั้ง 4 ประเด็นเรียบร้อยแล้ว:
+  > 
+  > 1. **การรองรับสถานะครบ 9 สถานะใน MyTicketsView และ Server API:**
+  >    - เพิ่มสถานะ `WAITING_FOR_REQUESTER`, `REOPENED`, และ `CANCELLED` ในอาเรย์ `STATUSES` ของ `MyTicketsView.tsx` และ `VALID_STATUSES` ใน `server/src/app.ts` เรียบร้อย รองรับการคัดกรองตั๋วและการแสดงผลป้าย Badge ครบถ้วนทุกสถานะ
+  > 
+  > 2. **การซิงค์ State เมื่อค่า Props ฟิลเตอร์เริ่มต้นเปลี่ยนแปลง (Filter State Synchronization):**
+  >    - มีการเพิ่ม `useEffect` ดักจับการเปลี่ยนแปลงของ `initialStatusFilter` ใน `MyTicketsView.tsx` ���ละ `initialFilters` ใน `StaffTicketQueue.tsx` ทำให้การ Drill-down จากการ์ดแดชบอร์ดทำงานได้อย่างถูกต้องและต่อเนื่อง
+  > 
+  > 3. **เอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md` และ `docs/lab-04/ai-use.md`):**
+  >    - บันทึกการตรวจทานรอบที่ 6 และประวัติการใช้งาน AI ครบถ้วนตามเกณฑ์ Handout Section 14 (Answer Part 1)
+  > 
+  > 4. **ชุดทดสอบอัตโนมัติหน้าบ้าน:**
+  >    - ชุดทดสอบใน `MyTickets.test.tsx` และ `StaffTicketQueue.test.tsx` ครอบคลุมพฤติกรรมการ Drill-down และการซิงค์ State ของฟิลเตอร์อย่างสมบูรณ์
+  > 
+  > โค้ดและชุดทดสอบมีความสมบูรณ์ อนุมัติให้รวมโค้ดเข้าสู่สาขา `lab4-staging` ได้ (APPROVE)
+
+---
+
+### feat(workflow): Ticket Workflow Hardening, Resolution Gate & Concurrency Control (Issue #79)
+
+- **Pull Request:** [#86](https://github.com/chanya06/toktickit/pull/86)
+- **Branch:** `feature/35-ticket-workflow-hardening`
+- **Target Branch:** `lab4-staging`
+- **Merged By:** @lmaybelgracel at 2026-10-31T16:47:56Z
+
+#### Round 1 Review Verdict & Summary (2026-10-31T16:20:18Z)
+
+- **Verdict:** **Changes Requested**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > > **Reviewer:** `@lmaybelgracel` — **Verdict:** CHANGES REQUESTED  
+  > > จากการตรวจทานการบังคับใช้กฎวงจรสถานะตั๋ว (Ticket Workflow Hardening), กลไก Resolution Gate และก���รควบคุมการทำงานพร้อมกัน (Concurrency Control) ใน PR #86 (สาขา feature/35-ticket-workflow-hardening) เทียบกับเกณฑ์บังคับของอาจารย์ใน Handout Lab 4 (Sections 4.5, 6.2, 10 และ 14) และสัญญาข้อกำหนด specification.md / ui-spec.md พบข้อบกพร่องสำคัญ 4 จุดที่ต้องได้รับการปรับปรุงแก้ไขก่อนการอนุมัติ:  
+  > > 
+  > > 1. **การขาดปุ่มหรือส่วนควบคุมให้ Requester ทำการ Reopen ตั๋วที่สถานะเป็น RESOLVED บนหน้าจอ TicketDetailView (FR-13 / AC-10):**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 4.5, 6.2 และ specification.md (FR-13 / AC-10) กำหนดให้ผู้แจ้งตั๋ว (Requester) มีสิทธิ์เปิดตั๋วใหม่ (Reopen) จากสถานะ `RESOLVED` ได้เมื่อปัญหาเกิดขึ้นซ้ำ  
+  > >    - *ข้อผิดพลาด:* ฝั่งเซิร์ฟเวอร์มีการสร้างเส้นทาง `PATCH /api/tickets/:id/status` อน���ญาตให้ Requester ส่งคำขอเปลี่ยนสถานะตั๋วจาก `RESOLVED` เป็น `REOPENED` เรียบร้อยแล้ว แต่ในฝั่งหน้าบ้าน `client/src/components/TicketDetailView.tsx` กล่องการจัดการตั๋ว (`staff-operations-panel`) ถูกจำกัดการแสดงผลเฉพาะ IT Staff และ Admin (`isStaffOrAdmin`) เท่านั้น โดยไม่มีปุ่มหรือการควบคุมใด ๆ ให้ Requester กด Reopen บนหน้าจอเมื่อตั๋วมีสถานะเป็น `RESOLVED`  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มปุ่ม "Reopen Ticket" (พร้อมช่องกรอกหรือคำยืนยันระบุเหตุผล) ให้แสดงผลสำหรับผู้ใช้ที่เป็นเจ้าของตั๋ว (Requester) เมื่อตั๋วอยู่ในสถานะ `RESOLVED` บน `TicketDetailView.tsx`  
+  > > 
+  > > 2. **การขาดช่องกรอกเหตุผลการปิดงาน (Resolution Note Input) เมื่อเปลี่ยนสถานะตั๋วสู่ RESOLVED บน UI:**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 4.5, 6.2 และ specification.md กำหนดว่าเมื่อเปลี่ยนสถานะตั๋วเป็น `RESOLVED` ต้องสามารถบันทึกข้อความสรุปการแก้ไขปัญหา (Resolution Note) ซึ่งจะถูกบันทึกเป็น Public Comment ต่อท้ายตั๋วโดยอัตโนมัติ  
+  > >    - *ข้อผิดพลาด:* ใน `server/src/routes/staff.ts` และ `client/src/api.ts` ฟังก์ชัน `updateTicketStatus` รองรับพารามิเตอร์ `resolutionNote` เรียบร้อยแล้ว แต่ใน `TicketDetailView.tsx` เมื่อผู้ใช้เลือกสถานะถัดไปเป็น `RESOLVED` ไม่มีช่อง Input หรือ Modal ให้กรอก `resolutionNote` และฟังก์ชัน `handleExecuteStatusTransition` ไม่มีการส่ง `resolutionNote` ไปยัง API  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มช่องกรอก `resolutionNote` (หรือ Modal ยืนยันการปิดงาน) บน `TicketDetailView.tsx` เมื่อผู้ใช้เลือกเปลี่ยนสถานะเป็น `RESOLVED` และส่งค่านั้นไปยัง `updateTicketStatus`  
+  > > 
+  > > 3. **การขาดหัวข้อบันทึกการรีวิว PR #86 ในเอกสารกระบวนการวิศวกรรม (`docs/lab-04/reviewer.md`):**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 14 (Answer Part 1: Git Use with Engineering Workflow) กำหนดให้เอกสาร reviewer.md ต้องปรากฏหลักฐานการรีวิวของทุก PR ประกอบด้วย ตัวตนผู้ตรวจ ลิงก์ PR ข้อคิดเห็น/ข้อบกพร่องที่พบ (Comments) การตอบกลับของผู้พัฒนา (Responses) และผลการอนุมัติ (Approvals)  
+  > >    - *ข้อผิดพลาด:* ใน `docs/lab-04/reviewer.md` มีเพียงการอัปเดตบรรทัด PR #86 ในตารางสรุปด้านบน (`Pending Review | In Review`) แต่ยังไม่มีหัวข้อเนื้อหา Review Round 7 สำหรับ PR #86 ที่บันทึกข้อคิดเห็นการ��รวจทาน  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มหัวข้อ Review Round 7: PR #86 ใน `docs/lab-04/reviewer.md` บันทึกรายละเอียดข้อเสนอแนะและเปิดพื้นที่ให้ผู้พัฒนาตอบกลับแผนการดำเนินงาน  
+  > > 
+  > > 4. **การขาดเคสทดสอบอัตโนมัติสำหรับ Requester Reopen Action ในชุดทดสอบหน้าบ้าน (`TicketWorkflow.test.tsx`):**  
+  > >    - *เกณฑ์บังคับ:* Handout Section 10 กำหนดให้การทำงานของ Workflow และการอนุญาตตามบทบาทผู้ใช้บน UI ต้องมีชุดทดสอบอัตโนมัติรองรับอย่างครอบคลุม  
+  > >    - *ข้อผิดพลาด:* ใน `client/tests/lab-04/TicketWorkflow.test.tsx` มีเฉพาะเคส `UI-06h` ที่ทดสอบว่าซ่อน `staff-operations-panel` เมื่อผู้ใช้เป็น Requester แต่ยังขาดเคสทดสอบยืนยันว่าเมื่อ Requester เปิดดูตั๋วสถานะ `RESOLVED` จะต้องมองเห็นและสามารถกดปุ่ม Reopen เพื่อเรียก API เปลี่ยนสถานะเป็น `REOPENED` ได้  
+  > >    - *สิ่งที่ต้องแก้ไข:* เพิ่มเคสทดสอบอัตโนมัติใน `TicketWorkflow.test.tsx` ยืนยันการแสดงผลปุ่ม Reopen และการเรียกใช้ API ของ Requester สำหรับตั๋วสถานะ `RESOLVED`
+
+#### Round 2 Review Verdict & Summary (2026-10-31T16:46:54Z)
+
+- **Verdict:** **Approved**
+- **Reviewer:** @lmaybelgracel
+- **Verbatim Feedback:**
+
+  > ### Peer Review: Ticket Workflow Hardening, Resolution Gate & Concurrency Control (PR #86) - Approved
+  > 
+  > ได้ทำการตรวจทานโค้ดและเอกสารใน commit ล่าสุด (`7b335bd`) หลังจากการแก้ไขข้อเสนอแนะใน Review Round 7 เรียบร้อยแล้ว:
+  > 
+  > 1. **Requester Reopen Action:** มีการเพิ่มปุ่ม Reopen Ticket, Requester Reopen Banner และ Reopen Modal บน `TicketDetailView.tsx` พร้อมเชื่อมต่อกับ Endpoint `PATCH /api/tickets/:id/status` ครบถ้วนตามข้อกำหนด FR-13 / AC-10
+  > 2. **Resolution Note Input:** มีการเพิ่ม Textarea สำหรับกรอกบันทึกการปิดงานเมื่อเลือกสถานะ `RESOLVED` และส่งข้อมูลไปบันทึกเป็น Public Comment โดยอัตโนมัติตาม BR-08 / AC-09
+  > 3. **Automated Test Coverage:** มีชุดทดสอบอัตโนมัติ `UI-06i`, `UI-06j`, `UI-06k` ใน `TicketWorkflow.test.tsx` ครอบคลุมการทำงานใหม่ทั้งหมด และผ��านการทดสอบครบถ้วน
+  > 4. **Documentation Sync:** เอกสาร `docs/lab-04/reviewer.md`, `docs/lab-04/ai-use.md`, และ `docs/lab-04/tests.md` ได้รับการบันทึกหลักฐานการรีวิวและอัปเดตสถานะครบถ้วน
+  > 
+  > การดำเนินงานเป็นไปตามเกณฑ์มาตรฐานทางวิศวกรรมของ Lab 4 ครบถ้วน อนุมัติให้ Merge เข้าสู่สาขาหลักได้
+
+---
+
+
