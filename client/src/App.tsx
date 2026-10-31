@@ -9,19 +9,22 @@ import { ChangePassword } from "./components/ChangePassword";
 import { StaffTicketQueue } from "./components/StaffTicketQueue";
 import { StaffTicketDetail } from "./components/StaffTicketDetail";
 import { AdminUserManagement } from "./components/AdminUserManagement";
+import { StaffDashboard, DrillDownFilter } from "./components/StaffDashboard";
+import { RequesterDashboard } from "./components/RequesterDashboard";
 
-export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users";
+export type CurrentView = "my-tickets" | "create-ticket" | "ticket-detail" | "staff-queue" | "admin-users" | "staff-dashboard" | "requester-dashboard";
 
 const getDefaultViewForRole = (role?: string): CurrentView => {
-  if (role === "ADMINISTRATOR") return "admin-users";
-  if (role === "IT_STAFF") return "staff-queue";
-  return "my-tickets";
+  if (role === "ADMINISTRATOR") return "staff-dashboard";
+  if (role === "IT_STAFF") return "staff-dashboard";
+  return "requester-dashboard";
 };
 
 const isViewAllowedForRole = (view: CurrentView, role?: string): boolean => {
   if (!role) return false;
   if (view === "admin-users") return role === "ADMINISTRATOR";
-  if (view === "staff-queue") return role === "IT_STAFF" || role === "ADMINISTRATOR";
+  if (view === "staff-queue" || view === "staff-dashboard") return role === "IT_STAFF" || role === "ADMINISTRATOR";
+  if (view === "requester-dashboard") return role === "REQUESTER";
   return true;
 };
 
@@ -31,6 +34,10 @@ function AppContent() {
   const isAdmin = user?.role === "ADMINISTRATOR";
   const isStaffOrAdmin = user?.role === "IT_STAFF" || isAdmin;
   const [createdSuccessTicket, setCreatedSuccessTicket] = useState<Ticket | null>(null);
+  const [queueFilter, setQueueFilter] = useState<DrillDownFilter | null>(null);
+  const [requesterFilterStatus, setRequesterFilterStatus] = useState<string | undefined>(undefined);
+  const [previousStaffView, setPreviousStaffView] = useState<CurrentView>("staff-queue");
+  const [previousRequesterView, setPreviousRequesterView] = useState<CurrentView>("my-tickets");
 
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(() => {
     try {
@@ -181,11 +188,38 @@ function AppContent() {
               <button
                 style={{
                   ...styles.navItem,
+                  ...(currentView === "staff-dashboard" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("staff-dashboard")}
+              >
+                Dashboard
+              </button>
+            )}
+
+            {isStaffOrAdmin && (
+              <button
+                style={{
+                  ...styles.navItem,
                   ...(currentView === "staff-queue" ? styles.navItemActive : {}),
                 }}
-                onClick={() => setCurrentView("staff-queue")}
+                onClick={() => {
+                  setQueueFilter(null);
+                  setCurrentView("staff-queue");
+                }}
               >
                 Staff Queue
+              </button>
+            )}
+
+            {!isStaffOrAdmin && (
+              <button
+                style={{
+                  ...styles.navItem,
+                  ...(currentView === "requester-dashboard" ? styles.navItemActive : {}),
+                }}
+                onClick={() => setCurrentView("requester-dashboard")}
+              >
+                Dashboard
               </button>
             )}
 
@@ -194,7 +228,10 @@ function AppContent() {
                 ...styles.navItem,
                 ...(currentView === "my-tickets" ? styles.navItemActive : {}),
               }}
-              onClick={() => setCurrentView("my-tickets")}
+              onClick={() => {
+                setRequesterFilterStatus(undefined);
+                setCurrentView("my-tickets");
+              }}
             >
               My Tickets
             </button>
@@ -242,12 +279,44 @@ function AppContent() {
 
       {/* Main Content Area */}
       <main className="app-main" style={styles.mainContent}>
-        {currentView === "admin-users" ? (
+        {currentView === "requester-dashboard" ? (
+          <RequesterDashboard
+            onNavigateMyTickets={(filterStatus) => {
+              setRequesterFilterStatus(filterStatus);
+              setCurrentView("my-tickets");
+            }}
+            onSelectTicket={(ticketId) => {
+              setPreviousRequesterView("requester-dashboard");
+              setSelectedTicketId(ticketId);
+              setCurrentView("ticket-detail");
+            }}
+            onCreateTicket={() => setCurrentView("create-ticket")}
+          />
+        ) : currentView === "staff-dashboard" ? (
+          <StaffDashboard
+            onDrillDown={(filter) => {
+              setQueueFilter(filter);
+              setCurrentView("staff-queue");
+            }}
+            onSelectTicket={(ticketId) => {
+              setPreviousStaffView("staff-dashboard");
+              setSelectedTicketId(ticketId);
+              setCurrentView("ticket-detail");
+            }}
+            onCreateTicket={() => setCurrentView("create-ticket")}
+          />
+        ) : currentView === "admin-users" ? (
           isAdmin ? (
             <AdminUserManagement />
           ) : (
             <StaffTicketQueue
+              initialOwnerFilter={queueFilter?.ownerFilter}
+              initialStatus={queueFilter?.status}
+              initialItPriority={queueFilter?.itPriority}
+              initialSearch={queueFilter?.search}
+              initialActionBy={queueFilter?.actionBy}
               onSelectTicket={(ticket) => {
+                setPreviousStaffView("staff-queue");
                 setSelectedTicketId(ticket.id);
                 setCurrentView("ticket-detail");
               }}
@@ -255,7 +324,13 @@ function AppContent() {
           )
         ) : currentView === "staff-queue" ? (
           <StaffTicketQueue
+            initialOwnerFilter={queueFilter?.ownerFilter}
+            initialStatus={queueFilter?.status}
+            initialItPriority={queueFilter?.itPriority}
+            initialSearch={queueFilter?.search}
+            initialActionBy={queueFilter?.actionBy}
             onSelectTicket={(ticket) => {
+              setPreviousStaffView("staff-queue");
               setSelectedTicketId(ticket.id);
               setCurrentView("ticket-detail");
             }}
@@ -264,7 +339,7 @@ function AppContent() {
           <CreateTicket
             activeRequester={activeRequester}
             onSuccess={handleTicketCreated}
-            onCancel={() => setCurrentView(isStaffOrAdmin ? "staff-queue" : "my-tickets")}
+            onCancel={() => setCurrentView(isStaffOrAdmin ? "staff-queue" : (previousRequesterView || "requester-dashboard"))}
           />
         ) : currentView === "my-tickets" ? (
           <div>
@@ -275,21 +350,26 @@ function AppContent() {
             )}
             <MyTickets
               activeRequester={activeRequester}
+              initialStatus={requesterFilterStatus}
               onNavigateCreate={() => setCurrentView("create-ticket")}
-              onSelectTicket={(ticket) => { setSelectedTicketId(ticket.id); setCurrentView("ticket-detail"); }}
+              onSelectTicket={(ticket) => {
+                setPreviousRequesterView("my-tickets");
+                setSelectedTicketId(ticket.id);
+                setCurrentView("ticket-detail");
+              }}
             />
           </div>
         ) : currentView === "ticket-detail" && selectedTicketId ? (
           isStaffOrAdmin ? (
             <StaffTicketDetail
               ticketId={selectedTicketId}
-              onBack={() => setCurrentView("staff-queue")}
+              onBack={() => setCurrentView(previousStaffView || "staff-queue")}
             />
           ) : (
             <TicketDetail
               activeRequester={activeRequester}
               ticketId={selectedTicketId}
-              onBack={() => setCurrentView("my-tickets")}
+              onBack={() => setCurrentView(previousRequesterView || "my-tickets")}
             />
           )
         ) : null}

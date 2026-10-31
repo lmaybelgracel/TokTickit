@@ -9,16 +9,31 @@ import {
 } from "../api";
 import "./MyTickets.css";
 
-interface MyTicketsProps {
+export interface MyTicketsProps {
   activeRequester: RequesterUser;
   onNavigateCreate: () => void;
   onSelectTicket?: (ticket: Ticket) => void;
+  initialStatus?: string;
 }
+
+// Maps query parameter or drill-down token into standardized TicketStatus filter.
+// Note: "resolved_or_closed" and "completed" represent the combined terminal status
+// used by Requester Dashboard Card 3 (AC-11), while "resolved" strictly maps to single status "RESOLVED".
+const mapStatusFilter = (status?: string): string => {
+  if (!status) return "";
+  const s = status.trim().toLowerCase();
+  if (s === "open" || s === "active") return "ACTIVE";
+  if (s === "waiting" || s === "waiting_for_requester") return "WAITING_FOR_REQUESTER";
+  if (s === "resolved_or_closed" || s === "completed") return "RESOLVED_OR_CLOSED";
+  if (s === "resolved") return "RESOLVED";
+  return status.trim().toUpperCase();
+};
 
 export const MyTickets: React.FC<MyTicketsProps> = ({
   activeRequester,
   onNavigateCreate,
   onSelectTicket,
+  initialStatus,
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -32,7 +47,7 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
   const [search, setSearch] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedPriority, setSelectedPriority] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>(mapStatusFilter(initialStatus));
   const [sort, setSort] = useState<string>("createdAt:desc");
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -51,6 +66,13 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
     }
     loadCats();
   }, []);
+
+  useEffect(() => {
+    if (initialStatus !== undefined) {
+      setSelectedStatus(mapStatusFilter(initialStatus));
+      setCurrentPage(1);
+    }
+  }, [initialStatus]);
 
   useEffect(() => {
     let cancelled = false;
@@ -191,7 +213,16 @@ export const MyTickets: React.FC<MyTicketsProps> = ({
             aria-label="Filter by Status"
           >
             <option value="">All Statuses</option>
-            <option value="NEW">NEW</option>
+            <option value="ACTIVE">Active (Non-terminal)</option>
+            <option value="NEW">New</option>
+            <option value="OPEN">Open</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="WAITING_FOR_REQUESTER">Waiting for Requester</option>
+            <option value="RESOLVED_OR_CLOSED">Resolved / Closed</option>
+            <option value="RESOLVED">Resolved</option>
+            <option value="CLOSED">Closed</option>
+            <option value="REOPENED">Reopened</option>
+            <option value="CANCELLED">Cancelled</option>
           </select>
 
           {/* Sort Select */}

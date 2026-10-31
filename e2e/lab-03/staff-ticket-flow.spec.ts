@@ -185,6 +185,30 @@ test.describe("E2E-STAFF: IT Staff Multi-Role Ticket Collaboration & Resolution 
         return json(currentTicket);
       }
 
+      if (url.pathname === "/api/dashboard/staff") {
+        return json({
+          unassignedCount: 1,
+          myAssignedCount: 0,
+          myActionsTakenCount: 0,
+          statusDistribution: { NEW: 1, OPEN: 0, IN_PROGRESS: 0, WAITING_FOR_REQUESTER: 0, RESOLVED: 0, CLOSED: 0, REOPENED: 0 },
+          priorityDistribution: { URGENT: 0, HIGH: 0, MEDIUM: 1, LOW: 0 },
+          queueSummary: { totalCount: 1, urgentOpenCount: 0, waitingRequesterCount: 0, resolvedTodayCount: 0 },
+          recentQueueActivity: [],
+        });
+      }
+
+      if (url.pathname === "/api/dashboard/requester") {
+        return json({
+          metrics: {
+            totalOpenTickets: 0,
+            waitingForRequester: 0,
+            resolvedOrClosed: 1,
+          },
+          recentTickets: [currentTicket],
+          recentlyResolved: [currentTicket],
+        });
+      }
+
       return json({ error: "Not found" }, 404);
     });
 
@@ -194,7 +218,13 @@ test.describe("E2E-STAFF: IT Staff Multi-Role Ticket Collaboration & Resolution 
     await page.locator("#login-password").fill("Password123!");
     await page.getByRole("button", { name: /Sign In/i }).click();
 
-    // 2. Views Staff Queue with ticket
+    // 2. Navigate to Staff Queue view if on dashboard
+    const staffQueueNav = page.getByRole("button", { name: "Staff Queue" });
+    if (await staffQueueNav.isVisible()) {
+      await staffQueueNav.click();
+    }
+
+    // Views Staff Queue with ticket
     await expect(page.getByRole("heading", { name: "IT Staff Ticket Queue" })).toBeVisible();
     const ticketRow = page.getByRole("row").filter({ hasText: "TKT-2026-000101" });
     await expect(ticketRow).toBeVisible();
@@ -252,6 +282,12 @@ test.describe("E2E-STAFF: IT Staff Multi-Role Ticket Collaboration & Resolution 
     await page.getByLabel(/Email Address/i).fill(requesterUser.email);
     await page.locator("#login-password").fill("Password123!");
     await page.getByRole("button", { name: /Sign In/i }).click();
+
+    // Navigate to My Tickets if on Requester Dashboard
+    const myTicketsNav = page.getByRole("button", { name: "My Tickets", exact: true });
+    if (await myTicketsNav.isVisible()) {
+      await myTicketsNav.click();
+    }
 
     // 10. Requester views resolved ticket
     const reqTicketRow = page.getByRole("row").filter({ hasText: "TKT-2026-000101" });

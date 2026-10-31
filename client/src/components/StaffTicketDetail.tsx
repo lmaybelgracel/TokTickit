@@ -15,6 +15,7 @@ import {
   addTicketNote,
 } from "../api";
 import "./StaffTicketDetail.css";
+import { ActionsTakenSection } from "./ActionsTakenSection";
 
 export interface StaffTicketDetailProps {
   ticketId: number;
@@ -53,35 +54,38 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
   const [isResolving, setIsResolving] = useState<boolean>(false);
 
   // Load ticket details and staff roster
-  useEffect(() => {
-    let cancelled = false;
-    async function loadData() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const [ticketData, usersData] = await Promise.all([
-          fetchStaffTicketDetail(ticketId),
-          fetchStaffUsers().catch(() => []),
-        ]);
-        if (!cancelled) {
-          setTicket(ticketData);
-          setStaffUsers(usersData);
-        }
-      } catch (err: any) {
-        if (!cancelled) {
-          setError(err.message || "Failed to load ticket details");
-        }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
-      }
+  const loadTicketData = async () => {
+    try {
+      const [ticketData, usersData] = await Promise.all([
+        fetchStaffTicketDetail(ticketId),
+        fetchStaffUsers().catch(() => []),
+      ]);
+      setTicket(ticketData);
+      setStaffUsers(usersData);
+    } catch (err: any) {
+      setError(err.message || "Failed to load ticket details");
+    } finally {
+      setIsLoading(false);
     }
-    loadData();
-    return () => {
-      cancelled = true;
-    };
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    void loadTicketData();
   }, [ticketId]);
+
+  useEffect(() => {
+    if (!isResolveModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsResolveModalOpen(false);
+        setResolveError(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isResolveModalOpen]);
 
   const handleClaim = async () => {
     if (!ticket) return;
@@ -123,11 +127,16 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
     if (!ticket || !newStatus) return;
     try {
       setActionSuccess(null);
-      const updated = await updateTicketStatus(ticket.id, newStatus);
+      const updated = await updateTicketStatus(ticket.id, newStatus, null, ticket.updatedAt);
       setTicket((prev) => (prev ? { ...prev, ...updated } : null));
       setActionSuccess(`Status transitioned to ${newStatus}.`);
     } catch (err: any) {
-      setError(err.message || "Failed to update status");
+      if (err.status === 409) {
+        setError("Conflict: This ticket was modified by another user. Refreshing latest data...");
+        void loadTicketData();
+      } else {
+        setError(err.message || "Failed to update status");
+      }
     }
   };
 
@@ -141,13 +150,18 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
     setIsResolving(true);
     setResolveError(null);
     try {
-      const updated = await resolveTicket(ticket.id, resolutionSummary.trim());
+      const updated = await resolveTicket(ticket.id, resolutionSummary.trim(), null, ticket.updatedAt);
       setTicket((prev) => (prev ? { ...prev, ...updated } : null));
       setIsResolveModalOpen(false);
       setResolutionSummary("");
       setActionSuccess("Ticket has been resolved with resolution summary recorded.");
     } catch (err: any) {
-      setResolveError(err.message || "Failed to resolve ticket");
+      if (err.status === 409) {
+        setResolveError("Conflict: This ticket was modified by another user. Refreshing latest data...");
+        void loadTicketData();
+      } else {
+        setResolveError(err.message || "Failed to resolve ticket");
+      }
     } finally {
       setIsResolving(false);
     }
@@ -296,6 +310,25 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
           }}
         >
           {actionSuccess}
+        </div>
+      )}
+
+      {/* Error Notification */}
+      {error && (
+        <div
+          className="staff-detail__error-banner"
+          style={{
+            padding: "0.75rem 1rem",
+            marginBottom: "1rem",
+            backgroundColor: "#FFEBEE",
+            color: "#C62828",
+            borderRadius: "6px",
+            border: "1px solid #FFCDD2",
+            fontSize: "0.875rem",
+            fontWeight: "600",
+          }}
+        >
+          {error}
         </div>
       )}
 
@@ -453,6 +486,14 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
               </ul>
             </section>
           )}
+
+          {/* Actions Taken Section */}
+          <ActionsTakenSection
+            ticketId={ticket.id}
+            ticketCreatedAt={ticket.createdAt}
+            isStaffOrAdmin={true}
+            onActionRecorded={loadTicketData}
+          />
 
           {/* Dual Communication Panel (Public Comments vs Internal Notes) */}
           <section className="dual-comm" aria-label="Discussion and Notes">
@@ -643,7 +684,7 @@ export const StaffTicketDetail: React.FC<StaffTicketDetailProps> = ({ ticketId, 
 
             <div className="modal-body">
               <p style={{ fontSize: "0.875rem", color: "#5A6E63", margin: 0 }}>
-                Per course business rule BR-20, resolving a ticket requires providing a clear resolution summary
+                Per course business rule BR-11, resolving a ticket requires providing a clear resolution summary
                 explaining the diagnostic steps and corrective action taken (3 to 500 characters).
               </p>
 

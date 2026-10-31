@@ -141,7 +141,7 @@ describe("StaffTicketDetail Component Tests (Sprint 3 - Issue 21)", () => {
     fireEvent.change(statusSelect, { target: { value: "IN_PROGRESS" } });
 
     await waitFor(() => {
-      expect(api.updateTicketStatus).toHaveBeenCalledWith(101, "IN_PROGRESS");
+      expect(api.updateTicketStatus).toHaveBeenCalledWith(101, "IN_PROGRESS", null, sampleTicket.updatedAt);
     });
   });
 
@@ -176,7 +176,7 @@ describe("StaffTicketDetail Component Tests (Sprint 3 - Issue 21)", () => {
     fireEvent.click(confirmBtn);
 
     await waitFor(() => {
-      expect(api.resolveTicket).toHaveBeenCalledWith(101, "Fixed firewall routing rule on Gateway B.");
+      expect(api.resolveTicket).toHaveBeenCalledWith(101, "Fixed firewall routing rule on Gateway B.", null, sampleTicket.updatedAt);
     });
   });
 

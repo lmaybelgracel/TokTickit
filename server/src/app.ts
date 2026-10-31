@@ -9,7 +9,10 @@ import { authRouter } from "./routes/auth.routes.js";
 import { staffRouter } from "./routes/staff.routes.js";
 import { commentsRouter } from "./routes/comments.routes.js";
 import { adminRouter } from "./routes/admin.routes.js";
-import { authenticateToken } from "./middleware/auth.middleware.js";
+import { ticketActionsRouter, actionsRouter } from "./routes/actions.routes.js";
+import { dashboardRouter, handleRequesterDashboard, handleStaffDashboard } from "./routes/dashboard.routes.js";
+import { authenticateToken, requireAuth, enforcePasswordChange, requireRole } from "./middleware/auth.middleware.js";
+import { Role, TicketStatus } from "@prisma/client";
 
 // The Express app is exported separately from app.listen() (see index.ts) so
 // Supertest can import `app` without opening a port. Do not merge these files.
@@ -22,7 +25,33 @@ app.use(authenticateToken);
 app.use("/api/auth", authRouter);
 app.use("/api/staff", staffRouter);
 app.use("/api/tickets", commentsRouter);
+app.use("/api/tickets", ticketActionsRouter);
+app.use("/api/actions", actionsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/dashboard", dashboardRouter);
+
+// Direct alias routes without req.url mutation
+app.get(
+  "/api/requester/dashboard",
+  requireAuth,
+  enforcePasswordChange,
+  requireRole(Role.REQUESTER),
+  handleRequesterDashboard
+);
+app.get(
+  "/api/staff/dashboard",
+  requireAuth,
+  enforcePasswordChange,
+  requireRole(Role.IT_STAFF, Role.ADMINISTRATOR),
+  handleStaffDashboard
+);
+app.get(
+  "/api/admin/dashboard",
+  requireAuth,
+  enforcePasswordChange,
+  requireRole(Role.ADMINISTRATOR),
+  handleStaffDashboard
+);
 
 const MAX_ATTACHMENT_SIZE = 5 * 1024 * 1024;
 const ALLOWED_ATTACHMENT_TYPES = new Set([
@@ -342,10 +371,22 @@ app.get("/api/tickets", async (req: Request, res: Response) => {
     }
     if (priority) where.requestedPriority = String(priority);
 
-    if (status !== undefined && !["NEW", "IN_PROGRESS", "RESOLVED", "CLOSED"].includes(String(status))) {
-      return res.status(400).json({ error: { code: "INVALID_QUERY", message: "status is invalid." } });
+    if (status !== undefined && String(status).trim() !== "") {
+      const upperStatus = String(status).trim().toUpperCase();
+      if (upperStatus === "ACTIVE") {
+        where.currentStatus = {
+          notIn: [TicketStatus.RESOLVED, TicketStatus.CLOSED, TicketStatus.CANCELLED],
+        };
+      } else if (upperStatus === "RESOLVED_OR_CLOSED" || upperStatus === "COMPLETED") {
+        where.currentStatus = {
+          in: [TicketStatus.RESOLVED, TicketStatus.CLOSED],
+        };
+      } else if (Object.values(TicketStatus).includes(upperStatus as TicketStatus)) {
+        where.currentStatus = upperStatus as TicketStatus;
+      } else {
+        return res.status(400).json({ error: { code: "INVALID_QUERY", message: "status is invalid." } });
+      }
     }
-    if (status) where.currentStatus = String(status);
 
     const validSorts: Record<string, { createdAt?: "asc" | "desc"; updatedAt?: "asc" | "desc" }> = {
       "createdAt:desc": { createdAt: "desc" }, "createdAt:asc": { createdAt: "asc" },

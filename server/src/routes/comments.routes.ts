@@ -230,11 +230,12 @@ commentsRouter.patch("/:id/resolve-indication", requireTicketAuth, async (req: R
       return;
     }
 
-    const { appearsResolved = true } = req.body;
+    const { appearsResolved, indicated } = req.body;
+    const isIndicated = indicated !== undefined ? Boolean(indicated) : (appearsResolved !== undefined ? Boolean(appearsResolved) : true);
 
     const updated = await prisma.ticket.update({
       where: { id: ticketId },
-      data: { requesterResolvedIndication: Boolean(appearsResolved) },
+      data: { requesterResolvedIndication: isIndicated },
       select: {
         id: true,
         ticketNumber: true,
@@ -243,7 +244,12 @@ commentsRouter.patch("/:id/resolve-indication", requireTicketAuth, async (req: R
       },
     });
 
-    res.status(200).json(updated);
+    res.status(200).json({
+      success: true,
+      requesterResolvedIndication: updated.requesterResolvedIndication,
+      currentStatus: updated.currentStatus,
+      ticket: updated,
+    });
   } catch (error) {
     res.status(500).json({ error: "Failed to update resolution indication" });
   }
