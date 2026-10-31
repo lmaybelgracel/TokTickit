@@ -23,7 +23,7 @@ Testing encompasses:
 | **AC-05** | IT Staff dashboard aggregates authoritative metrics | `API-DASH-02`, `API-DASH-04`, `UI-DASH-02`, `UI-DASH-04` | API, UI | `server/tests/lab-04/staff-dashboard.api.test.ts`, `client/src/__tests__/lab-04/StaffDashboard.test.tsx` |
 | **AC-06** | Resolution gate transition requires valid summary | `API-WORK-01`, `E2E-RES-01` | API, E2E | `server/tests/lab-04/ticket-workflow.api.test.ts`, `e2e/lab-04/ticket-resolution.spec.ts` |
 | **AC-07** | Direct status transition to Resolved rejected (422) | `API-WORK-02` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
-| **AC-08** | Missing knownUpdatedAt rejected (422) and stale update rejected (409) | `API-WORK-03`, `API-WORK-06` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
+| **AC-08** | Missing knownUpdatedAt rejected (422) and stale update rejected (409) | `API-WORK-03`, `API-WORK-06`, `E2E-RES-02` | API, E2E | `server/tests/lab-04/ticket-workflow.api.test.ts`, `e2e/lab-04/ticket-resolution.spec.ts` |
 | **AC-09** | Inactive user assignment/action rejected (422) | `API-WORK-04` | API | `server/tests/lab-04/ticket-workflow.api.test.ts` |
 | **AC-10** | Requester resolution toggle is advisory only | `API-WORK-05`, `UI-WORK-01` | API, UI | `server/tests/lab-04/ticket-workflow.api.test.ts`, `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` |
 | **AC-11** | IT Staff dashboard card drill-down navigation | `UI-DASH-03`, `E2E-DASH-01` | UI, E2E | `client/src/__tests__/lab-04/StaffDashboard.test.tsx`, `e2e/lab-04/dashboards.spec.ts` |
@@ -66,7 +66,9 @@ Testing encompasses:
 | `UI-WORK-01` | UI | AC-10 | Advisory resolved banner displayed for staff | Shows banner without changing status badge | `client/src/__tests__/lab-04/TicketWorkflow.test.tsx` | Passed |
 | `E2E-ACT-01` | E2E | AC-01 | Full flow: Login as Staff, record action, verify on detail | Action appears in list with correct performer | `e2e/lab-04/actions-taken-flow.spec.ts` | Passed |
 | `E2E-RES-01` | E2E | AC-06 | Full flow: Resolve ticket with modal summary | Status updates to RESOLVED, summary displayed | `e2e/lab-04/ticket-resolution.spec.ts` | Passed |
+| `E2E-RES-02` | E2E | AC-08 | Concurrency guard: 409 Conflict on stale update in resolution modal | Displays conflict banner and fetches fresh ticket data | `e2e/lab-04/ticket-resolution.spec.ts` | Passed |
 | `E2E-DASH-01`| E2E | AC-11 | Staff Dashboard metric card drill-down flow | Click card, land on filtered queue matching count | `e2e/lab-04/dashboards.spec.ts` | Passed |
+| `E2E-DASH-02`| E2E | AC-04 | Requester Dashboard metric card drill-down flow | Click Open Tickets card, land on My Tickets view | `e2e/lab-04/dashboards.spec.ts` | Passed |
 | `E2E-RESP-01`| E2E | AC-13 | Viewport 375px mobile responsiveness test | Zero horizontal scroll, all text visible | `e2e/lab-04/dashboards.spec.ts` | Passed |
 | `E2E-ALL-01` | E2E | AC-16 | Clean build and E2E automation pass on main | All Playwright specs pass on staging and main | `e2e/lab-04/*.spec.ts` | Passed |
 | `REG-ALL-01` | Suite | AC-15 | Labs 1–3 regression suites pass 100% | All 42+ test suites pass without failure | Server & Client Vitest execution | Passed |

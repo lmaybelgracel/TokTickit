@@ -235,15 +235,15 @@ model ActionTaken {
 
 ## 10. Definition of Done (DoD)
 
-- [ ] `docs/lab-04/` specification suite (`specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, `ai-use.md`) complete and peer-reviewed.
-- [ ] Database schema evolved with Prisma migration for `ActionTaken` without loss of Lab 1–3 data.
-- [ ] Idempotent seed script populated with tickets having 0, 1, and multiple Actions Taken and diverse metric states.
-- [ ] Backend REST API endpoints implemented, secured by RBAC, and verified with Vitest integration tests.
-- [ ] Frontend Dashboards and Actions Taken UI implemented following Zen Green tokens and verified with Vitest component tests.
-- [ ] Playwright E2E test suites automated and passing across all core workflows.
-- [ ] Responsive screenshots captured across Desktop, Tablet, and Mobile viewports without layout clipping.
-- [ ] Bidirectional peer review logged with verbatim comments and approvals in `reviewer.md`.
-- [ ] Comprehensive single-file submission PDF compiled and verified covering Answer Part 1 through Answer Part 9.
+- [x] `docs/lab-04/` specification suite (`specification.md`, `ui-spec.md`, `api-spec.md`, `tests.md`, `reviewer.md`, `ai-use.md`) complete and peer-reviewed.
+- [x] Database schema evolved with Prisma migration for `ActionTaken` without loss of Lab 1–3 data.
+- [x] Idempotent seed script populated with tickets having 0, 1, and multiple Actions Taken and diverse metric states.
+- [x] Backend REST API endpoints implemented, secured by RBAC, and verified with Vitest integration tests.
+- [x] Frontend Dashboards and Actions Taken UI implemented following Zen Green tokens and verified with Vitest component tests.
+- [x] Playwright E2E test suites automated and passing across all core workflows.
+- [x] Responsive screenshots captured across Desktop, Tablet, and Mobile viewports without layout clipping.
+- [x] Bidirectional peer review logged with verbatim comments and approvals in `reviewer.md`.
+- [x] Comprehensive single-file submission PDF compiled and verified covering Answer Part 1 through Answer Part 9.
 
 ## 11. Assumptions & Engineering Decisions
 
