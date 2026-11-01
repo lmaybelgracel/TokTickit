@@ -1,6 +1,6 @@
 # Lab 4 - AI Use and Engineering Reflection
 
-**Author:** Patitaya Kaewwichain 67070505220  
+**Author:** ปทิตญา แก้ววิเชียร (Patitaya Kaewwichain) 67070505220  
 **Repository:** `lmaybelgracel/TokTickit`  
 **AI Agent Environment:** Antigravity IDE (powered by Google DeepMind Advanced Agentic Coding / Gemini 2.5)
 

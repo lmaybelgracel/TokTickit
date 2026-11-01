@@ -1,6 +1,6 @@
 # Lab 4 - Peer Review Record
 
-**Author:** Patitaya Kaewwichain 67070505220 — GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
+**Author:** ปทิตญา แก้ววิเชียร (Patitaya Kaewwichain) 67070505220 — GitHub: [@lmaybelgracel](https://github.com/lmaybelgracel)
 
 **Peer reviewer (reviewed my PRs):** Phatthidawadi — GitHub: [@phatthidawadi](https://github.com/phatthidawadi)
 
