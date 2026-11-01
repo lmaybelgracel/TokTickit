@@ -23,7 +23,7 @@
 | [#75](https://github.com/lmaybelgracel/TokTickit/pull/75) | Issue 33: IT Staff & Administrator Dashboard Frontend UI / `feature/33-staff-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #75](https://github.com/lmaybelgracel/TokTickit/pull/75) |
 | [#76](https://github.com/lmaybelgracel/TokTickit/pull/76) | Issue 34: Requester Dashboard Frontend UI & Regression Verification / `feature/34-requester-dashboard-ui` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #76](https://github.com/lmaybelgracel/TokTickit/pull/76) |
 | [#77](https://github.com/lmaybelgracel/TokTickit/pull/77) | Issue 35: End-to-End Automation, Responsive Visual Evidence & Accessibility Audit / `feature/35-e2e-automation-and-audit` | Approved (Round 1: Changes Requested, Round 2: Changes Requested, Round 3: Approved) | Merged | [PR #77](https://github.com/lmaybelgracel/TokTickit/pull/77) |
-| [#78](https://github.com/lmaybelgracel/TokTickit/pull/78) | Release Integration: Sprint 4 Final Release / `lab4-staging` -> `main` | Changes Requested (Resolved, Awaiting Re-review) | Open | [PR #78](https://github.com/lmaybelgracel/TokTickit/pull/78) |
+| [#78](https://github.com/lmaybelgracel/TokTickit/pull/78) | Release Integration: Sprint 4 Final Release / `lab4-staging` -> `main` | Approved (Round 1: Changes Requested, Round 2: Approved) | Merged | [PR #78](https://github.com/lmaybelgracel/TokTickit/pull/78) |
 
 ---
 
@@ -645,8 +645,18 @@
   1. *Resolution Gate Check (BR-08):* Added `prisma.actionTaken.count({ where: { ticketId } })` guard in `PATCH /api/staff/tickets/:id/resolve`. Returns HTTP 422 with descriptive error if count is 0. Added unit/integration test in `ticket-workflow.api.test.ts`.
   2. *Inactive User Guard on PATCH Action:* Added DB verification for `caller.isActive` in `PATCH /api/actions/:id`. Rejects inactive users with HTTP 422. Added test case in `actions-taken.api.test.ts`.
   3. *Database Atomicity:* Wrapped `actionTaken.create` and `ticket.update` within `prisma.$transaction` in `POST /api/tickets/:id/actions` to ensure atomic creation and timestamp touch.
-- **Round 1 Verdict:** Changes Requested (Resolved, Awaiting Round 2 Review)
-- **Status:** Open on `lmaybelgracel/TokTickit` awaiting re-review and merge by @phatthidawadi.
+- **Round 1 Verdict:** Changes Requested (Resolved)
+- **Round 2 Reviewer Verdict & Summary:** Approved by @phatthidawadi (2026-10-31T19:55:20Z):
+  > "ตรวจสอบการแก้ไขใน commit 5ccaaf9 เรียบร้อยแล้ว:
+  > 
+  > 1. ตัวตรวจจับ Resolution Gate นับจำนวน Action Taken ก่อนปิดงานทำงานถูกต้องแล้ว ถ้าไม่มี Action จะถูกปฏิเสธด้วย 422 ทันที
+  > 2. ตัวป้องกัน Inactive User ในการแก้ไข Action ทำงานถูกต้อง ป้องกัน User ที่ถูกปิดการใช้งานเรียบร้อย
+  > 3. การสร้าง Action ถูกครอบด้วย $transaction ทำให้ Timestamp ของตั๋วซิงค์กันแบบ Atomic
+  > 4. รันเทสต์ทั้งระบบผ่านครบ 312/312 เทสต์ (100%) และบิลด์ผ่านทั้ง Server/Client ปราศจาก Error
+  > 
+  > ผลการประเมิน: ผ่านการตรวจทาน (Approve) พร้อมสำหรับ Merge เข้าสู่ main ได้แล้ว"
+- **Round 2 Verdict:** Approved
+- **Status:** Merged into `main` by @phatthidawadi on 2026-10-31T19:56:02Z.
 
 ---
 
