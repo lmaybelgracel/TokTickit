@@ -344,6 +344,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
     await expect(page.getByRole("heading", { name: /Resolve Ticket/i })).toBeVisible();
+    await page.waitForTimeout(400);
 
     // Capture desktop resolution modal screenshot
     await page.screenshot({
@@ -352,6 +353,7 @@ test.describe("Sprint 4 Visual Evidence, Responsive Layout & Accessibility Audit
 
     // Mobile resolution modal screenshot
     await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForTimeout(300);
     await page.screenshot({
       path: "artifacts/lab-04/screenshots/resolution/resolution-modal-mobile-375.png",
     });
